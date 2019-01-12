@@ -189,13 +189,13 @@ class KZPlayerItem: Object, RealmGenerating {
                 }
 
                 if let url = URL(string: artworkURL), !url.isFileURL {
-                    KZPlayer.sessionManager.request(url).responseData { response in
-                        guard let data = response.result.value, let image = UIImage(data: data) else {
+                    KZPlayer.imageDownloader.download(URLRequest(url: url)) { response in
+                        guard let image = response.result.value else {
                             return callCompletionHandler(artwork: .default)
                         }
 
-                        callCompletionHandler(artwork: MPMediaItemArtwork(boundsSize: .zero, requestHandler: { _ in
-                            return image
+                        callCompletionHandler(artwork: MPMediaItemArtwork(boundsSize: .zero, requestHandler: { size in
+                            return image.af_imageAspectScaled(toFill: size)
                         }))
                     }
                     return // Alamofire will handle the default

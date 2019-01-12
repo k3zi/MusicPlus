@@ -1,5 +1,7 @@
 PODS:
   - Alamofire (4.8.0)
+  - AlamofireImage (3.5.0):
+    - Alamofire (~> 4.8)
   - AwaitKit (5.0.1):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
@@ -43,6 +45,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AlamofireImage
   - AwaitKit
   - Connectivity
   - Crashlytics
@@ -62,6 +65,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - AlamofireImage
     - AwaitKit
     - CocoaSecurity
     - Connectivity
@@ -83,6 +87,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
   AwaitKit: a6d0b0b6d603cedda8ef1c1c249b8d6730359917
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
   Connectivity: 6d84f12755dd44417107adaca75ea743a19e5165
@@ -102,6 +107,6 @@ SPEC CHECKSUMS:
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: cc030de14e992078e2a7f7d15c35f2a04fcd3a2d
+PODFILE CHECKSUM: 81b23fc9d5abd3f835a64f53167f7587fa1ceeab
 
 COCOAPODS: 1.6.0.beta.2

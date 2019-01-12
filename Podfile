@@ -19,6 +19,7 @@ target 'MusicPlus' do
     pod 'Crashlytics'
 
     pod 'Alamofire'
+    pod 'AlamofireImage'
     pod 'XMLMapper'
     pod 'AwaitKit'
     pod 'Connectivity'

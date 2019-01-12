@@ -11,6 +11,7 @@ import UIKit
 import AVFoundation
 import Accelerate
 import Alamofire
+import AlamofireImage
 import MediaPlayer
 import CoreSpotlight
 import MobileCoreServices
@@ -233,6 +234,10 @@ class KZPlayer: NSObject {
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
         return SessionManager(configuration: configuration)
+    }()
+
+    static var imageDownloader: ImageDownloader = {
+        return ImageDownloader()
     }()
 }
 
