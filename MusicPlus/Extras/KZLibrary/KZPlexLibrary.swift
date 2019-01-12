@@ -163,7 +163,7 @@ class KZPlexLibrary: KZLibrary {
                 }
             }
 
-            try await(when(fulfilled: syncPromises, concurrently: 3))
+            try await(when(fulfilled: syncPromises, concurrently: 1))
             print("Finished Syncing")
         }
     }
