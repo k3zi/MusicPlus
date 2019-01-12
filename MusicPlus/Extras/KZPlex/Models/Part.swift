@@ -33,6 +33,7 @@ class Part: XMLMappable, Hashable {
     var has64bitOffsets: Bool!
     var hasThumbnail: Bool!
     var optimizedForStreaming: Bool!
+    var syncState: String?
 
     required init?(map: XMLMap) {}
 
@@ -44,6 +45,7 @@ class Part: XMLMappable, Hashable {
         size <- map.attributes["size"]
         audioProfile <- map.attributes["audioProfile"]
         container <- map.attributes["container"]
+        syncState <- map.attributes["syncState"]
         has64bitOffsets <- (map.attributes["has64bitOffsets"], XMLBoolFromIntTransform())
         hasThumbnail <- (map.attributes["hasThumbnail"], XMLBoolFromIntTransform())
         optimizedForStreaming <- (map.attributes["optimizedForStreaming"], XMLBoolFromIntTransform())

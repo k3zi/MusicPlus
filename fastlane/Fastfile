@@ -12,6 +12,10 @@ def get_version_string
   "#{get_version_number}.#{get_build_number}"
 end
 
+lane :bump do |options|
+  increment_build_number
+end
+
 lane :beta do |options|
   ensure_git_status_clean
   changelog = changelog_from_git_commits(

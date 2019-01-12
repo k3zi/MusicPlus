@@ -93,7 +93,6 @@ class KZPlexLibrary: KZLibrary {
                 let responsibleItems = response.items.filter {
                     $0.server.machineIdentifier == library.device.clientIdentifier
                     && $0.location.contains(library.uuid.lowercased())
-                    && $0.status.state == "complete"
                 }
 
                 let arrayOfPromises = responsibleItems.map {
@@ -105,6 +104,7 @@ class KZPlexLibrary: KZLibrary {
                 let documentURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
                 var allSyncTracks: [Track] = syncItems.flatMap { $0.tracks }
+                allSyncTracks = allSyncTracks.filter { $0.media.part.syncState != "pending" }
 
                 let syncPromises = AnyIterator<Promise<Void>> {
                     guard allSyncTracks.count > 0 else {
@@ -120,7 +120,6 @@ class KZPlexLibrary: KZLibrary {
                         }
 
                         let key = "\(track.media.part.duration!)-\(track.media.part.size!)-\(track.media.audioChannels!)-\(track.media.audioCodec!)"
-                        print(key)
 
                         let ext = track.media.part.key.components(separatedBy: ".").last ?? "mp3"
 
@@ -149,19 +148,21 @@ class KZPlexLibrary: KZLibrary {
                         }
 
                         let downloadURL = "\(plexLibraryConfig.connectionURI)\(track.media.part.key!)"
+                        let downloadedURL = "\(plexLibraryConfig.connectionURI)/sync/\(KZPlex.clientIdentifier)/item/\(track.ratingKey!)/downloaded"
                         do {
-                            let response = try await(plex.get(downloadURL, token: plexLibraryConfig.authToken))
-                            try response.data.write(to: absoluteFilePath)
+                            try await(plex.download(downloadURL, to: absoluteFilePath, token: plexLibraryConfig.authToken))
                             try realm.write {
                                 item.localAssetURL = filePath.path
                             }
+                            try await(plex.put(downloadedURL, token: plexLibraryConfig.authToken))
+                            print("Synced \(item.title) to \(filePath.path)")
                         } catch {
                             print(error)
                         }
                     }
                 }
 
-                try await(when(fulfilled: syncPromises, concurrently: 2))
+                try await(when(fulfilled: syncPromises, concurrently: 3))
                 print("Finished Syncing")
             }
         }

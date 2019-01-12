@@ -93,6 +93,7 @@ class KZPlex: NSObject {
     enum HTTPMethod: String {
         case get = "GET"
         case post = "POST"
+        case put = "PUT"
     }
 
     static let clientIdentifier = UIDevice.current.identifierForVendor?.uuidString ?? ""
@@ -179,9 +180,23 @@ class KZPlex: NSObject {
         }
     }
 
+    func download(_ url: String, to: URL, token: String? = nil) -> Promise<(saveLocation: URL, response: URLResponse)> {
+        return firstly { () -> Promise<(saveLocation: URL, response: URLResponse)> in
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.get, token: token)
+            return urlSession.downloadTask(.promise, with: request, to: to)
+        }
+    }
+
     func post(_ url: String, token: String? = nil) -> Promise<(data: Data, response: URLResponse)> {
         return firstly { () -> Promise<(data: Data, response: URLResponse)> in
             let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.post, token: token)
+            return urlSession.dataTask(.promise, with: request).validate()
+        }
+    }
+
+    func put(_ url: String, token: String? = nil) -> Promise<(data: Data, response: URLResponse)> {
+        return firstly { () -> Promise<(data: Data, response: URLResponse)> in
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.put, token: token)
             return urlSession.dataTask(.promise, with: request).validate()
         }
     }
