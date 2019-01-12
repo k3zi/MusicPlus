@@ -28,8 +28,9 @@ lane :beta do |options|
 
   if ENV['KEYCHAIN_PASSWORD']
     unlock_keychain(
-      path: 'login',
-      password: ENV['KEYCHAIN_PASSWORD']
+      path: 'fastlane_tmp_keychain',
+      password: ENV['KEYCHAIN_PASSWORD'],
+      add_to_search_list: :replace
     )
   end
 

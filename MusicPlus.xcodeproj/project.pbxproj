@@ -1220,7 +1220,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.kez.musicplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = "match AdHoc io.kez.musicplus";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore io.kez.musicplus";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/MusicPlus-BridgeHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
