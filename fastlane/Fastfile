@@ -13,7 +13,6 @@ def get_version_string
 end
 
 lane :beta do |options|
-  ensure_git_branch(branch: 'master')
   ensure_git_status_clean
   changelog = changelog_from_git_commits(
     pretty: '- (%ae) %s',
@@ -41,7 +40,7 @@ lane :beta do |options|
       )
       gym(
         clean: true,
-        scheme: 'Music+',
+        scheme: 'MusicPlus',
         configuration: 'Release',
         include_symbols: true,
         include_bitcode: true,
@@ -74,7 +73,6 @@ lane :beta do |options|
 end
 
 lane :store do
-  ensure_git_branch(branch: 'master')
   ensure_git_status_clean
   push_to_git_remote
   changelog = changelog_from_git_commits(pretty: '- (%ae) %s')
@@ -93,7 +91,7 @@ lane :store do
   )
   gym(
     clean: true,
-    scheme: "Music+",
+    scheme: "MusicPlus",
     configuration: "Release",
     include_symbols: true,
     include_bitcode: true,
