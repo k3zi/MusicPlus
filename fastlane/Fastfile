@@ -1,0 +1,121 @@
+setup_travis
+update_fastlane
+default_platform :ios
+
+repository_name = "k3zi/MusicPlus"
+
+def get_badge_version_string
+  "#{get_version_number}-#{get_build_number}-blue"
+end
+
+def get_version_string
+  "#{get_version_number}.#{get_build_number}"
+end
+
+lane :beta do |options|
+  ensure_git_branch(branch: 'master')
+  ensure_git_status_clean
+  changelog = changelog_from_git_commits(
+    pretty: '- (%ae) %s',
+    merge_commit_filtering: "exclude_merges"
+  )
+
+  increment_build_number
+  new_version = get_version_string
+
+  add_badge(
+    shield: "#{get_version_number}-#{get_build_number}-blue"
+  )
+
+  if ENV['KEYCHAIN_PASSWORD']
+    unlock_keychain(
+      path: 'login',
+      password: ENV['KEYCHAIN_PASSWORD']
+    )
+  end
+
+  unless options[:skip_testflight]
+      match(
+        type: 'appstore',
+        keychain_password: ENV['KEYCHAIN_PASSWORD']
+      )
+      gym(
+        clean: true,
+        scheme: 'Music+',
+        configuration: 'Release',
+        include_symbols: true,
+        include_bitcode: true,
+        export_method: 'app-store'
+      )
+      upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  reset_git_repo(force: true)
+  increment_build_number
+
+  commit_version_bump(message: "Bump version to: #{get_build_number}")
+  if ENV['GITHUB_USERNAME']
+    writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
+    sh "git remote add http #{writable_remote}"
+    push_to_git_remote(remote: 'http')
+  else
+    push_to_git_remote
+  end
+
+  set_github_release(
+    repository_name: repository_name,
+    api_token: ENV['GITHUB_TOKEN'],
+    name: tag_name,
+    tag_name: tag_name,
+    commitish: "master",
+    description: change_log,
+    is_prerelease: true
+  )
+end
+
+lane :store do
+  ensure_git_branch(branch: 'master')
+  ensure_git_status_clean
+  push_to_git_remote
+  changelog = changelog_from_git_commits(pretty: '- (%ae) %s')
+  increment_build_number
+  tag_name = "release/#{new_version}"
+  new_version = get_version_string
+
+  unlock_keychain(
+    path: 'login',
+    password: ENV['KEYCHAIN_PASSWORD']
+  )
+
+  match(
+    type: "appstore",
+    keychain_password: ENV['KEYCHAIN_PASSWORD']
+  )
+  gym(
+    clean: true,
+    scheme: "Music+",
+    configuration: "Release",
+    include_symbols: true,
+    include_bitcode: true,
+    export_method: "app-store"
+  )
+  deliver(force: true, skip_screenshots: true, skip_metadata: true)
+
+  commit_version_bump(message: "Bump version to: #{get_build_number}")
+  if ENV['GITHUB_USERNAME']
+    writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
+    sh "git remote add http #{writable_remote}"
+    push_to_git_remote(remote: 'http')
+  else
+    push_to_git_remote
+  end
+
+  set_github_release(
+    repository_name: repository_name,
+    api_token: ENV["GITHUB_TOKEN"],
+    name: tag_name,
+    tag_name: tag_name,
+    commitish: "master",
+    description: change_log
+  )
+end

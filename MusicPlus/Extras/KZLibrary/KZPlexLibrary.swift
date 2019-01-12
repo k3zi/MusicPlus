@@ -1,0 +1,110 @@
+//
+//  KZPlexLibrary.swift
+//  Music+
+//
+//  Created by kezi on 2019/01/05.
+//  Copyright © 2019 Storm Edge Apps LLC. All rights reserved.
+//
+
+import Foundation
+import MediaPlayer
+import CoreSpotlight
+import MobileCoreServices
+import PromiseKit
+
+class KZPlexLibrary: KZLibrary {
+
+    override func realm() -> Realm {
+        var config = Realm.Configuration()
+        config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("KZPlexLibrary-\(uniqueIdentifier).realm")
+        return try! Realm(configuration: config)
+    }
+
+    override func refresh() {
+        guard let plexLibraryConfig = plexLibraryConfig else {
+            return
+        }
+
+        let plex = KZPlex(authToken: plexLibraryConfig.authToken)
+        plex.resources().then { response -> Promise<[LibrarySectionsGETResponse?]> in
+            let arrayOfPromises = response.devices.filter { $0.clientIdentifier == plexLibraryConfig.clientIdentifier }.flatMap { $0.connections }.map { $0.sections() }
+            return when(fulfilled: arrayOfPromises)
+        }.then { response -> Promise<LibrarySectionsAllGETResponse> in
+            let servers = response.compactMap { $0 }
+            var libraries: [Directory] = servers.flatMap { $0.directories }
+            libraries = libraries.uniqueElements.filter { $0.type == .artist }
+            guard let library = libraries.first(where: { $0.uuid == plexLibraryConfig.dircetoryUUID }) else {
+                throw KZPlex.Error(errorDescription: "Unable to find library.")
+            }
+
+            plexLibraryConfig.connectionURI = library.connection.uri
+            self.save()
+
+            return library.all()
+        }.done(on: DispatchQueue.global(qos: .background)) { response in
+            let realm = self.realm()
+            let items = response.tracks!
+            var changed = false
+            realm.beginWrite()
+
+            var i = 0
+            for item in items {
+                i += 1
+                if i == 100 {
+                    try! realm.commitWrite()
+                    realm.beginWrite()
+                    i = 0
+
+                    if changed {
+                        DispatchQueue.main.async(execute: {
+                            NotificationCenter.default.post(name: Constants.Notification.libraryDataDidChange, object: nil)
+                        })
+                    }
+                }
+                autoreleasepool {
+                    let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.ratingKey!)'")
+                    if results.count == 0 {
+                        let newItem = item.asPlayerItem(realm: realm, plexLibraryUniqueIdentifier: self.uniqueIdentifier)
+                        self.addItemToSpotlight(newItem)
+                        realm.add(newItem)
+                        changed = true
+                    }
+                }
+            }
+            try! realm.commitWrite()
+
+            if changed {
+                DispatchQueue.main.async(execute: {
+                    NotificationCenter.default.post(name: Constants.Notification.libraryDataDidChange, object: nil)
+                })
+            }
+        }
+    }
+
+    static var plexLibraries: [KZPlexLibrary] {
+        do {
+            let result = try UserDefaults.standard.get(objectType: [KZPlexLibrary].self, forKey: Constants.Settings.plexLibraries)
+            if let result = result {
+                return result
+            }
+        } catch {
+            fatalError("Unable to read plex library data from user defaults.")
+        }
+
+        return []
+    }
+
+    override func save() {
+        var libraries = KZPlexLibrary.plexLibraries.filter({ $0 != self })
+        libraries.append(self)
+
+        do {
+            try UserDefaults.standard.set(object: libraries, forKey: Constants.Settings.plexLibraries)
+        } catch {
+            fatalError("Unable to svae plex library data to user defaults.")
+        }
+
+        UserDefaults.standard.synchronize()
+    }
+
+}

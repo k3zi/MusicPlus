@@ -1,0 +1,6 @@
+framework module SecureNSUserDefaults {
+  umbrella header "SecureNSUserDefaults-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,107 @@
+PODS:
+  - Alamofire (4.8.0)
+  - AwaitKit (5.0.1):
+    - PromiseKit (~> 6)
+  - CocoaSecurity (1.2.4)
+  - Connectivity (2.0.1)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
+  - Fabric (1.9.0)
+  - Keynode (4.0.0)
+  - KZ (3.0.0):
+    - PureLayout
+    - Reusable
+  - M13ProgressSuite (1.2.9)
+  - PromiseKit (6.7.1):
+    - PromiseKit/CorePromise (= 6.7.1)
+    - PromiseKit/Foundation (= 6.7.1)
+    - PromiseKit/UIKit (= 6.7.1)
+  - PromiseKit/CorePromise (6.7.1)
+  - PromiseKit/Foundation (6.7.1):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.7.1):
+    - PromiseKit/CorePromise
+  - PRTween (0.1.0)
+  - PureLayout (3.1.4)
+  - Realm (3.13.1):
+    - Realm/Headers (= 3.13.1)
+  - Realm/Headers (3.13.1)
+  - RealmSwift (3.13.1):
+    - Realm (= 3.13.1)
+  - Reusable (4.0.5):
+    - Reusable/Storyboard (= 4.0.5)
+    - Reusable/View (= 4.0.5)
+  - Reusable/Storyboard (4.0.5)
+  - Reusable/View (4.0.5)
+  - SecureNSUserDefaults (1.0.1):
+    - CocoaSecurity (~> 1.2.4)
+  - SpinKit (1.2.0)
+  - XMLMapper (1.5.2):
+    - XMLMapper/Core (= 1.5.2)
+  - XMLMapper/Core (1.5.2)
+  - Zip (1.1.0)
+
+DEPENDENCIES:
+  - Alamofire
+  - AwaitKit
+  - Connectivity
+  - Crashlytics
+  - Fabric
+  - Keynode
+  - KZ
+  - M13ProgressSuite
+  - PRTween
+  - PureLayout
+  - RealmSwift
+  - Reusable
+  - SecureNSUserDefaults
+  - SpinKit
+  - XMLMapper
+  - Zip
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - AwaitKit
+    - CocoaSecurity
+    - Connectivity
+    - Crashlytics
+    - Fabric
+    - Keynode
+    - KZ
+    - M13ProgressSuite
+    - PromiseKit
+    - PRTween
+    - PureLayout
+    - Realm
+    - RealmSwift
+    - Reusable
+    - SecureNSUserDefaults
+    - SpinKit
+    - XMLMapper
+    - Zip
+
+SPEC CHECKSUMS:
+  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  AwaitKit: a6d0b0b6d603cedda8ef1c1c249b8d6730359917
+  CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
+  Connectivity: 6d84f12755dd44417107adaca75ea743a19e5165
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
+  Keynode: a8896a3d118a6b7195dd242ed58070e842903964
+  KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
+  M13ProgressSuite: ea9f7263e73e9215e6849dfa54e29ee0ad6a145c
+  PromiseKit: ef376fb8b4e92edfeb66bd403b983eaa07fbde0c
+  PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
+  PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
+  Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
+  RealmSwift: 8a1e6a02b7a08cd17a31e3115143fb69fe5f3fb9
+  Reusable: 188be1a54ac0691bc66e5bb24ec6eb91971b315b
+  SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
+  SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
+  XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
+  Zip: 8877eede3dda76bcac281225c20e71c25270774c
+
+PODFILE CHECKSUM: cc030de14e992078e2a7f7d15c35f2a04fcd3a2d
+
+COCOAPODS: 1.6.0.beta.2

@@ -1,0 +1,6 @@
+framework module PRTween {
+  umbrella header "PRTween-umbrella.h"
+
+  export *
+  module * { export * }
+}

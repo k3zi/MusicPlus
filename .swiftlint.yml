@@ -1,0 +1,19 @@
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+
+disabled_rules:
+  - file_length
+  - type_body_length
+  - variable_name_min_length
+  - variable_name
+  - cyclomatic_complexity
+  - valid_docs
+  - line_length
+
+function_body_length:
+  - 200
+  - 300
+
+line_length:
+  - 99999999 # warning
+  - 200 # error

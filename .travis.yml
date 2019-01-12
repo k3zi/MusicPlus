@@ -1,0 +1,12 @@
+osx_image: xcode10.1
+language: swift
+
+install:
+  - brew install imagemagick librsvg
+  - bundle install
+script:
+  - bundle exec fastlane beta
+
+branches:
+  only:
+    - master

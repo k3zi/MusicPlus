@@ -1,0 +1,75 @@
+//
+//  Streamer+DownloadingDelegate.swift
+//  AudioStreamer
+//
+//  Created by Syed Haris Ali on 6/5/18.
+//  Copyright © 2018 Ausome Apps LLC. All rights reserved.
+//
+
+import Foundation
+import os.log
+
+extension KZRemoteAudioPlayerNode: DownloadingDelegate {
+
+    public func download(_ download: Downloading, completedWithError error: Error?) {
+        os_log("%@ - %d [error: %@]", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line, String(describing: error?.localizedDescription))
+
+        if let error = error, let url = download.url {
+            if timesFailed > 2 {
+                if let newUrl = delegate?.streamer(self, alternativeURLForFailedDownload: download) {
+                    timesFailed = 0
+                    download.url = newUrl
+                    download.start()
+                } else {
+                    delegate?.streamer(self, failedDownloadWithError: error, forURL: url)
+                    callCompletionHandler()
+                }
+            } else {
+                timesFailed += 1
+                download.url = url
+                download.start()
+            }
+        }
+    }
+
+    public func download(_ download: Downloading, changedState downloadState: DownloadingState) {
+        os_log("%@ - %d [state: %@]", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line, String(describing: downloadState))
+    }
+
+    public func download(_ download: Downloading, didReceiveData data: Data, progress: Float) {
+        // os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
+
+        guard let parser = parser else {
+            os_log("Expected parser, bail...", log: KZRemoteAudioPlayerNode.logger, type: .error)
+            return
+        }
+
+        /// Parse the incoming audio into packets
+        do {
+            try parser.parse(data: data)
+        } catch {
+            os_log("Failed to parse: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
+        }
+
+        /// Once there's enough data to start producing packets we can use the data format
+        if reader == nil, let _ = parser.dataFormat {
+            do {
+                reader = try Reader(parser: parser, readFormat: readFormat)
+            } catch {
+                os_log("Failed to create reader: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
+            }
+        }
+
+        /// Update the progress UI
+        DispatchQueue.main.async {
+            [weak self] in
+
+            // Notify the delegate of the new progress value of the download
+            self?.notifyDownloadProgress(progress)
+
+            // Check if we have the duration
+            self?.handleDurationUpdate()
+        }
+    }
+
+}

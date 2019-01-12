@@ -1,0 +1,6 @@
+framework module Pods_MusicPlus {
+  umbrella header "Pods-MusicPlus-umbrella.h"
+
+  export *
+  module * { export * }
+}

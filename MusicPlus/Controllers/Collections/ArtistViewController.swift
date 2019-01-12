@@ -1,0 +1,145 @@
+// 
+//  ArtistViewController.swift
+//  Music+
+// 
+//  Created by Kesi Maduka on 6/16/16.
+//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+// 
+
+import UIKit
+
+class ArtistViewController: MPSectionedTableViewController {
+
+    let artist: KZPlayerArtist
+    var expandedSections = [Bool]()
+    let shuffleButton = MPShuffleHeaderView(frame: CGRect.zero)
+
+    init(artist: KZPlayerArtist) {
+        self.artist = artist
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        title = artist.name
+        let button = UIButton.styleForBack()
+        button.addTarget(self, action: #selector(popViewController), for: .touchDown)
+        navigationItem.leftBarButtonItems?.append(UIBarButtonItem(customView: button))
+
+        tableView.register(cellType: MPSongTableViewCell.self)
+        tableView.sectionIndexMinimumDisplayRowCount = Int.max
+        tableView.tableHeaderView = shuffleButton
+
+        shuffleButton.label.text = "Shuffle Artist"
+        shuffleButton.setBackgroundColor(RGB(255, a: 0.2), forState: .highlighted)
+        shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
+
+        NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
+            self.fetchData()
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        shuffleButton.frame.size.width = Constants.UI.Screen.width
+    }
+
+    override func fetchData() {
+        sections.removeAll()
+        artist.albums.forEach({
+            var songs = [Any]()
+            $0.songs.forEach({ songs.append($0) })
+            let section = TableSection(sectionName: $0.name, sectionObjects: songs)
+            sections.append(section)
+            if expandedSections.count < sections.count {
+                expandedSections.append(false)
+            }
+        })
+        tableView.reloadData()
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let album = artist.albums[section]
+        let view = MPArtistSectionHeaderView(album: album)
+
+        view.tag = section
+        view.toggleButton.tag = section
+        view.toggleButton.isSelected = expandedSections[section]
+        view.bottomSeperator.isHidden = view.toggleButton.isSelected || artist.albums.count == (section + 1)
+        view.toggleButton.addTarget(self, action: #selector(toggleSection), for: .touchUpInside)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapSection))
+        view.addGestureRecognizer(tap)
+
+        return view
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 90
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return 90
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if !expandedSections[section] {
+            return 0
+        }
+
+        return super.tableView(tableView, numberOfRowsInSection: section)
+    }
+
+    @objc func toggleSection(_ sender: UIButton) {
+        expandedSections[sender.tag] = !expandedSections[sender.tag]
+        tableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
+    }
+
+    @objc func didTapSection(_ gesture: UITapGestureRecognizer) {
+        guard let view = gesture.view else {
+            return
+        }
+
+        view.backgroundColor = RGB(255, a: 0.2)
+
+        delay(0.3) {
+            UIView.animate(withDuration: Constants.UI.Animation.cellHighlight, animations: {
+                view.backgroundColor = UIColor.clear
+            }, completion: nil)
+        }
+
+        let section = view.tag
+        let album = artist.albums[section]
+
+        let vc = AlbumViewController(album: album)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    @objc func popViewController() {
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc func shuffle(_ button: UIButton) {
+        button.setBackgroundColor(RGB(255, a: 0.2), forState: .normal)
+
+        delay(0.3) {
+            UIView.transition(with: button, duration: Constants.UI.Animation.cellHighlight, options: [.transitionCrossDissolve], animations: {
+                button.setBackgroundColor(UIColor.clear, forState: .normal)
+                }, completion: nil)
+        }
+
+        let player = KZPlayer.sharedInstance
+        player.settings.crossFadeMode = .crossFade
+        player.play(AnyRealmCollection(artist.songs), shuffle: true)
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    }
+
+}
