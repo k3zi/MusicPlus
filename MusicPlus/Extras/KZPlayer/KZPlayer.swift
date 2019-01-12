@@ -59,17 +59,17 @@ class KZAudioPlayerSet: StreamingDelegate {
     var itemKey: String?
     var shouldUseCallback = true
     var item: KZPlayerItem
-    var itemReference: ThreadSafeReference<KZPlayerItem>
+    var itemReference: KZThreadSafeReference<KZPlayerItem>
     var libraryIdentifier: String?
 
     init(item: KZPlayerItem) {
         self.item = item
-        itemReference = ThreadSafeReference(to: item)
+        itemReference = KZThreadSafeReference(to: item)
         libraryIdentifier = item.plexLibraryUniqueIdentifier
-        if item.plexLibraryUniqueIdentifier.isNotEmpty {
-            auPlayer = KZRemoteAudioPlayerNode()
-        } else {
+        if item.isStoredLocally {
             auPlayer = AVAudioPlayerNode()
+        } else {
+            auPlayer = KZRemoteAudioPlayerNode()
         }
         auSpeed = AVAudioUnitVarispeed()
         auEqualizer = AVAudioUnitEQ(numberOfBands: 10)
@@ -106,7 +106,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func streamer(_ streamer: Streaming, alternativeURLForFailedDownload download: Downloading) -> URL? {
-        guard let libraryIdentifier = libraryIdentifier, let realm = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == libraryIdentifier })?.realm(), let item = realm.resolve(itemReference) else {
+        guard let item = itemReference.resolve() else {
             return nil
         }
 
@@ -136,6 +136,10 @@ class KZAudioPlayerSet: StreamingDelegate {
         }
 
         guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
+            return 0.0
+        }
+
+        guard let item = itemReference.resolve() else {
             return 0.0
         }
 
@@ -333,7 +337,7 @@ extension KZPlayer {
     }
 
     func updateNowPlayingInfo(_ item: KZPlayerItem) {
-        guard let realm = currentLibrary?.realm() else {
+        guard !item.isInvalidated, let realm = currentLibrary?.realm() else {
             return
         }
 

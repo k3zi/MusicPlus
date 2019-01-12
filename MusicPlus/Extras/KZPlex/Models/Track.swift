@@ -80,9 +80,9 @@ class Track: XMLMappable, Hashable {
         grandparentArt <- map.attributes["grandparentArt"]
         duration <- map.attributes["duration"]
 
-        lastViewedAt <- (map.attributes["updatedAt"], XMLDateTransform())
-        addedAt <- (map.attributes["createdAt"], XMLDateTransform())
-        updatedAt <- (map.attributes["scannedAt"], XMLDateTransform())
+        lastViewedAt <- (map.attributes["lastViewedAt"], XMLDateTransform())
+        addedAt <- (map.attributes["addedAt"], XMLDateTransform())
+        updatedAt <- (map.attributes["updatedAt"], XMLDateTransform())
 
         if index == nil {
             index = 0
@@ -95,6 +95,6 @@ class Track: XMLMappable, Hashable {
         let url = key!
         let artworkURL = thumb ?? parentThumb ?? grandparentThumb ?? art ?? parentArt ?? grandparentArt ?? ""
 
-        return KZPlayerItem(realm: realm, artist: grandparentTitle, album: parentTitle, title: title, duration: duration / 1000, assetURL: url, isDocumentURL: false, artworkURL: artworkURL, uniqueIdentifier: String(ratingKey), trackNum: index, plexLibraryUniqueIdentifier: plexLibraryUniqueIdentifier)
+        return KZPlayerItem(realm: realm, artist: grandparentTitle, album: parentTitle, title: title, duration: duration / 1000, assetURL: url, isDocumentURL: false, artworkURL: artworkURL, uniqueIdentifier: String(ratingKey), trackNum: index, plexLibraryUniqueIdentifier: plexLibraryUniqueIdentifier, plexTrack: self)
     }
 }

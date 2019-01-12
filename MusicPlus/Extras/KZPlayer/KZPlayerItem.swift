@@ -12,6 +12,7 @@ import RealmSwift
 
 class KZPlayerItem: Object, RealmGenerating {
     @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", systemID = "", plexLibraryUniqueIdentifier = ""
+    @objc dynamic var localAssetURL: String?
     @objc dynamic var trackNum = 1, playCount = 1, position = 0
     @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 4.0
     @objc dynamic var liked = false, isDocumentURL = false
@@ -19,6 +20,7 @@ class KZPlayerItem: Object, RealmGenerating {
 
     @objc dynamic var artist: KZPlayerArtist?
     @objc dynamic var album: KZPlayerAlbum?
+    @objc dynamic var plexTrack: KZPlayerPlexTrack?
 
     @objc dynamic var oItem: KZPlayerItem? = nil {
         willSet {
@@ -85,7 +87,7 @@ class KZPlayerItem: Object, RealmGenerating {
         self.oItem = self
     }
 
-    convenience init(realm: Realm, artist: String, album: String, title: String, duration: Double, assetURL: String, isDocumentURL: Bool, artworkURL: String, uniqueIdentifier: String, trackNum: Int = 1, plexLibraryUniqueIdentifier: String = "") {
+    convenience init(realm: Realm, artist: String, album: String, title: String, duration: Double, assetURL: String, isDocumentURL: Bool, artworkURL: String, uniqueIdentifier: String, trackNum: Int = 1, plexLibraryUniqueIdentifier: String = "", plexTrack: Track? = nil) {
         self.init()
 
         if let artist = realm.object(ofType: KZPlayerArtist.self, forPrimaryKey: artist as AnyObject) {
@@ -115,6 +117,9 @@ class KZPlayerItem: Object, RealmGenerating {
         self.systemID = "KZPlayerItem-\(uniqueIdentifier)"
         self.isDocumentURL = isDocumentURL
         self.plexLibraryUniqueIdentifier = plexLibraryUniqueIdentifier
+        if let plexTrack = plexTrack {
+            self.plexTrack = KZPlayerPlexTrack(track: plexTrack)
+        }
         self.oItem = self
     }
 
@@ -150,7 +155,22 @@ class KZPlayerItem: Object, RealmGenerating {
         return config
     }
 
+    var isStoredLocally: Bool {
+        if isDocumentURL || localAssetURL != nil || plexLibraryUniqueIdentifier.isEmpty {
+            return true
+        }
+
+        return false
+    }
+
     func fileURL() -> URL {
+        if let localAssetURL = localAssetURL {
+            let fileManager = FileManager.default
+            let documentURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+            return documentURL.appendingPathComponent(localAssetURL)
+        }
+
         if let config = plexLibraryConfig {
             let headers = KZPlex.requestHeadersQuery
             return URL(string: "\(config.connectionURI)/music/:/transcode/universal/start?path=\(assetURL)&X-Plex-Token=\(config.authToken)&\(headers)")!
@@ -307,6 +327,8 @@ class KZPlayerQueueItem: KZPlayerItem {
 
         self.systemID = "KZPlayerQueueItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
         self.isDocumentURL = orig.isDocumentURL
+        self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
+        self.localAssetURL = orig.localAssetURL
         self.oItem = orig.originalItem()
     }
 }
@@ -332,6 +354,7 @@ class KZPlayerShuffleQueueItem: KZPlayerItem {
         self.systemID = "KZPlayerShuffleQueueItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
         self.isDocumentURL = orig.isDocumentURL
         self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
+        self.localAssetURL = orig.localAssetURL
         self.oItem = orig.originalItem()
     }
 }
@@ -357,6 +380,7 @@ class KZPlayerUpNextItem: KZPlayerItem {
         self.systemID = "KZPlayerUpNextItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
         self.isDocumentURL = orig.isDocumentURL
         self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
+        self.localAssetURL = orig.localAssetURL
         self.oItem = orig.originalItem()
     }
 
@@ -383,6 +407,7 @@ class KZPlayerHistoryItem: KZPlayerItem {
         self.systemID = "KZPlayerUpNextItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
         self.isDocumentURL = orig.isDocumentURL
         self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
+        self.localAssetURL = orig.localAssetURL
         self.oItem = orig.originalItem()
     }
 

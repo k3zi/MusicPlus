@@ -18,6 +18,9 @@ PODS:
     - PromiseKit/CorePromise (= 6.7.1)
     - PromiseKit/Foundation (= 6.7.1)
     - PromiseKit/UIKit (= 6.7.1)
+  - PromiseKit/Alamofire (6.7.1):
+    - Alamofire (~> 4.0)
+    - PromiseKit/CorePromise
   - PromiseKit/CorePromise (6.7.1)
   - PromiseKit/Foundation (6.7.1):
     - PromiseKit/CorePromise
@@ -53,6 +56,7 @@ DEPENDENCIES:
   - Keynode
   - KZ
   - M13ProgressSuite
+  - PromiseKit/Alamofire
   - PRTween
   - PureLayout
   - RealmSwift
@@ -107,6 +111,6 @@ SPEC CHECKSUMS:
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 81b23fc9d5abd3f835a64f53167f7587fa1ceeab
+PODFILE CHECKSUM: 1515bdff3a6a66183997a5bc2c187e34748f7fb6
 
 COCOAPODS: 1.6.0.beta.2

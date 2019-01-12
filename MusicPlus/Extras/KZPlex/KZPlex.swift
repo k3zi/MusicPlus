@@ -26,6 +26,9 @@ class KZPlex: NSObject {
     struct Path {
         static let _plexTV = "https://plex.tv"
         static let linkAccount = "\(_plexTV)/link"
+
+        static let syncItems = "\(_plexTV)/devices/\(KZPlex.clientIdentifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/sync_items"
+
         struct pins {
             static let _pins = "\(_plexTV)/pins"
             static let request = "\(_pins).json"
@@ -50,12 +53,16 @@ class KZPlex: NSObject {
                 self.connection = connection
             }
 
-            var _library: String {
+            var _base: String {
                 return "\(connection.uri!)/library"
             }
             var sections: String {
                 // Adding .xml to this yields 0 results for directories
-                return "\(_library)/sections"
+                return "\(_base)/sections"
+            }
+
+            func syncItems(id: Int) -> String {
+                return "\(connection.uri!)/sync/items/\(id)"
             }
 
             struct _section {
@@ -88,18 +95,21 @@ class KZPlex: NSObject {
         case post = "POST"
     }
 
+    static let clientIdentifier = UIDevice.current.identifierForVendor?.uuidString ?? ""
+
     static let requestHeaders: [String: String] = [
         "X-Plex-Platform": "iOS",
         "X-Plex-Platform-Version": UIDevice.current.systemVersion,
-        "X-Plex-Provides": "player",
-        "X-Plex-Client-Identifier": UIDevice.current.identifierForVendor?.uuidString ?? "",
+        "X-Plex-Provides": "player,sync-target",
+        "X-Plex-Client-Identifier": KZPlex.clientIdentifier,
         "X-Plex-Product": Bundle.main.bundleIdentifier ?? "",
         "X-Plex-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-        "X-Plex-Device": UIDevice.current.model,
-        "X-Plex-Device-Name": UIDevice.current.name
+        "X-Plex-Device": UIDevice.current.name ,
+        "X-Plex-Device-Name": "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "") (\(UIDevice.current.model))",
+        "X-Plex-Sync-Version": "2"
     ]
 
-    static let requestHeadersQuery = KZPlex.requestHeaders.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
+    static let requestHeadersQuery = KZPlex.requestHeaders.map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)" }.joined(separator: "&")
 
     var urlSession: URLSession!
 
@@ -226,6 +236,25 @@ class KZPlex: NSObject {
             }
 
             guard let response = APIResourcesGETResponse(XMLString: data) else {
+                throw Error.dataParsingError
+            }
+
+            response.plex = self
+            return response
+        }
+    }
+
+    func syncItems() -> Promise<DevicesSyncItemsGETResponse?> {
+        return async {
+            guard let result = try? await(self.get(Path.syncItems)) else {
+                return nil
+            }
+
+            guard let data = String(bytes: result.data, encoding: .utf8) else {
+                throw Error.dataParsingError
+            }
+
+            guard let response = DevicesSyncItemsGETResponse(XMLString: data) else {
                 throw Error.dataParsingError
             }
 

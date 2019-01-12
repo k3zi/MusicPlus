@@ -13,12 +13,14 @@ class Location: XMLMappable {
     var nodeName: String!
 
     var id: Int!
-    var path: String!
+    var path: String?
+    var uri: String?
 
     required init?(map: XMLMap) {}
 
     func mapping(map: XMLMap) {
         id <- map.attributes["id"]
         path <- map.attributes["path"]
+        uri <- map.attributes["uri"]
     }
 }

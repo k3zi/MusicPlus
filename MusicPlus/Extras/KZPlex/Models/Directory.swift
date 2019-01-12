@@ -99,4 +99,28 @@ class Directory: XMLMappable, Hashable {
             return response
         }
     }
+
+    func syncItems(syncItemId: Int) -> Promise<LibrarySectionsAllGETResponse> {
+        return async {
+            let url = KZPlex.Path.library(self.connection).syncItems(id: syncItemId)
+            let result = try await(self.plex.get(url, token: self.device.accessToken))
+
+            guard let data = String(bytes: result.data, encoding: .utf8) else {
+                throw KZPlex.Error.dataParsingError
+            }
+
+            guard let response = LibrarySectionsAllGETResponse(XMLString: data) else {
+                throw KZPlex.Error.dataParsingError
+            }
+
+            response.plex = self.plex
+            response.tracks.forEach {
+                $0.directory = self
+                $0.connection = self.connection
+                $0.plex = self.plex
+                $0.device = self.device
+            }
+            return response
+        }
+    }
 }

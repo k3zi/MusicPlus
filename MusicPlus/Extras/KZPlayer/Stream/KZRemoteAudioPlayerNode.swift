@@ -35,6 +35,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
     var completionHandler: AVAudioNodeCompletionHandler?
     var firstPacketPushedHandler: (() -> Void)?
     var timesFailed: Int = 0
+    var timer: Timer?
 
     // MARK: - Properties
 
@@ -163,8 +164,13 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         self.completionHandler = completionHandler
         self.url = url
         self.durationHint = durationHint
+        addTimer()
+    }
+
+    func addTimer() {
         /// Use timer to schedule the buffers (this is not ideal, wish AVAudioEngine provided a pull-model for scheduling buffers)
         let interval = 1 / (readFormat.sampleRate / Double(readBufferSize))
+        self.timer?.invalidate()
         let timer = Timer(timeInterval: interval / 2, repeats: true) {
             [weak self] _ in
             guard self?.isPlaying ?? false else {
@@ -176,6 +182,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
             self?.notifyTimeUpdated()
         }
         RunLoop.current.add(timer, forMode: .common)
+        self.timer = timer
     }
 
     // MARK: - Reset
@@ -191,6 +198,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         reader = nil
         isFileSchedulingComplete = false
         hasPushedAPacket = false
+        self.timer?.invalidate()
 
         // Create a new parser
         do {
@@ -210,6 +218,8 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
             self.timePaused = nil
         }
 
+        addTimer()
+
         // Start playback on the player node
         super.play()
 
@@ -224,6 +234,8 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         guard self.isPlaying else {
             return
         }
+
+        timer?.invalidate()
 
         timePaused = self.currentTime
 
@@ -242,6 +254,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         // Stop the downloader, the player node, and the engine
         downloader.stop()
         super.stop()
+        timer?.invalidate()
 
         // Update the state
         state = .stopped

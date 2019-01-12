@@ -44,8 +44,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         connectivity = Connectivity()
         connectivity?.framework = .network
+        var firstTime = true
 
         let connectivityChanged: (Connectivity) -> Void = { _ in
+            if firstTime {
+                firstTime = false
+                return
+            }
+
             DispatchQueue.global(qos: .background).async {
                 KZPlayer.sharedInstance.currentLibrary?.refresh()
             }

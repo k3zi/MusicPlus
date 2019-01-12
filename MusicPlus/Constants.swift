@@ -270,11 +270,11 @@ extension Data {
         return Data(digest)
     }
 
-    func SHA1() -> Data {
-        let length = Int(CC_SHA1_DIGEST_LENGTH)
+    func SHA256() -> Data {
+        let length = Int(CC_SHA256_DIGEST_LENGTH)
         var digest = [UInt8](repeating: 0, count: length)
         _ = withUnsafeBytes { (body: UnsafePointer<UInt8>) in
-            CC_SHA1(body, CC_LONG(self.count), &digest)
+            CC_SHA256(body, CC_LONG(self.count), &digest)
         }
 
         return Data(digest)
@@ -288,8 +288,8 @@ extension String {
         return (self as NSString).data(using: String.Encoding.utf8.rawValue)!.MD5().hexedString()
     }
 
-    func SHA1() -> String {
-        return (self as NSString).data(using: String.Encoding.utf8.rawValue)!.SHA1().hexedString()
+    func SHA256() -> String {
+        return (self as NSString).data(using: String.Encoding.utf8.rawValue)!.SHA256().hexedString()
     }
 
     static func random(length: Int) -> String {
