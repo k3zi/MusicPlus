@@ -1184,7 +1184,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 75Y6FH939X;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				INFOPLIST_FILE = "$(SRCROOT)/MusicPlus/Info.plist";
+				INFOPLIST_FILE = MusicPlus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES_THIN;
@@ -1213,7 +1213,7 @@
 				CURRENT_PROJECT_VERSION = 4;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 75Y6FH939X;
-				INFOPLIST_FILE = "$(SRCROOT)/MusicPlus/Info.plist";
+				INFOPLIST_FILE = MusicPlus/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES_THIN;
