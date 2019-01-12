@@ -10,6 +10,8 @@ import Foundation
 
 class KZPlayerPlexTrack: Object {
     @objc dynamic var updatedAt = Date()
+    // This should actually be dependent on settings for the default value
+    @objc dynamic var shouldSyncRaw = true
 
     convenience init(track: Track) {
         self.init()

@@ -145,4 +145,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectivity?.stopNotifier()
     }
 
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        KZPlayer.sharedInstance.currentLibrary?.refresh()
+    }
+
 }
