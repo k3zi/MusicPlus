@@ -1,4 +1,6 @@
-if: tag IS blank
+jobs:
+  include:
+    - if: tag IS blank
 
 osx_image: xcode10.1
 language: swift
@@ -8,8 +10,3 @@ install:
   - bundle install
 script:
   - bundle exec fastlane beta --verbose
-
-branches:
-  except:
-    - /^((?!master).)*$/
-    - /^beta\/.*$/
