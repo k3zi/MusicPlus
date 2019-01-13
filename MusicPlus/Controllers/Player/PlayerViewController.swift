@@ -10,7 +10,7 @@ import UIKit
 
 class PlayerViewController: MPViewController {
 
-    static let sharedInstance = PlayerViewController()
+    static let shared = PlayerViewController()
     lazy var minimizeButton: ExtendedButton = {
         let button = ExtendedButton()
         button.setImage(#imageLiteral(resourceName: "backBT"), for: .normal)

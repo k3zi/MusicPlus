@@ -72,7 +72,6 @@ class MPMenuViewController: KZViewController {
     var dynamicConstraints = [NSLayoutConstraint]()
 
     var menuItems = [Any]()
-    var libraryItems = [Any]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,6 +108,10 @@ class MPMenuViewController: KZViewController {
         librarySelectionView.backgroundColor = UIColor.white.withAlphaComponent(0.05)
 
         fetchData()
+
+        NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
+            self.libraryTableView.reloadData()
+        }
     }
 
     override func setupConstraints() {
@@ -128,7 +131,8 @@ class MPMenuViewController: KZViewController {
         librarySelectionView.autoPinEdge(toSuperviewEdge: .right)
         dynamicConstraints.append(librarySelectionView.autoSetDimension(.width, toSize: 0))
 
-        libraryTableView.autoPinEdgesToSuperviewEdges()
+        libraryTableView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .right)
+        libraryTableView.autoPinEdge(.right, to: .right, of: view.superview!)
 
         logoImageView.autoPinEdge(toSuperviewEdge: .top)
         logoImageView.autoMatch(.width, to: .width, of: menuView, withMultiplier: 0.5)
@@ -193,17 +197,14 @@ class MPMenuViewController: KZViewController {
 
     override func fetchData() {
         menuItems.removeAll()
-        menuItems.append(MPMenuItem(name: "SONGS", imageName: "sidebarSongIcon", controller: SongsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "ALBUMS", imageName: "sidebarAlbumIcon", controller: AlbumsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "ARTISTS", imageName: "sidebarArtistIcon", controller: ArtistsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "PARTY PLAYLIST", imageName: "sidebarPartyPlaylistIcon", controller: SongsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "SLEEP TIMER", imageName: "sidebarSleepTimerIcon", controller: SongsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "COLOR", imageName: "sidebarColorIcon", controller: SongsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "PLEX", imageName: "sidebarPlexIcon", controller: SongsViewController.sharedInstance))
-        menuItems.append(MPMenuItem(name: "SETTINGS", imageName: "sidebarSettingsIcon", controller: SettingsViewController(), shouldPresent: true))
-
-        libraryItems.append(MPLibraryItem(name: "Local", icon: #imageLiteral(resourceName: "serverIItunesIcon")))
-        libraryItems.append(MPLibraryItem(name: "Plex", icon: #imageLiteral(resourceName: "sidebarPlexIcon")))
+        menuItems.append(MPMenuItem(name: "SONGS", imageName: "sidebarSongIcon", controller: SongsViewController.shared))
+        menuItems.append(MPMenuItem(name: "ALBUMS", imageName: "sidebarAlbumIcon", controller: AlbumsViewController.shared))
+        menuItems.append(MPMenuItem(name: "ARTISTS", imageName: "sidebarArtistIcon", controller: ArtistsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "PARTY PLAYLIST", imageName: "sidebarPartyPlaylistIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "SLEEP TIMER", imageName: "sidebarSleepTimerIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "COLOR", imageName: "sidebarColorIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "PLEX", imageName: "sidebarPlexIcon", controller: SongsViewController.shared))
+        menuItems.append(MPMenuItem(name: "SETTINGS", imageName: "sidebarSettingsIcon", controller: SettingsViewController.shared))
 
         let selectedRow = menuTableView.indexPathForSelectedRow
         menuTableView.reloadData()
@@ -219,7 +220,7 @@ class MPMenuViewController: KZViewController {
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         if tableView == libraryTableView {
-            return libraryItems
+            return KZLibrary.libraries
         }
 
         return menuItems
@@ -240,7 +241,11 @@ class MPMenuViewController: KZViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == libraryTableView {
+            guard let library = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZLibrary else {
+                return
+            }
 
+            KZPlayer.sharedInstance.currentLibrary = library
         } else if tableView == menuTableView {
             if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
                 indexPathsForSelectedRows.forEach {

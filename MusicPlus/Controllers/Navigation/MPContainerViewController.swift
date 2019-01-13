@@ -19,9 +19,9 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
     static let sharedInstance = MPContainerViewController()
 
     var centerNavigationControllers = [MPNavigationController]()
-    var centerViewControllers = [SongsViewController.sharedInstance, AlbumsViewController.sharedInstance, ArtistsViewController.sharedInstance]
+    var centerViewControllers = [SongsViewController.shared, AlbumsViewController.shared, ArtistsViewController.shared, SettingsViewController.shared]
     let leftViewController = MPMenuViewController()
-    let playerViewController = PlayerViewController()
+    let playerViewController = PlayerViewController.shared
 
     var xOffsetConstraint: NSLayoutConstraint?
 

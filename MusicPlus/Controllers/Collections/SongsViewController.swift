@@ -10,7 +10,7 @@ import UIKit
 
 class SongsViewController: MPSongCollectionViewController {
 
-    static let sharedInstance = SongsViewController()
+    static let shared = SongsViewController()
     let shuffleButton = MPShuffleHeaderView(frame: CGRect.zero)
 
     // MARK: - Setup View

@@ -137,7 +137,7 @@ class AlbumViewController: MPSectionedTableViewController {
         let wrappedSong = KZThreadSafeReference(to: initialSong)
         let wrappedAlbum = KZThreadSafeReference(to: album)
 
-        KZPlayer.libraryQueue.async {
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
             guard let safeInitialSong = wrappedSong.resolve(), let safeAlbum = wrappedAlbum.resolve() else {
                 return
             }

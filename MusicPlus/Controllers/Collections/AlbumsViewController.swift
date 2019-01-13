@@ -10,7 +10,7 @@ import UIKit
 
 class AlbumsViewController: KZViewController {
 
-    static let sharedInstance = AlbumsViewController()
+    static let shared = AlbumsViewController()
 
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()

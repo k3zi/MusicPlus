@@ -92,9 +92,9 @@ class KZPlayer: NSObject {
     // Library
     var currentLibrary: KZLibrary? {
         didSet {
-            DispatchQueue.main.async(execute: {
+            DispatchQueue.main.async {
                 NotificationCenter.default.post(name: Constants.Notification.libraryDidChange, object: nil)
-            })
+            }
 
             DispatchQueue.global(qos: .background).async {
                 self.currentLibrary?.refresh()

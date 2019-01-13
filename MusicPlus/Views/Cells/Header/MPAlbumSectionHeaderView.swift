@@ -150,7 +150,7 @@ class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
         button.toggle()
 
         if index == 0 {
-            // KZPlayer.sharedInstance.addUpNext(item)
+            // KZPlayer.shared.addUpNext(item)
         }
     }
 

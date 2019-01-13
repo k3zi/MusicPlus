@@ -66,20 +66,22 @@ class MPLibraryCell: KZTableViewCell {
     override func fillInCellData(_ shallow: Bool) {
         super.fillInCellData(shallow)
 
-        guard let item = model as? MPLibraryItem else {
-            return
+        if let item = model as? MPLibraryItem {
+            iconView.image = item.icon
+            label.text = item.name
+        } else if let item = model as? KZLibrary {
+            iconView.image = item is KZPlexLibrary ? #imageLiteral(resourceName: "sidebarPlexIcon") : #imageLiteral(resourceName: "serverIItunesIcon")
+            label.text = item.name
+            let selected = KZPlayer.sharedInstance.currentLibrary == item
+            let tintColor = selected ? AppDelegate.del().session.tintColor : Constants.UI.Color.gray
+            iconView.tintColor = tintColor
+            label.textColor = tintColor
         }
-
-        iconView.image = item.icon
-        label.text = item.name
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        let tintColor = selected ? AppDelegate.del().session.tintColor : Constants.UI.Color.gray
-        iconView.tintColor = tintColor
-        label.textColor = tintColor
     }
 
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {

@@ -10,7 +10,7 @@ import UIKit
 
 class ArtistsViewController: MPSectionedTableViewController {
 
-    static let sharedInstance = ArtistsViewController()
+    static let shared = ArtistsViewController()
 
     init() {
         super.init(nibName: nil, bundle: nil)

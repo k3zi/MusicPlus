@@ -10,6 +10,8 @@ import UIKit
 
 class SettingsViewController: KZViewController {
 
+    static let shared = SettingsViewController()
+
     let backgroundView = MPBackgroundView()
 
     override func viewDidLoad() {
