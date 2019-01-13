@@ -111,9 +111,16 @@ class AlbumViewController: MPSectionedTableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.row > 0 else {
-            let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
-            player.play(AnyRealmCollection(album.songs), shuffle: true)
+            let wrappedAlbum = KZThreadSafeReference(to: album)
+            KZPlayer.libraryQueue.async {
+                guard let safeAlbum = wrappedAlbum.resolve() else {
+                    return
+                }
+
+                let player = KZPlayer.sharedInstance
+                player.settings.crossFadeMode = .crossFade
+                player.play(AnyRealmCollection(safeAlbum.songs), shuffle: true)
+            }
             return
         }
 
@@ -130,7 +137,7 @@ class AlbumViewController: MPSectionedTableViewController {
         let wrappedSong = KZThreadSafeReference(to: initialSong)
         let wrappedAlbum = KZThreadSafeReference(to: album)
 
-        KZPlayer.uiQueue.async {
+        KZPlayer.libraryQueue.async {
             guard let safeInitialSong = wrappedSong.resolve(), let safeAlbum = wrappedAlbum.resolve() else {
                 return
             }

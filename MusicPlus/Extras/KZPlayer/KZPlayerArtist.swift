@@ -10,7 +10,7 @@ import UIKit
 import MediaPlayer
 import RealmSwift
 
-class KZPlayerArtist: Object {
+class KZPlayerArtist: Object, RealmGenerating {
     @objc dynamic var name = ""
     @objc dynamic var liked = false
 
@@ -25,5 +25,17 @@ class KZPlayerArtist: Object {
 
     override class func primaryKey() -> String? {
         return "name"
+    }
+
+    func realmGenerator() -> (() -> Realm?) {
+        // First aquire things that can not go across threads
+        let identifier = songs.map { $0.plexLibraryUniqueIdentifier }.first { $0.isNotEmpty }
+        return {
+            guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
+                return nil
+            }
+
+            return library.realm()
+        }
     }
 }

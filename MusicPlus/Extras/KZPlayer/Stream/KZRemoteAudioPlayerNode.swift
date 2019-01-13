@@ -164,7 +164,6 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         self.completionHandler = completionHandler
         self.url = url
         self.durationHint = durationHint
-        addTimer()
     }
 
     func addTimer() {
@@ -181,7 +180,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
             self?.handleTimeUpdate()
             self?.notifyTimeUpdated()
         }
-        RunLoop.current.add(timer, forMode: .common)
+        RunLoop.main.add(timer, forMode: .common)
         self.timer = timer
     }
 

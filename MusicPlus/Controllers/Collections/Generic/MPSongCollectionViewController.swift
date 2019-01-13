@@ -108,7 +108,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
         }
 
         let wrappedSong = KZThreadSafeReference(to: initialSong)
-        KZPlayer.uiQueue.async {
+        KZPlayer.libraryQueue.async {
             guard let safeInitialSong = wrappedSong.resolve(), let collection = self.collection(), let index = collection.firstIndex(of: safeInitialSong) else {
                 return
             }

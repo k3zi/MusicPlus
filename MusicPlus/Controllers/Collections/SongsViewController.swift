@@ -60,9 +60,15 @@ class SongsViewController: MPSongCollectionViewController {
             }, completion: nil)
         }
 
-        let player = KZPlayer.sharedInstance
-        player.settings.crossFadeMode = .crossFade
-        player.play(collection, shuffle: true)
+        KZPlayer.libraryQueue.async {
+            guard let collection = self.collection() else {
+                return
+            }
+
+            let player = KZPlayer.sharedInstance
+            player.settings.crossFadeMode = .crossFade
+            player.play(collection, shuffle: true)
+        }
     }
 
 }

@@ -133,9 +133,16 @@ class ArtistViewController: MPSectionedTableViewController {
                 }, completion: nil)
         }
 
-        let player = KZPlayer.sharedInstance
-        player.settings.crossFadeMode = .crossFade
-        player.play(AnyRealmCollection(artist.songs), shuffle: true)
+        let wrappedArtist = KZThreadSafeReference(to: artist)
+        KZPlayer.libraryQueue.async {
+            guard let safeArtist = wrappedArtist.resolve() else {
+                return
+            }
+
+            let player = KZPlayer.sharedInstance
+            player.settings.crossFadeMode = .crossFade
+            player.play(AnyRealmCollection(safeArtist.songs), shuffle: true)
+        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

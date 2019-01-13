@@ -52,157 +52,11 @@ enum KZPLayerCrossFadeMode {
     case crossFade
 }
 
-class KZAudioPlayerSet: StreamingDelegate {
-    var auPlayer: AVAudioPlayerNode
-    var auSpeed: AVAudioUnitVarispeed
-    var auEqualizer: AVAudioUnitEQ
-    var itemKey: String?
-    var shouldUseCallback = true
-    var isRemoved = false
-    var isSeeking = false
-    var item: KZPlayerItem
-    var itemReference: KZThreadSafeReference<KZPlayerItem>
-    var libraryIdentifier: String?
-    var lastSeekTime: TimeInterval?
-
-    init(item: KZPlayerItem) {
-        self.item = item
-        itemReference = KZThreadSafeReference(to: item)
-        libraryIdentifier = item.plexLibraryUniqueIdentifier
-        if item.isStoredLocally {
-            auPlayer = AVAudioPlayerNode()
-        } else {
-            auPlayer = KZRemoteAudioPlayerNode()
-        }
-        auSpeed = AVAudioUnitVarispeed()
-        auEqualizer = AVAudioUnitEQ(numberOfBands: 10)
-
-        if let player = auPlayer as? KZRemoteAudioPlayerNode {
-            player.delegate = self
-        }
-    }
-
-    var volume: Float {
-        set {
-            auPlayer.volume = newValue
-        }
-
-        get {
-            return auPlayer.volume
-        }
-    }
-
-    func callCompletionHandler(_ handler: AVAudioNodeCompletionHandler) {
-        if isRemoved || isSeeking {
-            return
-        }
-
-        handler()
-    }
-
-    func schedule(completionHandler: @escaping AVAudioNodeCompletionHandler) {
-        if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode {
-            auPlayer.firstPacketPushedHandler = {
-                KZPlayer.sharedInstance.updateNowPlayingInfo(self.item)
-            }
-            auPlayer.schedule(url: item.fileURL(), durationHint: item.duration()) {
-                self.callCompletionHandler(completionHandler)
-            }
-        } else {
-            let fileURL = item.fileURL()
-            guard let file  = try? AVAudioFile(forReading: fileURL) else {
-                return
-            }
-
-            auPlayer.scheduleFile(file, at: nil) {
-                self.callCompletionHandler(completionHandler)
-            }
-        }
-    }
-
-    func streamer(_ streamer: Streaming, alternativeURLForFailedDownload download: Downloading) -> URL? {
-        guard let item = itemReference.resolve() else {
-            return nil
-        }
-
-        let newUrl = item.fileURL()
-        return download.url != newUrl ? newUrl : nil
-    }
-
-    func pause() {
-        auPlayer.pause()
-    }
-
-    func play() {
-        auPlayer.play()
-    }
-
-    func stop() {
-        auPlayer.stop()
-    }
-
-    func lastRenderTime() -> AVAudioTime? {
-        return auPlayer.lastRenderTime
-    }
-
-    func currentTime() -> Double {
-        if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode, let currentTime = auPlayer.currentTime {
-            return currentTime
-        }
-
-        guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
-            return 0
-        }
-
-        guard let item = itemReference.resolve() else {
-            return 0
-        }
-
-        return (lastSeekTime ?? 0) + (Double(playerTime.sampleTime) / Double(playerTime.sampleRate)) - item.startTime
-    }
-
-    func seek(to time: TimeInterval, completionHandler: @escaping AVAudioNodeCompletionHandler) throws {
-        isSeeking = true
-        lastSeekTime = time
-        if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode {
-            try auPlayer.seek(to: time) {
-                self.callCompletionHandler(completionHandler)
-            }
-            isSeeking = false
-            return
-        }
-
-        var value = time
-        if item.startTime != 0.0 {
-            value += TimeInterval(item.startTime)
-        }
-
-        if value < 0.0 {
-            value = 0.0
-        }
-
-        let audioFile = try AVAudioFile(forReading: item.fileURL())
-        guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
-            isSeeking = false
-            return
-        }
-
-        let startingFrame = AVAudioFramePosition(playerTime.sampleRate * value)
-        let frameLength =  AVAudioFrameCount(playerTime.sampleRate * (item.endTime - value))
-        auPlayer.stop()
-        auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil) {
-            self.callCompletionHandler(completionHandler)
-        }
-        auPlayer.play()
-        isSeeking = false
-    }
-}
-
 // MARK: Main Player
 class KZPlayer: NSObject {
     static let sharedInstance = KZPlayer()
-    static let libraryQueue = DispatchQueue(label: "io.kez.musicplus.librarythread", attributes: .concurrent)
-    static let uiQueue = DispatchQueue(label: "io.kez.musicplus.uithread", attributes: .concurrent)
+    static let libraryQueue = DispatchQueue(label: "io.kez.musicplus.librarythread", qos: .userInitiated, attributes: .concurrent)
+    static let uiQueue = DispatchQueue(label: "io.kez.musicplus.uithread", qos: .userInteractive, attributes: .concurrent)
 
     static let libraryQueueKey = DispatchSpecificKey<Void>()
 
@@ -453,7 +307,7 @@ extension KZPlayer {
     ///   - shuffle: whether to shuffle the items, nil ensures that the previous value is used
     func play(_ items: KZPlayerItemCollection, initialSong: KZPlayerItem? = nil, shuffle: Bool? = nil) {
         guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
-            return KZPlayer.libraryQueue.sync {
+            return KZPlayer.libraryQueue.async {
                 self.play(items, initialSong: initialSong, shuffle: true)
             }
         }
@@ -484,9 +338,9 @@ extension KZPlayer {
 
     // Play Single Item
     func play(_ item: KZPlayerItem, silent: Bool = false, isQueueItem: Bool = false) -> Bool {
-        if !Thread.current.isMainThread {
+        guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
             let threadSafeItem = KZThreadSafeReference(to: item)
-            return DispatchQueue.main.sync {
+            return KZPlayer.libraryQueue.sync {
                 guard let item = threadSafeItem.resolve() else {
                     return false
                 }
@@ -529,7 +383,13 @@ extension KZPlayer {
         playerSet.play()
         print("started playing \"\(item.title)\" on channel: \(channel)")
 
-        updateNowPlayingInfo(item)
+        let threadSafeItem = KZThreadSafeReference(to: item)
+        DispatchQueue.mainSyncSafe {
+            guard let item = threadSafeItem.resolve() else {
+                return
+            }
+            updateNowPlayingInfo(item)
+        }
         return true
     }
 
