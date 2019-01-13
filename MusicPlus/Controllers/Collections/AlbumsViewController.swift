@@ -66,7 +66,7 @@ class AlbumsViewController: KZViewController {
 
         title = "Albums"
         view.backgroundColor = UIColor.clear
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menuBT"), style: .plain, target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.toggleMenu))
+        setupMenuToggle()
 
         collectionView.delegate = self
         collectionView.dataSource = self

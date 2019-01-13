@@ -57,8 +57,10 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
             case .initial(let collection):
                 self.updateSections(collection: AnyRealmCollection(collection))
                 break
-            case .update(_, let deletions, let insertions, let modifications):
-                self.updateSections(collection: AnyRealmCollection(collection))
+            case .update(_, let deletions, let insertions, _):
+                if deletions.count > 0 || insertions.count > 0 {
+                    self.updateSections(collection: AnyRealmCollection(collection))
+                }
                 break
             case .error:
                 break

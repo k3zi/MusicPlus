@@ -50,6 +50,7 @@
 		29F941FB1D12B179001A3515 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941FA1D12B179001A3515 /* ArtistViewController.swift */; };
 		D8EDEBB9A638767A3E483FD4 /* Pods_MusicPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */; };
 		EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */; };
+		EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */; };
 		EA5389E221867EC400CFA9B7 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5389E121867EC400CFA9B7 /* SliderView.swift */; };
 		EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */; };
 		EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */; };
@@ -181,6 +182,7 @@
 		5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7B059640EDDA747F028A681 /* Pods_Music_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Music_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
+		EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Menu.swift"; sourceTree = "<group>"; };
 		EA5389E121867EC400CFA9B7 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlexLibraryConfig.swift; sourceTree = "<group>"; };
 		EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZThreadSafeReference.swift; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 			isa = PBXGroup;
 			children = (
 				EAF6AE3E21E17CD000E1F727 /* UserDefaults+Codable.swift */,
+				EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -973,6 +976,7 @@
 				EAF6AE4F21E2490500E1F727 /* XMLBoolFromIntTransform.swift in Sources */,
 				EAF6AE8D21E2E49200E1F727 /* Streamer+DownloadableDelegate.swift in Sources */,
 				EAF6AE3821E1467B00E1F727 /* KZLibrary.swift in Sources */,
+				EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */,
 				29E640AA1D0EADD8005BA3D7 /* AlbumsViewController.swift in Sources */,
 				2940701B1D1295920069E27E /* ImageAnalyzer.swift in Sources */,
 				EAF6AE3A21E146AE00E1F727 /* KZLocalLibrary.swift in Sources */,

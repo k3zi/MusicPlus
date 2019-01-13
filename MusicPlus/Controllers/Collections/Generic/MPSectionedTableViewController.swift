@@ -26,7 +26,7 @@ class MPSectionedTableViewController: KZViewController {
         view.backgroundColor = UIColor.clear
         automaticallyAdjustsScrollViewInsets = false
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menuBT"), style: .plain, target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.toggleMenu))
+        setupMenuToggle()
 
         tableView.dataSource = self
         tableView.delegate = self

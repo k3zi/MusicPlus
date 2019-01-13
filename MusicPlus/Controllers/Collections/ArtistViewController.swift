@@ -36,7 +36,6 @@ class ArtistViewController: MPSectionedTableViewController {
         tableView.tableHeaderView = shuffleButton
 
         shuffleButton.label.text = "Shuffle Artist"
-        shuffleButton.setBackgroundColor(RGB(255, a: 0.2), forState: .highlighted)
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
@@ -124,15 +123,7 @@ class ArtistViewController: MPSectionedTableViewController {
         _ = self.navigationController?.popViewController(animated: true)
     }
 
-    @objc func shuffle(_ button: UIButton) {
-        button.setBackgroundColor(RGB(255, a: 0.2), forState: .normal)
-
-        delay(0.3) {
-            UIView.transition(with: button, duration: Constants.UI.Animation.cellHighlight, options: [.transitionCrossDissolve], animations: {
-                button.setBackgroundColor(UIColor.clear, forState: .normal)
-                }, completion: nil)
-        }
-
+    @objc func shuffle(_ button: MPShuffleHeaderView) {
         let wrappedArtist = KZThreadSafeReference(to: artist)
         KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
             guard let safeArtist = wrappedArtist.resolve() else {

@@ -224,12 +224,7 @@ extension KZPlayer {
     }
 
     func updateNowPlayingInfo(_ item: KZPlayerItem) {
-        guard !item.isInvalidated, let realm = currentLibrary?.realm() else {
-            return
-        }
-
-        let itemRefrence = ThreadSafeReference(to: item)
-        guard let item = realm.resolve(itemRefrence) else {
+        guard !item.isInvalidated else {
             return
         }
 
@@ -395,14 +390,7 @@ extension KZPlayer {
 
         playerSet.play()
         print("started playing \"\(item.title)\" on channel: \(channel)")
-
-        let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
-        DispatchQueue.mainSyncSafe {
-            guard let item = threadSafeItem.resolve() else {
-                return
-            }
-            updateNowPlayingInfo(item)
-        }
+        updateNowPlayingInfo(item.originalItem)
         return true
     }
 

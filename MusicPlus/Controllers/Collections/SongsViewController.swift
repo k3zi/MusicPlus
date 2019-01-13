@@ -21,10 +21,8 @@ class SongsViewController: MPSongCollectionViewController {
         title = "Songs"
         tableView.tableHeaderView = shuffleButton
         tableView.delaysContentTouches = false
-        tableView.contentOffset = CGPoint(x: 0, y: 43)
+        tableView.contentOffset = CGPoint(x: 0, y: shuffleButton.frame.height)
 
-        shuffleButton.adjustsImageWhenHighlighted = false
-        shuffleButton.showsTouchWhenHighlighted = false
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
@@ -46,14 +44,6 @@ class SongsViewController: MPSongCollectionViewController {
     }
 
     @objc func shuffle(_ button: UIButton) {
-        UIView.transition(with: button, duration: 0.1, options: [.transitionCrossDissolve], animations: {
-            button.setBackgroundColor(RGB(255, a: 0.2), forState: .normal)
-        }) { _ in
-            UIView.transition(with: button, duration: 0.5, options: [.transitionCrossDissolve], animations: {
-                button.setBackgroundColor(UIColor.clear, forState: .normal)
-            }, completion: nil)
-        }
-
         self.playAllShuffled()
     }
 

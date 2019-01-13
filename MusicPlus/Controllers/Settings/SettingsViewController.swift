@@ -18,7 +18,7 @@ class SettingsViewController: KZViewController {
         super.viewDidLoad()
 
         title = "Settings"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(self.dismissPresenting))
+        setupMenuToggle()
         view.addSubview(backgroundView)
     }
 
