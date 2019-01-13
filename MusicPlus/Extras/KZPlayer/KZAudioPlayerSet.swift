@@ -15,7 +15,10 @@ class KZAudioPlayerSet: StreamingDelegate {
     var auEqualizer: AVAudioUnitEQ
     var itemKey: String?
     var shouldUseCallback = true
+
+    /// Whether the set has or will be removed from the audio engine and should thus be disregarded
     var isRemoved = false
+
     var isSeeking = false
     var item: KZPlayerItem
     var itemReference: KZThreadSafeReference<KZPlayerItem>
@@ -107,7 +110,7 @@ class KZAudioPlayerSet: StreamingDelegate {
         return auPlayer.lastRenderTime
     }
 
-    func currentTime() -> Double {
+    func currentTime(item: KZPlayerItemBase? = nil) -> Double {
         if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode, let currentTime = auPlayer.currentTime {
             return currentTime
         }
@@ -116,7 +119,7 @@ class KZAudioPlayerSet: StreamingDelegate {
             return 0
         }
 
-        guard let item = itemReference.resolve() else {
+        guard let item = item ?? itemReference.resolve() else {
             return 0
         }
 

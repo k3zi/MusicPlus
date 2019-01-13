@@ -57,6 +57,7 @@ class KZPlayer: NSObject {
     static let sharedInstance = KZPlayer()
     static let libraryQueue = DispatchQueue(label: "io.kez.musicplus.librarythread", qos: .userInitiated, attributes: .concurrent)
     static let uiQueue = DispatchQueue(label: "io.kez.musicplus.uithread", qos: .userInteractive, attributes: .concurrent)
+    static var activeWorkers = [BackgroundWorker]()
 
     static let libraryQueueKey = DispatchSpecificKey<Void>()
 
@@ -71,6 +72,9 @@ class KZPlayer: NSObject {
     var itemBeforeUpNextKey: String?
     var cachedActiveItemKey: String?
     var cachedActiveItem: KZPlayerHistoryItem?
+
+    /// These are tokens that obsevre the current queue's original collections and update them accordingly.
+    var currentQueueNotificationTokens = [NotificationToken]()
 
     var settings = Settings()
     var state = KZPlayerState.starting
@@ -237,8 +241,8 @@ extension KZPlayer {
             dict[MPMediaItemPropertyArtist] = item.artistName()
             dict[MPMediaItemPropertyAlbumTitle] = item.album?.name ?? ""
             dict[MPMediaItemPropertyPlaybackDuration] = item.endTime - item.startTime
-            dict[MPNowPlayingInfoPropertyPlaybackRate] = self.audioEngine.isRunning ? 1.0 : 0.0
-            dict[MPNowPlayingInfoPropertyElapsedPlaybackTime] = self.currentTime()
+            dict[MPNowPlayingInfoPropertyPlaybackRate] = audioEngine.isRunning ? 1.0 : 0.0
+            dict[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime(item: item)
             if #available(iOS 10.0, *) {
                 dict[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
             }
@@ -300,6 +304,18 @@ extension KZPlayer {
 // MARK: - Basic Functions
 extension KZPlayer {
 
+    class func executeOn(queue: DispatchQueue, event: @escaping () -> Void) {
+        queue.async {
+            let timer = BackgroundWorker()
+            timer.start {
+                event()
+                self.activeWorkers.remove(object: timer)
+                timer.stop()
+            }
+            self.activeWorkers.append(timer)
+        }
+    }
+
     // MARK: Play
 
     /// Plays the provided items
@@ -309,15 +325,10 @@ extension KZPlayer {
     ///   - initialSong: the first song to play, if nil then it will be the first item in `items`
     ///   - shuffle: whether to shuffle the items, nil ensures that the previous value is used
     func play(_ items: KZPlayerItemCollection, initialSong: KZPlayerItem? = nil, shuffle: Bool? = nil) {
-        guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
-            return KZPlayer.libraryQueue.async {
-                self.play(items, initialSong: initialSong, shuffle: true)
-            }
-        }
+        self.resetPlayer()
 
-        let shuffle = setShuffle(shuffle)
-        resetPlayer()
-        setCollection(items, initialSong: initialSong, shuffle: shuffle)
+        let shuffle = self.setShuffle(shuffle)
+        self.setCollection(items, initialSong: initialSong, shuffle: shuffle)
 
         var index = 0
         if !shuffle, let initialSong = initialSong {
@@ -329,14 +340,13 @@ extension KZPlayer {
             index = items.index(of: initialSong) ?? 0
         }
 
-        resetPlayer()
-        var collection: Array<KZPlayerItemBase> = shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
+        let collection: [KZPlayerItemBase] = shuffle ? Array(self.sessionShuffledQueue()) : Array(self.sessionQueue())
 
         guard collection.count > 0 else {
             return
         }
 
-        persistentPlayNextSong(collection[index], times: collection.count)
+        self.persistentPlayNextSong(collection[index], times: collection.count)
     }
 
     // Play Single Item
@@ -494,12 +504,12 @@ extension KZPlayer {
         setForChannel(channel)?.volume = value
     }
 
-    func currentTime(_ channel: Int = -1) -> Double {
-        guard let filePlayer = setForChannel(channel) else {
+    func currentTime(_ channel: Int = -1, item: KZPlayerItemBase? = nil) -> Double {
+        guard let set = setForChannel(channel) else {
             return 0.0
         }
 
-        return filePlayer.currentTime()
+        return set.currentTime(item: item)
     }
 
     func setCurrentTime(_ value: Double, channel: Int = -1) -> Bool {
@@ -608,7 +618,7 @@ extension KZPlayer {
             return
         }
 
-        if !checkTimeFunctioning && settings.crossFadeMode == .crossFade && !crossFading && (currentItem.endTime - currentTime()) < crossFadeTime {
+        if !checkTimeFunctioning && settings.crossFadeMode == .crossFade && !crossFading && (currentItem.endTime - currentTime(item: currentItem)) < crossFadeTime {
             self.checkTimeFunctioning = true
             backgroundNext()
             self.checkTimeFunctioning = false
@@ -727,9 +737,7 @@ extension KZPlayer {
     }
 
     func primaryKeyForChannel(_ channel: Int = -1) -> String? {
-        let channel = channel == -1 ? activePlayer : channel
-
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = setForChannel(channel) else {
             return nil
         }
 
@@ -749,9 +757,7 @@ extension KZPlayer {
     }
 
     func setItemForChannel(_ item: KZPlayerItemBase, channel: Int = -1) {
-        let channel = channel == -1 ? activePlayer : channel
-
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = setForChannel(channel) else {
             return
         }
 
@@ -885,6 +891,8 @@ extension KZPlayer {
             fatalError("No library is currently set.")
         }
 
+        currentQueueNotificationTokens.forEach { $0.invalidate() }
+
         realm.beginWrite()
         realm.delete(realm.objects(KZPlayerQueueItem.self))
         realm.delete(realm.objects(KZPlayerShuffleQueueItem.self))
@@ -902,16 +910,20 @@ extension KZPlayer {
             return
         }
 
+        // Realm is reaally slow if we try reading from the base collection.
+        // Converting it to an array speeds up the process x25
+        let itemsAsArray = items.toArray()
+
         realm.beginWrite()
 
-        for i in 0..<items.count {
-            let queueItem = KZPlayerQueueItem(orig: items[i])
+        for i in 0..<itemsAsArray.count {
+            let queueItem = KZPlayerQueueItem(orig: itemsAsArray[i])
             queueItem.position = i
             realm.add(queueItem)
         }
 
         if shuffle {
-            let shuffled = items.shuffled()
+            let shuffled = itemsAsArray.withShuffledPosition()
             for item in shuffled {
                 let queueItem = KZPlayerShuffleQueueItem(orig: item)
                 if item.originalItem().systemID == initialSong?.originalItem().systemID {
@@ -922,6 +934,35 @@ extension KZPlayer {
         }
 
          try! realm.commitWrite()
+
+        let queueNotificationToken = items.observe { changes in
+            switch changes {
+            case .initial:
+                break
+            case .update(_, let deletions, let insertions, _):
+                let objects = realm.objects(KZPlayerQueueItem.self).toArray()
+
+                // Handle deletions
+                objects.filter { deletions.contains($0.position) }.forEach { realm.delete($0) }
+
+                // Handle insertions
+                objects.forEach { object in
+                    object.position += insertions.filter { object.position >= $0 }.count
+                }
+                insertions.forEach { i in
+                    let queueItem = KZPlayerQueueItem(orig: items[i])
+                    queueItem.position = i
+                    realm.add(queueItem)
+                }
+
+                // No need to handle modifications as the queue items report back to their original items
+                break
+            case .error:
+                break
+            }
+        }
+
+        currentQueueNotificationTokens.append(queueNotificationToken)
     }
 
     func addUpNext(_ orig: KZPlayerItem) {

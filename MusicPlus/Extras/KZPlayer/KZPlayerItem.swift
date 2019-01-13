@@ -477,8 +477,18 @@ class KZPlayerHistoryItem: Object, KZPlayerItemBase {
     }
 }
 
+extension Array where Element: KZPlayerItemBase {
+    func withShuffledPosition() -> Array<Element> {
+        for result in self {
+            result.position = Int(arc4random_uniform(UInt32(count)))
+        }
+
+        return sorted(by: { $0.position < $1.position })
+    }
+}
+
 extension AnyRealmCollection where Element: KZPlayerItemBase {
-    func shuffled() -> Results<Element> {
+    func withShuffledPosition() -> Results<Element> {
         for result in self {
             result.position = Int(arc4random_uniform(UInt32(self.count)))
         }
@@ -486,6 +496,16 @@ extension AnyRealmCollection where Element: KZPlayerItemBase {
         return self.sorted(byKeyPath: "position", ascending: true)
     }
 
+    func toArray() -> [Element] {
+        var arr = [Element]()
+        for result in self {
+            arr.append(result)
+        }
+        return arr
+    }
+}
+
+extension Results {
     func toArray() -> [Element] {
         var arr = [Element]()
         for result in self {

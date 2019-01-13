@@ -49,6 +49,7 @@
 		29F941F91D12A7FE001A3515 /* KZPlayerAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */; };
 		29F941FB1D12B179001A3515 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941FA1D12B179001A3515 /* ArtistViewController.swift */; };
 		D8EDEBB9A638767A3E483FD4 /* Pods_MusicPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */; };
+		EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */; };
 		EA5389E221867EC400CFA9B7 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5389E121867EC400CFA9B7 /* SliderView.swift */; };
 		EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */; };
 		EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */; };
@@ -179,6 +180,7 @@
 		38D130D20C0A026B911BD341 /* Pods-MusicPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPlus/Pods-MusicPlus.release.xcconfig"; sourceTree = "<group>"; };
 		5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7B059640EDDA747F028A681 /* Pods_Music_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Music_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA5389E121867EC400CFA9B7 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlexLibraryConfig.swift; sourceTree = "<group>"; };
 		EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZThreadSafeReference.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				29F941F21D129B7F001A3515 /* ObjectiveCProcessing.h */,
 				29F941F31D129B7F001A3515 /* ObjectiveCProcessing.m */,
 				EAC85DC72184068D00C61B6F /* CustomStringConvertible.swift */,
+				EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */,
 			);
 			path = Extras;
 			sourceTree = "<group>";
@@ -994,6 +997,7 @@
 				EAF6AE5921E26E0800E1F727 /* Directory.swift in Sources */,
 				EAF6AE6121E2BB6500E1F727 /* Media.swift in Sources */,
 				EAF6AE6521E2E15700E1F727 /* KZRemoteAudioPlayerNode.swift in Sources */,
+				EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */,
 				29E844891D1425070067CE56 /* MPShuffleTableViewCell.swift in Sources */,
 				EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */,
 				29F941DD1D1266EE001A3515 /* ANStepperView.m in Sources */,

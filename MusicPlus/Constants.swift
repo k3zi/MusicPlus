@@ -469,6 +469,17 @@ extension Sequence where Iterator.Element: Hashable {
     }
 }
 
+extension Results {
+
+    /// Converts the results object to the AnyRealmCollection wrapper
+    ///
+    /// - Returns: An `AnyRealmCollection` wrapped around `self`
+    func toAny() -> AnyRealmCollection<Element> {
+        return AnyRealmCollection(self)
+    }
+
+}
+
 extension DispatchQueue {
     class func mainSyncSafe(execute work: () -> Void) {
         if Thread.isMainThread {

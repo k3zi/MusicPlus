@@ -112,7 +112,7 @@ class AlbumViewController: MPSectionedTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard indexPath.row > 0 else {
             let wrappedAlbum = KZThreadSafeReference(to: album)
-            KZPlayer.libraryQueue.async {
+            KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
                 guard let safeAlbum = wrappedAlbum.resolve() else {
                     return
                 }

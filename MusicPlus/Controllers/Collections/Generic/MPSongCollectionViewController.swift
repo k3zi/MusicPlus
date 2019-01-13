@@ -17,61 +17,69 @@ enum MPCollectionSortBy {
 
 class MPSongCollectionViewController: MPSectionedTableViewController {
 
-    var uiCollection: KZPlayerItemCollection?
+    var displayedCollection: KZPlayerItemCollection?
+    var currentCollectionToken: NotificationToken?
+
+    var collectionGenerator: () -> KZPlayerItemCollection? {
+        didSet {
+            DispatchQueue.main.async {
+                self.registerNewCollection()
+            }
+        }
+    }
 
     init() {
+        collectionGenerator = { return nil }
         super.init(nibName: nil, bundle: nil)
-        self.uiCollection = collection()
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func collection() -> KZPlayerItemCollection? {
-        return nil
-    }
+    func registerNewCollection() {
+        currentCollectionToken?.invalidate()
+        currentCollectionToken = nil
 
-    // MARK: Setup View
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        tableView.register(cellType: MPSongTableViewCell.self)
-    }
-
-    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
-        return MPSongTableViewCell.self
-    }
-
-    override func fetchData() {
-        let alpha = CharacterSet.alphanumerics
-        let numeric = CharacterSet.decimalDigits
-
-        let collection = self.collection()
-
-        guard let uiCollection = collection else {
-            return DispatchQueue.main.async {
-                self.uiCollection = nil
-                self.sections = []
-                self.tableView.reloadData()
-            }
-        }
-
-        if self.uiCollection == collection {
+        guard let collection = collectionGenerator() else {
+            displayedCollection = nil
+            sections = []
+            tableView.reloadData()
             return
         }
 
+        currentCollectionToken = collection.observe { [weak self] changes in
+            guard let self = self else {
+                return
+            }
+
+            switch changes {
+            case .initial(let collection):
+                self.updateSections(collection: AnyRealmCollection(collection))
+                break
+            case .update(_, let deletions, let insertions, let modifications):
+                self.updateSections(collection: AnyRealmCollection(collection))
+                break
+            case .error:
+                break
+            }
+        }
+    }
+
+    func updateSections(collection: KZPlayerItemCollection) {
+        let alpha = CharacterSet.alphanumerics
+        let numeric = CharacterSet.decimalDigits
+
         var sections = [TableSection]()
 
-        for item in uiCollection {
+        for item in collection {
             let title = item.titleText()
             guard let firstChar = title.capitalized.first else {
                 continue
             }
 
             var firstCharString = String(firstChar)
-            let charSet = CharacterSet.init(charactersIn: firstCharString)
+            let charSet = CharacterSet(charactersIn: firstCharString)
 
             if numeric.isSuperset(of: charSet) {
                 firstCharString = "#"
@@ -91,11 +99,33 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
             }
         }
 
-        DispatchQueue.main.async {
-            self.uiCollection = collection
-            self.sections = sections
-            self.tableView.reloadData()
+        displayedCollection = collection
+        self.sections = sections
+        tableView.reloadData()
+    }
+
+    func playAllShuffled() {
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            guard let collection = self.collectionGenerator() else {
+                return
+            }
+
+            let player = KZPlayer.sharedInstance
+            player.settings.crossFadeMode = .crossFade
+            player.play(collection, shuffle: true)
         }
+    }
+
+    // MARK: Setup View
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        tableView.register(cellType: MPSongTableViewCell.self)
+    }
+
+    override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
+        return MPSongTableViewCell.self
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -108,8 +138,8 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
         }
 
         let wrappedSong = KZThreadSafeReference(to: initialSong)
-        KZPlayer.libraryQueue.async {
-            guard let safeInitialSong = wrappedSong.resolve(), let collection = self.collection(), let index = collection.firstIndex(of: safeInitialSong) else {
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            guard let safeInitialSong = wrappedSong.resolve(), let collection = self.collectionGenerator(), let index = collection.firstIndex(of: safeInitialSong) else {
                 return
             }
 

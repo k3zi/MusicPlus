@@ -48,7 +48,7 @@ class KZLibrary: Codable, Equatable {
     }
 
     var allSongs: KZPlayerItemCollection {
-        return KZPlayerItemCollection(realm().objects(KZPlayerItem.self))
+        return KZPlayerItemCollection(realm().objects(KZPlayerItem.self).sorted(byKeyPath: "title", ascending: true))
     }
 
     func addItemToSpotlight(_ item: KZPlayerItem) {

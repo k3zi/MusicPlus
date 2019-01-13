@@ -134,7 +134,7 @@ class ArtistViewController: MPSectionedTableViewController {
         }
 
         let wrappedArtist = KZThreadSafeReference(to: artist)
-        KZPlayer.libraryQueue.async {
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
             guard let safeArtist = wrappedArtist.resolve() else {
                 return
             }

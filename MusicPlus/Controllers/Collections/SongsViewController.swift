@@ -28,12 +28,10 @@ class SongsViewController: MPSongCollectionViewController {
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
-            self.fetchData()
+            self.collectionGenerator = {
+                return KZPlayer.sharedInstance.currentLibrary?.allSongs
+            }
         }
-    }
-
-    override func collection() -> KZPlayerItemCollection? {
-        return KZPlayer.sharedInstance.currentLibrary?.allSongs
     }
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -48,10 +46,6 @@ class SongsViewController: MPSongCollectionViewController {
     }
 
     @objc func shuffle(_ button: UIButton) {
-        guard let collection = self.collection() else {
-            return
-        }
-
         UIView.transition(with: button, duration: 0.1, options: [.transitionCrossDissolve], animations: {
             button.setBackgroundColor(RGB(255, a: 0.2), forState: .normal)
         }) { _ in
@@ -60,15 +54,7 @@ class SongsViewController: MPSongCollectionViewController {
             }, completion: nil)
         }
 
-        KZPlayer.libraryQueue.async {
-            guard let collection = self.collection() else {
-                return
-            }
-
-            let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
-            player.play(collection, shuffle: true)
-        }
+        self.playAllShuffled()
     }
 
 }
