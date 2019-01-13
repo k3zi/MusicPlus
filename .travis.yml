@@ -1,3 +1,5 @@
+if: tag IS blank
+
 osx_image: xcode10.1
 language: swift
 

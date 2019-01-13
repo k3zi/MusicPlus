@@ -58,9 +58,12 @@ class KZAudioPlayerSet: StreamingDelegate {
     var auEqualizer: AVAudioUnitEQ
     var itemKey: String?
     var shouldUseCallback = true
+    var isRemoved = false
+    var isSeeking = false
     var item: KZPlayerItem
     var itemReference: KZThreadSafeReference<KZPlayerItem>
     var libraryIdentifier: String?
+    var lastSeekTime: TimeInterval?
 
     init(item: KZPlayerItem) {
         self.item = item
@@ -89,19 +92,31 @@ class KZAudioPlayerSet: StreamingDelegate {
         }
     }
 
+    func callCompletionHandler(_ handler: AVAudioNodeCompletionHandler) {
+        if isRemoved || isSeeking {
+            return
+        }
+
+        handler()
+    }
+
     func schedule(completionHandler: @escaping AVAudioNodeCompletionHandler) {
         if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode {
             auPlayer.firstPacketPushedHandler = {
                 KZPlayer.sharedInstance.updateNowPlayingInfo(self.item)
             }
-            auPlayer.schedule(url: item.fileURL(), durationHint: item.duration(), completionHandler: completionHandler)
+            auPlayer.schedule(url: item.fileURL(), durationHint: item.duration()) {
+                self.callCompletionHandler(completionHandler)
+            }
         } else {
             let fileURL = item.fileURL()
             guard let file  = try? AVAudioFile(forReading: fileURL) else {
                 return
             }
 
-            auPlayer.scheduleFile(file, at: nil, completionHandler: completionHandler)
+            auPlayer.scheduleFile(file, at: nil) {
+                self.callCompletionHandler(completionHandler)
+            }
         }
     }
 
@@ -136,19 +151,25 @@ class KZAudioPlayerSet: StreamingDelegate {
         }
 
         guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
-            return 0.0
+            return 0
         }
 
         guard let item = itemReference.resolve() else {
-            return 0.0
+            return 0
         }
 
-        return (Double(playerTime.sampleTime) / Double(playerTime.sampleRate)) - item.startTime
+        return (lastSeekTime ?? 0) + (Double(playerTime.sampleTime) / Double(playerTime.sampleRate)) - item.startTime
     }
 
     func seek(to time: TimeInterval, completionHandler: @escaping AVAudioNodeCompletionHandler) throws {
+        isSeeking = true
+        lastSeekTime = time
         if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode {
-            return try auPlayer.seek(to: time, completionHandler: completionHandler)
+            try auPlayer.seek(to: time) {
+                self.callCompletionHandler(completionHandler)
+            }
+            isSeeking = false
+            return
         }
 
         var value = time
@@ -162,13 +183,18 @@ class KZAudioPlayerSet: StreamingDelegate {
 
         let audioFile = try AVAudioFile(forReading: item.fileURL())
         guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
+            isSeeking = false
             return
         }
 
         let startingFrame = AVAudioFramePosition(playerTime.sampleRate * value)
         let frameLength =  AVAudioFrameCount(playerTime.sampleRate * (item.endTime - value))
         auPlayer.stop()
-        auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil, completionHandler: completionHandler)
+        auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil) {
+            self.callCompletionHandler(completionHandler)
+        }
+        auPlayer.play()
+        isSeeking = false
     }
 }
 
@@ -641,7 +667,8 @@ extension KZPlayer {
         }
 
         DispatchQueue.global(qos: .background).async {
-            set.auPlayer.stop()
+            set.isRemoved = true
+            set.stop()
             for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
                 self.audioEngine.detach(unit)
             }
