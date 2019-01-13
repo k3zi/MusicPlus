@@ -34,6 +34,8 @@ class KZLocalLibrary: KZLibrary {
         var libraries = KZLocalLibrary.localLibraries.filter({ $0 != self })
         libraries.append(self)
 
+        libraries.forEach { $0.isRefreshing = false }
+
         do {
             try UserDefaults.standard.set(object: libraries, forKey: Constants.Settings.localLibraries)
         } catch {

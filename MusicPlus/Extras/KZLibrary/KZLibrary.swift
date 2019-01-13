@@ -31,6 +31,7 @@ class KZLibrary: Codable, Equatable {
     let uniqueIdentifier: String
     let created: Date
     let plexLibraryConfig: PlexLibraryConfig?
+    var isRefreshing = false
 
     init(name: String, readOnly: Bool, plexLibraryConfig: PlexLibraryConfig? = nil) {
         self.name = name

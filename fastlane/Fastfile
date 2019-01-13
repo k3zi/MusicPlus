@@ -80,7 +80,7 @@ lane :beta do |options|
     name: tag_name,
     tag_name: tag_name,
     commitish: "master",
-    description: change_log,
+    description: changelog,
     is_prerelease: true
   )
 end
@@ -127,6 +127,6 @@ lane :store do
     name: tag_name,
     tag_name: tag_name,
     commitish: "master",
-    description: change_log
+    description: changelog
   )
 end

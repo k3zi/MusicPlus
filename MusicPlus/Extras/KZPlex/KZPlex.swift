@@ -121,18 +121,19 @@ class KZPlex: NSObject {
         super.init()
 
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 5
-        configuration.timeoutIntervalForResource = 15
+        configuration.timeoutIntervalForRequest = .greatestFiniteMagnitude
+        configuration.timeoutIntervalForResource = .greatestFiniteMagnitude
         self.urlSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 
-    private func makeURLRequest(urlString: String, method: HTTPMethod, token: String? = nil) throws -> URLRequest {
+    private func makeURLRequest(urlString: String, method: HTTPMethod, token: String? = nil, timeoutInterval: TimeInterval? = nil) throws -> URLRequest {
         guard let url = URL(string: urlString) else {
             throw Error(errorDescription: "Inalid URL.")
         }
 
         var rq = URLRequest(url: url)
         rq.httpMethod = method.rawValue
+        rq.timeoutInterval = timeoutInterval ?? rq.timeoutInterval
         var headers = KZPlex.requestHeaders
         if let token = token {
             headers["X-Plex-Token"] = token
@@ -173,30 +174,30 @@ class KZPlex: NSObject {
         return try decoder.decode(T.self, from: rootData)
     }
 
-    func get(_ url: String, token: String? = nil) -> Promise<(data: Data, response: URLResponse)> {
+    func get(_ url: String, token: String? = nil, timeoutInterval: TimeInterval? = nil) -> Promise<(data: Data, response: URLResponse)> {
         return firstly { () -> Promise<(data: Data, response: URLResponse)> in
-            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.get, token: token)
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.get, token: token, timeoutInterval: timeoutInterval)
             return urlSession.dataTask(.promise, with: request).validate()
         }
     }
 
-    func download(_ url: String, to: URL, token: String? = nil) -> Promise<(saveLocation: URL, response: URLResponse)> {
+    func download(_ url: String, to: URL, token: String? = nil, timeoutInterval: TimeInterval? = nil) -> Promise<(saveLocation: URL, response: URLResponse)> {
         return firstly { () -> Promise<(saveLocation: URL, response: URLResponse)> in
-            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.get, token: token)
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.get, token: token, timeoutInterval: timeoutInterval)
             return urlSession.downloadTask(.promise, with: request, to: to)
         }
     }
 
-    func post(_ url: String, token: String? = nil) -> Promise<(data: Data, response: URLResponse)> {
+    func post(_ url: String, token: String? = nil, timeoutInterval: TimeInterval? = nil) -> Promise<(data: Data, response: URLResponse)> {
         return firstly { () -> Promise<(data: Data, response: URLResponse)> in
-            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.post, token: token)
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.post, token: token, timeoutInterval: timeoutInterval)
             return urlSession.dataTask(.promise, with: request).validate()
         }
     }
 
-    func put(_ url: String, token: String? = nil) -> Promise<(data: Data, response: URLResponse)> {
+    func put(_ url: String, token: String? = nil, timeoutInterval: TimeInterval? = nil) -> Promise<(data: Data, response: URLResponse)> {
         return firstly { () -> Promise<(data: Data, response: URLResponse)> in
-            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.put, token: token)
+            let request = try makeURLRequest(urlString: url, method: KZPlex.HTTPMethod.put, token: token, timeoutInterval: timeoutInterval)
             return urlSession.dataTask(.promise, with: request).validate()
         }
     }

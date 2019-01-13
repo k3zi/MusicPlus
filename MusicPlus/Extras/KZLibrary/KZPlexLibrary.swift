@@ -23,10 +23,11 @@ class KZPlexLibrary: KZLibrary {
     }
 
     override func refresh() {
-        guard let plexLibraryConfig = plexLibraryConfig else {
+        guard let plexLibraryConfig = plexLibraryConfig, !isRefreshing else {
             return
         }
 
+        isRefreshing = true
         print("Refreshing")
         let plex = KZPlex(authToken: plexLibraryConfig.authToken)
         async {
@@ -165,6 +166,7 @@ class KZPlexLibrary: KZLibrary {
 
             try await(when(fulfilled: syncPromises, concurrently: 1))
             print("Finished Syncing")
+            self.isRefreshing = false
         }
     }
 
@@ -184,6 +186,7 @@ class KZPlexLibrary: KZLibrary {
     override func save() {
         var libraries = KZPlexLibrary.plexLibraries.filter({ $0 != self })
         libraries.append(self)
+        libraries.forEach { $0.isRefreshing = false }
 
         do {
             try UserDefaults.standard.set(object: libraries, forKey: Constants.Settings.plexLibraries)
