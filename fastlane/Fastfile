@@ -65,7 +65,7 @@ lane :beta do |options|
   reset_git_repo(force: true)
   increment_build_number
 
-  commit_version_bump(message: "Bump version to: #{get_build_number}")
+  commit_version_bump(message: "Bump version to: #{get_build_number} [skip ci]")
   add_git_tag(tag: tag_name)
 
   if ENV['GITHUB_USERNAME']
@@ -112,7 +112,7 @@ lane :store do
   )
   deliver(force: true, skip_screenshots: true, skip_metadata: true)
 
-  commit_version_bump(message: "Bump version to: #{get_build_number}")
+  commit_version_bump(message: "Bump version to: #{get_build_number} [skip ci]")
   if ENV['GITHUB_USERNAME']
     writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
     sh "git remote add http #{writable_remote}"
