@@ -70,7 +70,7 @@ class KZPlayer: NSObject {
 
     var itemBeforeUpNextKey: String?
     var cachedActiveItemKey: String?
-    var cachedActiveItem: KZPlayerItem?
+    var cachedActiveItem: KZPlayerHistoryItem?
 
     var settings = Settings()
     var state = KZPlayerState.starting
@@ -139,7 +139,10 @@ extension KZPlayer {
                 vDSP_meamgv(samples, 1, &avgValue, inNumberFrames)
                 self.averagePower = Float(avgValue / 1.0)
             }
-            self.checkTime()
+
+            DispatchQueue.mainSyncSafe {
+                self.checkTime()
+            }
         }
 
         #if !targetEnvironment(simulator)
@@ -151,8 +154,8 @@ extension KZPlayer {
         #endif
     }
 
-    func addPlayerSet(bus: Int, item: KZPlayerItem) -> KZAudioPlayerSet {
-        let set = KZAudioPlayerSet(item: item)
+    func addPlayerSet(bus: Int, item: KZPlayerItemBase) -> KZAudioPlayerSet {
+        let set = KZAudioPlayerSet(item: item.originalItem)
         let format = auMixer.inputFormat(forBus: 0)
 
         for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
@@ -327,7 +330,7 @@ extension KZPlayer {
         }
 
         resetPlayer()
-        var collection = shuffle ? Array(sessionShuffledQueue()) as Array<KZPlayerItem> : Array(sessionQueue()) as Array<KZPlayerItem>
+        var collection: Array<KZPlayerItemBase> = shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
 
         guard collection.count > 0 else {
             return
@@ -337,9 +340,9 @@ extension KZPlayer {
     }
 
     // Play Single Item
-    func play(_ item: KZPlayerItem, silent: Bool = false, isQueueItem: Bool = false) -> Bool {
+    func play(_ item: KZPlayerItemBase, silent: Bool = false, isQueueItem: Bool = false) -> Bool {
         guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
-            let threadSafeItem = KZThreadSafeReference(to: item)
+            let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
             return KZPlayer.libraryQueue.sync {
                 guard let item = threadSafeItem.resolve() else {
                     return false
@@ -383,7 +386,7 @@ extension KZPlayer {
         playerSet.play()
         print("started playing \"\(item.title)\" on channel: \(channel)")
 
-        let threadSafeItem = KZThreadSafeReference(to: item)
+        let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
         DispatchQueue.mainSyncSafe {
             guard let item = threadSafeItem.resolve() else {
                 return
@@ -426,7 +429,7 @@ extension KZPlayer {
     }
 
     func backgroundNext() {
-        DispatchQueue.main.sync {
+        DispatchQueue.mainSyncSafe {
             self.next()
         }
     }
@@ -491,7 +494,7 @@ extension KZPlayer {
         setForChannel(channel)?.volume = value
     }
 
-    func currentTime(_ channel: Int = -1, item: KZPlayerItem? = nil) -> Double {
+    func currentTime(_ channel: Int = -1) -> Double {
         guard let filePlayer = setForChannel(channel) else {
             return 0.0
         }
@@ -547,7 +550,7 @@ extension KZPlayer {
         persistentPlayNextSong()
     }
 
-    func persistentPlayNextSong(_ item: KZPlayerItem? = nil, times: Int = 1) {
+    func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1) {
         var played = false
         var i = 0
         while !played && i < times {
@@ -556,7 +559,7 @@ extension KZPlayer {
         }
     }
 
-    func playNextSong(_ item: KZPlayerItem? = nil) -> Bool {
+    func playNextSong(_ item: KZPlayerItemBase? = nil) -> Bool {
         guard let nextItem = item ?? rotateSongs() else {
             return true
         }
@@ -586,7 +589,7 @@ extension KZPlayer {
 extension KZPlayer {
 
     func checkTime() {
-        var item: KZPlayerItem?
+        var item: KZPlayerHistoryItem?
         guard let currentKey = primaryKeyForChannel() else {
             return
         }
@@ -605,10 +608,10 @@ extension KZPlayer {
             return
         }
 
-        if !checkTimeFunctioning && settings.crossFadeMode == .crossFade && !crossFading && (currentItem.endTime - currentTime(item: item)) < crossFadeTime {
-            checkTimeFunctioning = true
+        if !checkTimeFunctioning && settings.crossFadeMode == .crossFade && !crossFading && (currentItem.endTime - currentTime()) < crossFadeTime {
+            self.checkTimeFunctioning = true
             backgroundNext()
-            checkTimeFunctioning = false
+            self.checkTimeFunctioning = false
         }
     }
 
@@ -622,7 +625,7 @@ extension KZPlayer {
         crossFading = false
     }
 
-    func crossFadeTo(_ item: KZPlayerItem) -> Bool {
+    func crossFadeTo(_ item: KZPlayerItemBase) -> Bool {
         stopCrossfade()
         print("crossFadeCount = \(crossFadeCount)")
         print("pre crossFading = \(crossFading)")
@@ -745,7 +748,7 @@ extension KZPlayer {
         return itemForPrimaryKey(primaryKey)
     }
 
-    func setItemForChannel(_ item: KZPlayerItem, channel: Int = -1) {
+    func setItemForChannel(_ item: KZPlayerItemBase, channel: Int = -1) {
         let channel = channel == -1 ? activePlayer : channel
 
         guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
@@ -753,7 +756,7 @@ extension KZPlayer {
         }
 
         set.itemKey = item.systemID
-}
+    }
 
     func itemForPrimaryKey(_ primaryKey: String) -> KZPlayerItem? {
         guard let realm = currentLibrary?.realm() else {
@@ -810,12 +813,12 @@ extension KZPlayer {
 
     // MARK: Session
 
-    func prevSong() -> KZPlayerItem? {
+    func prevSong() -> KZPlayerItemBase? {
         if currentTime() > 3 {
             return itemForChannel()
         }
 
-        var x: KZPlayerItem?
+        var x: KZPlayerItemBase?
 
         let collection = currentCollection()
 
@@ -824,7 +827,7 @@ extension KZPlayer {
         }
 
         if let item = itemForChannel() {
-            if let position = collection.index(of: item) {
+            if let position = collection.firstIndex(where: { $0.originalItem == item }) {
                 if (position - 1) < collection.count && (position - 1) > -1 {
                     x = collection[position - 1]
                 } else {
@@ -840,7 +843,7 @@ extension KZPlayer {
         return x
     }
 
-    func rotateSongs() -> KZPlayerItem? {
+    func rotateSongs() -> KZPlayerItemBase? {
         if settings.repeatMode == .repeatSong {
             return itemForChannel()
         }
@@ -849,14 +852,14 @@ extension KZPlayer {
             return item
         }
 
-        var x: KZPlayerItem?
+        var x: KZPlayerItemBase?
         let collection = currentCollection()
 
         if collection.count > 0 {
             x = collection[0]
         }
 
-        guard let item = itemForChannel(), let position = collection.index(of: item) else {
+        guard let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) else {
             return x
         }
 
@@ -873,8 +876,8 @@ extension KZPlayer {
         return x
     }
 
-    func currentCollection() -> [KZPlayerItem] {
-        return settings.shuffleMode == .shuffle ? Array(sessionShuffledQueue()) as Array<KZPlayerItem> : Array(sessionQueue()) as Array<KZPlayerItem>
+    func currentCollection() -> Array<KZPlayerItemBase> {
+        return settings.shuffleMode == .shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
     }
 
     func resetCollections() {
@@ -943,7 +946,7 @@ extension KZPlayer {
 
         if upNextItems.count > 0 {
             if let item = upNextItems.first {
-                result = KZPlayerHistoryItem(orig: item)
+                result = KZPlayerHistoryItem(orig: item.originalItem)
                 try! realm.write {
                     realm.delete(item)
                 }

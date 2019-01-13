@@ -32,7 +32,7 @@ class KZPlayerAlbum: Object, RealmGenerating {
 
     func realmGenerator() -> (() -> Realm?) {
         // First aquire things that can not go across threads
-        let identifier = songs.map { $0.plexLibraryUniqueIdentifier }.first { $0.isNotEmpty }
+        let identifier = songs.first { $0.plexLibraryUniqueIdentifier.isNotEmpty }?.plexLibraryUniqueIdentifier
         return {
             guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
                 return nil
@@ -44,7 +44,9 @@ class KZPlayerAlbum: Object, RealmGenerating {
 
     func totalDuration() -> Double {
         var sum = 0.0
-        songs.forEach({ sum = sum + $0.duration() })
+        songs.forEach {
+            sum = sum + $0.duration()
+        }
         return sum
     }
 
@@ -56,9 +58,9 @@ class KZPlayerAlbum: Object, RealmGenerating {
 
         var output = [String]()
 
-        if days > 0 { output.append("\(days) days") }
-        if hours > 0 { output.append("\(hours) hours") }
-        if minutes > 0 { output.append("\(minutes) minutes") }
+        if days > 0 { output.append("\(days) day\(days == 1 ? "" : "s")") }
+        if hours > 0 { output.append("\(hours) hour\(hours == 1 ? "" : "s")") }
+        if minutes > 0 { output.append("\(minutes) minute\(minutes == 1 ? "" : "s")") }
 
         return output.joined(separator: " ")
     }

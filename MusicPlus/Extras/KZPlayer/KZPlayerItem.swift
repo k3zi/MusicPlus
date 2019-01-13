@@ -10,7 +10,7 @@ import UIKit
 import MediaPlayer
 import RealmSwift
 
-class KZPlayerItem: Object, RealmGenerating {
+class KZPlayerItem: Object, KZPlayerItemBase {
     @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", systemID = "", plexLibraryUniqueIdentifier = ""
     @objc dynamic var localAssetURL: String?
     @objc dynamic var trackNum = 1, playCount = 1, position = 0
@@ -46,6 +46,11 @@ class KZPlayerItem: Object, RealmGenerating {
 
             self.observedKeys().forEach({ oItem.addObserver(self, forKeyPath: $0, options: .new, context: nil) })
         }
+    }
+
+    // Ignore this field
+    var orig: KZPlayerItem? {
+        return self
     }
 
     convenience init(item: MPMediaItem) {
@@ -129,22 +134,6 @@ class KZPlayerItem: Object, RealmGenerating {
         } else {
             return oItem!.originalItem()
         }
-    }
-
-    func realmGenerator() -> (() -> Realm?) {
-        // First aquire things that can not go across threads
-        let identifier = plexLibraryUniqueIdentifier
-        return {
-            guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
-                return nil
-            }
-
-            return library.realm()
-        }
-    }
-
-    func realm() -> Realm? {
-        return realmGenerator()()
     }
 
     var plexLibraryConfig: PlexLibraryConfig? {
@@ -307,113 +296,188 @@ class KZPlayerItem: Object, RealmGenerating {
     }
 }
 
-class KZPlayerQueueItem: KZPlayerItem {
-    convenience init(orig: KZPlayerItem) {
-        self.init()
+protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
 
-        self.title = orig.title
-        self.artist = orig.artist
-        self.album = orig.album
-        self.genre = orig.genre
-        self.composer = orig.composer
-        self.assetURL = orig.assetURL
-        self.artworkURL = orig.artworkURL
+    var orig: KZPlayerItem? { get }
 
-        self.trackNum = orig.trackNum
-        self.playCount = orig.playCount
+    var title: String { get set }
+    var albumArtist: String { get set }
+    var genre: String { get set }
+    var composer: String { get set }
+    var assetURL: String { get set }
+    var artworkURL: String { get set }
+    var systemID: String { get set }
+    var plexLibraryUniqueIdentifier: String { get set }
 
-        self.startTime = orig.startTime
-        self.endTime = orig.endTime
+    var localAssetURL: String? { get set }
 
-        self.systemID = "KZPlayerQueueItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
-        self.isDocumentURL = orig.isDocumentURL
-        self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
-        self.localAssetURL = orig.localAssetURL
-        self.oItem = orig.originalItem()
+    var trackNum: Int { get set }
+    var playCount: Int { get set }
+    var position: Int { get set }
+
+    var startTime: Double { get set }
+    var endTime: Double { get set }
+    var tempo: Double { get set }
+
+    var liked: Bool { get set }
+    var isDocumentURL: Bool { get set }
+
+    var tags: List<KZPlayerTag> { get }
+
+    var artist: KZPlayerArtist? { get set }
+    var album: KZPlayerAlbum? { get set }
+    var plexTrack: KZPlayerPlexTrack? { get set }
+}
+
+extension KZPlayerItemBase {
+    var title: String {
+        get { return orig!.title }
+        set { orig!.title = newValue }
+    }
+    var albumArtist: String {
+        get { return orig!.albumArtist }
+        set { orig!.albumArtist = newValue }
+    }
+    var genre: String {
+        get { return orig!.genre }
+        set { orig!.genre = newValue }
+    }
+    var composer: String {
+        get { return orig!.composer }
+        set { orig!.composer = newValue }
+    }
+    var assetURL: String {
+        get { return orig!.assetURL }
+        set { orig!.assetURL = newValue }
+    }
+    var artworkURL: String {
+        get { return orig!.artworkURL }
+        set { orig!.artworkURL = newValue }
+    }
+    var systemID: String {
+        get { return orig!.systemID }
+        set { orig!.title = systemID }
+    }
+    var plexLibraryUniqueIdentifier: String {
+        get { return orig!.plexLibraryUniqueIdentifier }
+        set { orig!.plexLibraryUniqueIdentifier = newValue }
+    }
+
+    var localAssetURL: String? {
+        get { return orig!.localAssetURL }
+        set { orig!.localAssetURL = newValue }
+    }
+
+    var trackNum: Int {
+        get { return orig!.trackNum }
+        set { orig!.trackNum = newValue }
+    }
+    var playCount: Int {
+        get { return orig!.playCount }
+        set { orig!.playCount = newValue }
+    }
+
+    var startTime: Double {
+        get { return orig!.startTime }
+        set { orig!.startTime = newValue }
+    }
+    var endTime: Double {
+        get { return orig!.endTime }
+        set { orig!.endTime = newValue }
+    }
+    var tempo: Double {
+        get { return orig!.tempo }
+        set { orig!.tempo = newValue }
+    }
+
+    var liked: Bool {
+        get { return orig!.liked }
+        set { orig!.liked = newValue }
+    }
+    var isDocumentURL: Bool {
+        get { return orig!.isDocumentURL }
+        set { orig!.isDocumentURL = newValue }
+    }
+
+    var tags: List<KZPlayerTag> {
+        get { return orig!.tags }
+    }
+
+    var artist: KZPlayerArtist? {
+        get { return orig!.artist }
+        set { orig!.artist = newValue }
+    }
+    var album: KZPlayerAlbum? {
+        get { return orig!.album }
+        set { orig!.album = newValue }
+    }
+    var plexTrack: KZPlayerPlexTrack? {
+        get { return orig!.plexTrack }
+        set { orig!.plexTrack = newValue }
+    }
+
+    var originalItem: KZPlayerItem {
+        return orig!
+    }
+
+    func realmGenerator() -> (() -> Realm?) {
+        // First aquire things that can not go across threads
+        let identifier = plexLibraryUniqueIdentifier
+        return {
+            guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
+                return nil
+            }
+
+            return library.realm()
+        }
+    }
+
+    func realm() -> Realm? {
+        return realmGenerator()()
     }
 }
 
-class KZPlayerShuffleQueueItem: KZPlayerItem {
+class KZPlayerQueueItem: Object, KZPlayerItemBase {
+    @objc dynamic var orig: KZPlayerItem?
+    @objc dynamic var position = 0
+
     convenience init(orig: KZPlayerItem) {
         self.init()
-
-        self.title = orig.title
-        self.album = orig.album
-        self.artist = orig.artist
-        self.genre = orig.genre
-        self.composer = orig.composer
-        self.assetURL = orig.assetURL
-        self.artworkURL = orig.artworkURL
-
-        self.trackNum = orig.trackNum
-        self.playCount = orig.playCount
-
-        self.startTime = orig.startTime
-        self.endTime = orig.endTime
-
-        self.systemID = "KZPlayerShuffleQueueItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
-        self.isDocumentURL = orig.isDocumentURL
-        self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
-        self.localAssetURL = orig.localAssetURL
-        self.oItem = orig.originalItem()
+        self.orig = orig
     }
 }
 
-class KZPlayerUpNextItem: KZPlayerItem {
+class KZPlayerShuffleQueueItem: Object, KZPlayerItemBase {
+    @objc dynamic var orig: KZPlayerItem?
+    @objc dynamic var position = 0
+
     convenience init(orig: KZPlayerItem) {
         self.init()
-
-        self.title = orig.title
-        self.artist = orig.artist
-        self.album = orig.album
-        self.genre = orig.genre
-        self.composer = orig.composer
-        self.assetURL = orig.assetURL
-        self.artworkURL = orig.artworkURL
-
-        self.trackNum = orig.trackNum
-        self.playCount = orig.playCount
-
-        self.startTime = orig.startTime
-        self.endTime = orig.endTime
-
-        self.systemID = "KZPlayerUpNextItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
-        self.isDocumentURL = orig.isDocumentURL
-        self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
-        self.localAssetURL = orig.localAssetURL
-        self.oItem = orig.originalItem()
+        self.orig = orig
     }
-
 }
 
-class KZPlayerHistoryItem: KZPlayerItem {
+class KZPlayerUpNextItem: Object, KZPlayerItemBase {
+    @objc dynamic var orig: KZPlayerItem?
+    @objc dynamic var position = 0
+
     convenience init(orig: KZPlayerItem) {
         self.init()
-
-        self.title = orig.title
-        self.artist = orig.artist
-        self.album = orig.album
-        self.genre = orig.genre
-        self.composer = orig.composer
-        self.assetURL = orig.assetURL
-        self.artworkURL = orig.artworkURL
-
-        self.trackNum = orig.trackNum
-        self.playCount = orig.playCount
-
-        self.startTime = orig.startTime
-        self.endTime = orig.endTime
-
-        self.systemID = "KZPlayerUpNextItem-\(Date.timeIntervalSinceReferenceDate)-\(orig.originalItem().systemID)"
-        self.isDocumentURL = orig.isDocumentURL
-        self.plexLibraryUniqueIdentifier = orig.plexLibraryUniqueIdentifier
-        self.localAssetURL = orig.localAssetURL
-        self.oItem = orig.originalItem()
+        self.orig = orig
     }
-
 }
 
-extension AnyRealmCollection where Element: KZPlayerItem {
+class KZPlayerHistoryItem: Object, KZPlayerItemBase {
+    @objc dynamic var orig: KZPlayerItem?
+    @objc dynamic var position = 0
+
+    convenience init(orig: KZPlayerItem) {
+        self.init()
+        self.orig = orig
+    }
+}
+
+extension AnyRealmCollection where Element: KZPlayerItemBase {
     func shuffled() -> Results<Element> {
         for result in self {
             result.position = Int(arc4random_uniform(UInt32(self.count)))
@@ -424,11 +488,9 @@ extension AnyRealmCollection where Element: KZPlayerItem {
 
     func toArray() -> [Element] {
         var arr = [Element]()
-
         for result in self {
             arr.append(result)
         }
-
         return arr
     }
 }

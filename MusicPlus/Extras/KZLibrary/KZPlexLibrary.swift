@@ -19,6 +19,11 @@ class KZPlexLibrary: KZLibrary {
     override func realm() -> Realm {
         var config = Realm.Configuration()
         config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("KZPlexLibrary-\(uniqueIdentifier).realm")
+        config.migrationBlock = { migration, oldSchemaVersion in
+            if (oldSchemaVersion < 1) {
+            }
+        }
+        config.schemaVersion = 1
         return try! Realm(configuration: config)
     }
 
@@ -102,6 +107,7 @@ class KZPlexLibrary: KZLibrary {
             var allSyncTracks: [Track] = syncItems.flatMap { $0.tracks }
             allSyncTracks = allSyncTracks.filter { $0.media.part.syncState == "processed" }
 
+            i = 0
             let syncPromises = AnyIterator<Promise<Void>> {
                 guard allSyncTracks.count > 0 else {
                     return nil
@@ -111,6 +117,7 @@ class KZPlexLibrary: KZLibrary {
 
                 return async {
                     let realm = self.realm()
+                    i += 1
                     guard let item = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(track.ratingKey!)'").first else {
                         return
                     }
@@ -157,7 +164,7 @@ class KZPlexLibrary: KZLibrary {
                             item.localAssetURL = filePath.path
                         }
                         try await(plex.put(downloadedURL, token: plexLibraryConfig.authToken))
-                        print("Synced \(item.title) to \(filePath.path)")
+                        print("\(i) → Synced \(item.title) to \(filePath.path)")
                     } catch {
                         print(error)
                     }

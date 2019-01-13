@@ -130,6 +130,10 @@ class KZAudioPlayerSet: StreamingDelegate {
             }
         }
 
+        guard let item = itemReference.resolve() else {
+            return
+        }
+
         isSeeking = true
         lastSeekTime = time
         if let auPlayer = auPlayer as? KZRemoteAudioPlayerNode {
