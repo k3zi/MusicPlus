@@ -8,5 +8,6 @@ script:
   - bundle exec fastlane beta --verbose
 
 branches:
-  only:
-    - master
+  except:
+    - /^((?!master).)*$/
+    - /^beta\/.*/

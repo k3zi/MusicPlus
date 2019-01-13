@@ -33,10 +33,9 @@ lane :beta do |options|
 
   increment_build_number
   new_version = get_version_string
+  tag_name = "beta/#{new_version}"
 
-  add_badge(
-    shield: "#{get_version_number}-#{get_build_number}-blue"
-  )
+  add_badge(shield: "#{get_version_number}-#{get_build_number}-blue")
 
   if ENV['KEYCHAIN_PASSWORD']
     unlock_keychain(
@@ -66,6 +65,8 @@ lane :beta do |options|
   increment_build_number
 
   commit_version_bump(message: "Bump version to: #{get_build_number}")
+  add_git_tag(tag: tag_name)
+
   if ENV['GITHUB_USERNAME']
     push_to_git_remote(remote: 'http')
   else
@@ -88,8 +89,8 @@ lane :store do
   push_to_git_remote
   changelog = changelog_from_git_commits(pretty: '- (%ae) %s')
   increment_build_number
-  tag_name = "release/#{new_version}"
   new_version = get_version_string
+  tag_name = "release/#{new_version}"
 
   unlock_keychain(
     path: 'login',
@@ -111,7 +112,7 @@ lane :store do
   deliver(force: true, skip_screenshots: true, skip_metadata: true)
 
   commit_version_bump(message: "Bump version to: #{get_build_number}")
-  if ENV['GITHUB_USERNAME']
+  if ENV['GITHUB_USERNAME'] do
     writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
     sh "git remote add http #{writable_remote}"
     push_to_git_remote(remote: 'http')
