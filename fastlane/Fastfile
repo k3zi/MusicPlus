@@ -23,7 +23,7 @@ lane :beta do |options|
     writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
     sh "git remote add http #{writable_remote}"
     sh 'git fetch http'
-    sh "git checkout -b #{ENV['TRAVIS_BRANCH']} http/#{ENV['TRAVIS_BRANCH']}"
+    sh "git checkout #{ENV['TRAVIS_BRANCH']}"
   end
 
   changelog = changelog_from_git_commits(
