@@ -131,7 +131,6 @@ class ArtistViewController: MPSectionedTableViewController {
             }
 
             let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
             player.play(AnyRealmCollection(safeArtist.songs), shuffle: true)
         }
     }

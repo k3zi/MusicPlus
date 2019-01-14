@@ -17,6 +17,8 @@ import MediaPlayer
 
 typealias KZPlayerItemCollection = AnyRealmCollection<KZPlayerItem>
 
+typealias SettingInfo = (title: String, accessor: String, description: String)
+
 struct Constants {
 
 	struct Config {
@@ -27,6 +29,21 @@ struct Constants {
         static let libraries = "libraries"
         static let localLibraries = "localLibraries"
         static let plexLibraries = "plexLibraries"
+        static let crossfadeAtSeconds = "crossfadeAtSeconds"
+
+        /// Bool
+        static let crossfade = "crossfade"
+
+        struct Options {
+            static let crossfadeAtSeconds: [Double] = [5, 10, 15, 20, 30]
+            static let crossfadeDurationSeconds: [Double] = [5, 10, 15, 20, 30]
+        }
+
+        struct Info {
+            static let crossfade = SettingInfo(title: NSLocalizedString("Crossfade", comment: ""), accessor: "crossfade", description: NSLocalizedString("As one song fades out, another song fades in.", comment: ""))
+            static let crossfadeAtSeconds = SettingInfo(title: NSLocalizedString("Crossfade At", comment: ""), accessor: "crossfadeAtSeconds", description: NSLocalizedString("Start the crossfade when the selected number of seconds remain.", comment: ""))
+            static let crossfadeDurationSeconds = SettingInfo(title: NSLocalizedString("Crossfade Duration", comment: ""), accessor: "crossfadeDurationSeconds", description: NSLocalizedString("The length of time taken to crossfade from one song to another.", comment: ""))
+        }
     }
 
 	struct Notification {

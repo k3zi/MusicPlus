@@ -25,8 +25,16 @@ import SceneKit
 struct Settings {
     var repeatMode: KZPLayerRepeatMode = .repeatAll
     var shuffleMode: KZPLayerShuffleMode = .noShuffle
-    var crossFadeMode: KZPLayerCrossFadeMode = .crossFade
-    var crossFadePrevious = false
+    var crossfadeMode: KZPLayerCrossFadeMode {
+        return UserDefaults.standard.bool(forKey: Constants.Settings.crossfade) ? .crossfade : .noCrossfade
+    }
+    var crossfadeAtSeconds: Double {
+        return max(UserDefaults.standard.double(forKey: Constants.Settings.crossfadeAtSeconds), Constants.Settings.Options.crossfadeAtSeconds[0])
+    }
+    var crossfadeDurationSeconds: Double {
+        return max(UserDefaults.standard.double(forKey: Constants.Settings.Info.crossfadeDurationSeconds.accessor), Constants.Settings.Options.crossfadeDurationSeconds[0])
+    }
+    var crossfadePrevious = false
 }
 
 enum KZPlayerState {
@@ -48,8 +56,8 @@ enum KZPLayerShuffleMode {
 }
 
 enum KZPLayerCrossFadeMode {
-    case noCrossFade
-    case crossFade
+    case noCrossfade
+    case crossfade
 }
 
 // MARK: Main Player
@@ -81,9 +89,8 @@ class KZPlayer: NSObject {
 
     var checkTimeFunctioning = false
 
-    var crossFading = false
-    var crossFadeDuration = 10.0, crossFadeTime = 10.0
-    var crossFadeCount = 0
+    var crossfading = false
+    var crossfadeCount = 0
 
     // Volume
     var averagePower: Float = 0.0
@@ -439,8 +446,8 @@ extension KZPlayer {
 
         print("previous = \(prevItem.title)")
 
-        if settings.crossFadeMode == .crossFade && settings.crossFadePrevious {
-            return crossFadeTo(prevItem)
+        if settings.crossfadeMode == .crossfade && settings.crossfadePrevious {
+            return crossfadeTo(prevItem)
         }
 
         stopCrossfade()
@@ -541,7 +548,7 @@ extension KZPlayer {
         // If the active channel has completed and we are still crossfading then either
         // the next player has not been set yet or there was an error and the active player
         // could not play.
-        guard force || !crossFading || channel == activePlayer else {
+        guard force || !crossfading || channel == activePlayer else {
             return
         }
 
@@ -570,8 +577,8 @@ extension KZPlayer {
             itemBeforeUpNextKey = itemForChannel(activePlayer)?.systemID
         }
 
-        if settings.crossFadeMode == .crossFade {
-            return crossFadeTo(nextItem)
+        if settings.crossfadeMode == .crossfade {
+            return crossfadeTo(nextItem)
         }
 
         for channel in auPlayerSets.keys {
@@ -583,7 +590,7 @@ extension KZPlayer {
     }
 }
 
-// MARK: CrossFade Functions
+// MARK: crossfade Functions
 extension KZPlayer {
 
     func checkTime() {
@@ -606,7 +613,7 @@ extension KZPlayer {
             return
         }
 
-        if !checkTimeFunctioning && settings.crossFadeMode == .crossFade && !crossFading && (currentItem.endTime - currentTime(item: currentItem)) < crossFadeTime {
+        if !checkTimeFunctioning && settings.crossfadeMode == .crossfade && !crossfading && (currentItem.endTime - currentTime(item: currentItem)) < settings.crossfadeAtSeconds {
             self.checkTimeFunctioning = true
             backgroundNext()
             self.checkTimeFunctioning = false
@@ -614,35 +621,35 @@ extension KZPlayer {
     }
 
     func stopCrossfade() {
-        guard crossFading else {
+        guard crossfading else {
             return
         }
 
-        crossFadeCount += 1
+        crossfadeCount += 1
         PRTween.sharedInstance().removeAllTweenOperations()
-        crossFading = false
+        crossfading = false
     }
 
-    func crossFadeTo(_ item: KZPlayerItemBase) -> Bool {
+    func crossfadeTo(_ item: KZPlayerItemBase) -> Bool {
         stopCrossfade()
-        print("crossFadeCount = \(crossFadeCount)")
-        print("pre crossFading = \(crossFading)")
-        let currentCFCount = crossFadeCount
-        crossFading = true
+        print("crossfadeCount = \(crossfadeCount)")
+        print("pre crossfading = \(crossfading)")
+        let currentCFCount = crossfadeCount
+        crossfading = true
 
         guard play(item, silent: true, isQueueItem: item is KZPlayerHistoryItem) else {
-            crossFading = false
+            crossfading = false
             return false
         }
 
         guard let p1 = playerForChannel() else {
-            crossFading = false
+            crossfading = false
             return false
         }
 
-        let duration = CGFloat(crossFadeDuration)
+        let duration = CGFloat(settings.crossfadeDurationSeconds)
         guard let period1 = PRTweenPeriod.period(withStartValue: CGFloat(p1.volume), endValue: 1.0, duration: duration) as? PRTweenPeriod else {
-             crossFading = false
+             crossfading = false
             return false
         }
 
@@ -651,13 +658,13 @@ extension KZPlayer {
         operation1.target = self
         operation1.timingFunction = PRTweenTimingFunctionLinear
         operation1.updateBlock = { (p: PRTweenPeriod!) in
-            if currentCFCount == self.crossFadeCount {
+            if currentCFCount == self.crossfadeCount {
                 p1.volume = Float(p.tweenedValue)
             }
         }
         operation1.completeBlock = { (completed: Bool) -> Void in
-            if currentCFCount == self.crossFadeCount {
-                self.crossFading = false
+            if currentCFCount == self.crossfadeCount {
+                self.crossfading = false
             }
         }
 
@@ -668,12 +675,12 @@ extension KZPlayer {
                 operation2.target = self
                 operation2.timingFunction = PRTweenTimingFunctionLinear
                 operation2.updateBlock = { (p: PRTweenPeriod!) in
-                    if currentCFCount == self.crossFadeCount {
+                    if currentCFCount == self.crossfadeCount {
                         p2.volume = Float(p.tweenedValue)
                     }
                 }
                 operation2.completeBlock = { (completed: Bool) -> Void in
-                    if currentCFCount == self.crossFadeCount {
+                    if currentCFCount == self.crossfadeCount {
                         self.removeChannel(channel: previousChannel)
                     }
                 }

@@ -51,9 +51,7 @@ class PlayerViewController: MPViewController {
 
     override func viewDidLoad() {
         view.addSubview(miniPlayerView)
-
         view.addSubview(minimizeButton)
-
         view.addSubview(volumeSlider)
 
         super.viewDidLoad()

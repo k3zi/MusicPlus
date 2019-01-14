@@ -118,7 +118,6 @@ class AlbumViewController: MPSectionedTableViewController {
                 }
 
                 let player = KZPlayer.sharedInstance
-                player.settings.crossFadeMode = .crossFade
                 player.play(AnyRealmCollection(safeAlbum.songs), shuffle: true)
             }
             return
@@ -144,7 +143,6 @@ class AlbumViewController: MPSectionedTableViewController {
 
             let collection = AnyRealmCollection(safeAlbum.songs.sorted(byKeyPath: "trackNum", ascending: true))
             let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
             player.play(collection, initialSong: safeInitialSong, shuffle: false)
         }
 

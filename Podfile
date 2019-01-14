@@ -9,6 +9,7 @@ target 'MusicPlus' do
     pod 'SecureNSUserDefaults'
     pod 'SpinKit'
     pod 'Keynode'
+    pod 'Flix'
 
     pod 'Zip'
 

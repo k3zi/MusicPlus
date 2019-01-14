@@ -1,0 +1,6 @@
+framework module Flix {
+  umbrella header "Flix-umbrella.h"
+
+  export *
+  module * { export * }
+}

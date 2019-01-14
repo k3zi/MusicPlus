@@ -5,10 +5,15 @@ PODS:
   - AwaitKit (5.0.1):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
-  - Connectivity (2.0.1)
+  - Connectivity (2.0.3)
   - Crashlytics (3.12.0):
     - Fabric (~> 1.9.0)
+  - Differentiator (3.1.0)
   - Fabric (1.9.0)
+  - Flix (2.0.0):
+    - RxCocoa (~> 4.3)
+    - RxDataSources (~> 3.1)
+    - RxSwift (~> 4.3)
   - Keynode (4.0.0)
   - KZ (3.0.0):
     - PureLayout
@@ -38,6 +43,15 @@ PODS:
     - Reusable/View (= 4.0.5)
   - Reusable/Storyboard (4.0.5)
   - Reusable/View (4.0.5)
+  - RxAtomic (4.4.0)
+  - RxCocoa (4.4.0):
+    - RxSwift (~> 4.0)
+  - RxDataSources (3.1.0):
+    - Differentiator (~> 3.0)
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxSwift (4.4.0):
+    - RxAtomic (~> 4.4)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
   - SpinKit (1.2.0)
@@ -53,6 +67,7 @@ DEPENDENCIES:
   - Connectivity
   - Crashlytics
   - Fabric
+  - Flix
   - Keynode
   - KZ
   - M13ProgressSuite
@@ -74,7 +89,9 @@ SPEC REPOS:
     - CocoaSecurity
     - Connectivity
     - Crashlytics
+    - Differentiator
     - Fabric
+    - Flix
     - Keynode
     - KZ
     - M13ProgressSuite
@@ -84,6 +101,10 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - Reusable
+    - RxAtomic
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
     - SecureNSUserDefaults
     - SpinKit
     - XMLMapper
@@ -94,9 +115,11 @@ SPEC CHECKSUMS:
   AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
   AwaitKit: a6d0b0b6d603cedda8ef1c1c249b8d6730359917
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Connectivity: 6d84f12755dd44417107adaca75ea743a19e5165
+  Connectivity: 3f4021b98863230c8d916e4d3cf562b2e290dae5
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655
+  Flix: 04392305c5fa58d2c2b75b1fd1ff523d9d860bc4
   Keynode: a8896a3d118a6b7195dd242ed58070e842903964
   KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
   M13ProgressSuite: ea9f7263e73e9215e6849dfa54e29ee0ad6a145c
@@ -106,11 +129,15 @@ SPEC CHECKSUMS:
   Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
   RealmSwift: 8a1e6a02b7a08cd17a31e3115143fb69fe5f3fb9
   Reusable: 188be1a54ac0691bc66e5bb24ec6eb91971b315b
+  RxAtomic: eacf60db868c96bfd63320e28619fe29c179656f
+  RxCocoa: df63ebf7b9a70d6b4eeea407ed5dd4efc8979749
+  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
+  RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
   SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 1515bdff3a6a66183997a5bc2c187e34748f7fb6
+PODFILE CHECKSUM: b21e6272fb569ef0e5d00783e21cbf25ad258c0b
 
 COCOAPODS: 1.6.0.beta.2

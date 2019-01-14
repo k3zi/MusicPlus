@@ -136,7 +136,7 @@ class MPSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
             bottomSeperator.alpha = highlighted ? 0.0 : 0.14
         }
 
-        if !highlighted {
+        if animated {
             UIView.animate(withDuration: Constants.UI.Animation.cellHighlight, animations: runAnimations)
         } else {
             runAnimations()

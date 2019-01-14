@@ -113,7 +113,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
             }
 
             let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
             player.play(collection, shuffle: true)
         }
     }
@@ -146,7 +145,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
             }
 
             let player = KZPlayer.sharedInstance
-            player.settings.crossFadeMode = .crossFade
             player.play(collection, initialSong: collection[index])
         }
 
