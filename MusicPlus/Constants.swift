@@ -43,6 +43,8 @@ struct Constants {
             static let crossfade = SettingInfo(title: NSLocalizedString("Crossfade", comment: ""), accessor: "crossfade", description: NSLocalizedString("As one song fades out, another song fades in.", comment: ""))
             static let crossfadeAtSeconds = SettingInfo(title: NSLocalizedString("Crossfade At", comment: ""), accessor: "crossfadeAtSeconds", description: NSLocalizedString("Start the crossfade when the selected number of seconds remain.", comment: ""))
             static let crossfadeDurationSeconds = SettingInfo(title: NSLocalizedString("Crossfade Duration", comment: ""), accessor: "crossfadeDurationSeconds", description: NSLocalizedString("The length of time taken to crossfade from one song to another.", comment: ""))
+            static let crossfadeOnNext = SettingInfo(title: NSLocalizedString("Crossfade on Next", comment: ""), accessor: "crossfadeOnNext", description: NSLocalizedString("Crossfade if the current song is skipped manualy.", comment: ""))
+            static let crossfadeOnPrevious = SettingInfo(title: NSLocalizedString("Crossfade on Previous", comment: ""), accessor: "crossfadeOnPrevious", description: NSLocalizedString("Crossfade when navigating to the previous song.", comment: ""))
         }
     }
 

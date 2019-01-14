@@ -54,7 +54,15 @@ class SettingsViewController: MPViewController {
             self.present(vc, animated: true, completion: nil)
         }
 
-        let networkSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider], headerHeight: 20, footerHeight: 0)
+        let crossfadeOnNext = Constants.Settings.Info.crossfadeOnNext
+        let crossfadeOnNextProvider = SwitchTableViewCellProvider(title: crossfadeOnNext.title, subTitle: crossfadeOnNext.description, isOn: false)
+        UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnNext.accessor, defaultValue: false).disposed(by: disposeBag)
+
+        let crossfadeOnPrevious = Constants.Settings.Info.crossfadeOnPrevious
+        let crossfadeOnPreviousProvider = SwitchTableViewCellProvider(title: crossfadeOnPrevious.title, subTitle: crossfadeOnPrevious.description, isOn: false)
+        UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
+
+        let networkSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 20, footerHeight: 0)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.flix.build([networkSectionProvider])

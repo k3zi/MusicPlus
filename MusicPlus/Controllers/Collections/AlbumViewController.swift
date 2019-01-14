@@ -8,9 +8,10 @@
 
 import UIKit
 
-class AlbumViewController: MPSectionedTableViewController {
+class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDelegate {
 
     let album: KZPlayerAlbum
+    var peekPop: PeekPop!
 
     init(album: KZPlayerAlbum) {
         self.album = album
@@ -25,6 +26,9 @@ class AlbumViewController: MPSectionedTableViewController {
         tableView = UITableView(frame: CGRect.zero, style: .plain) // use plain so the header is sticky
         super.viewDidLoad()
 
+        peekPop = PeekPop(viewController: self)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
+
         let titleView = UILabel()
         titleView.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         titleView.textColor = RGB(255)
@@ -38,6 +42,14 @@ class AlbumViewController: MPSectionedTableViewController {
         tableView.register(cellType: MPAlbumSongTableViewCell.self)
         tableView.register(cellType: MPShuffleTableViewCell.self)
         tableView.sectionIndexMinimumDisplayRowCount = Int.max
+    }
+
+    func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
+        guard let indexPath = tableView.indexPathForRow(at: location) else {
+            return nil
+        }
+
+        return UIView()
     }
 
     override func setupConstraints() {

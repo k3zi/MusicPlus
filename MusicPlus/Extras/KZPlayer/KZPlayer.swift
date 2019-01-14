@@ -25,8 +25,8 @@ import SceneKit
 struct Settings {
     var repeatMode: KZPLayerRepeatMode = .repeatAll
     var shuffleMode: KZPLayerShuffleMode = .noShuffle
-    var crossfadeMode: KZPLayerCrossFadeMode {
-        return UserDefaults.standard.bool(forKey: Constants.Settings.crossfade) ? .crossfade : .noCrossfade
+    var crossfade: Bool {
+        return UserDefaults.standard.bool(forKey: Constants.Settings.crossfade)
     }
     var crossfadeAtSeconds: Double {
         return max(UserDefaults.standard.double(forKey: Constants.Settings.crossfadeAtSeconds), Constants.Settings.Options.crossfadeAtSeconds[0])
@@ -34,7 +34,12 @@ struct Settings {
     var crossfadeDurationSeconds: Double {
         return max(UserDefaults.standard.double(forKey: Constants.Settings.Info.crossfadeDurationSeconds.accessor), Constants.Settings.Options.crossfadeDurationSeconds[0])
     }
-    var crossfadePrevious = false
+    var crossfadeOnNext: Bool {
+        return UserDefaults.standard.bool(forKey: Constants.Settings.Info.crossfadeOnNext.accessor)
+    }
+    var crossfadeOnPrevious: Bool {
+        return UserDefaults.standard.bool(forKey: Constants.Settings.Info.crossfadeOnPrevious.accessor)
+    }
 }
 
 enum KZPlayerState {
@@ -210,10 +215,10 @@ extension KZPlayer {
 
         AppDelegate.del().window?.addSubview(volumeView)
 
-        MPRemoteCommandCenter.shared().playCommand.addTarget(self, action: #selector(self.resume))
-        MPRemoteCommandCenter.shared().pauseCommand.addTarget(self, action: #selector(self.pause))
-        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget(self, action: #selector(self.next))
-        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget(self, action: #selector(self.prev))
+        MPRemoteCommandCenter.shared().playCommand.addTarget(self, action: #selector(resume))
+        MPRemoteCommandCenter.shared().pauseCommand.addTarget(self, action: #selector(pause))
+        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget(self, action: #selector(next))
+        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget(self, action: #selector(prev))
         // MPRemoteCommandCenter.sharedCommandCenter().likeCommand.addTarget(self, action: #selector(self.toggleLike))
         MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget { event -> MPRemoteCommandHandlerStatus in
             guard let event = event as? MPChangePlaybackPositionCommandEvent else {
@@ -430,12 +435,12 @@ extension KZPlayer {
     }
 
     @objc func next() {
-        playerCompleted(activePlayer, force: true)
+        playerCompleted(activePlayer, force: true, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
     }
 
     func backgroundNext() {
         DispatchQueue.mainSyncSafe {
-            self.next()
+            self.playerCompleted(activePlayer, force: true)
         }
     }
 
@@ -446,7 +451,7 @@ extension KZPlayer {
 
         print("previous = \(prevItem.title)")
 
-        if settings.crossfadeMode == .crossfade && settings.crossfadePrevious {
+        if settings.crossfade && settings.crossfadeOnPrevious {
             return crossfadeTo(prevItem)
         }
 
@@ -544,7 +549,7 @@ extension KZPlayer {
         }
     }
 
-    func playerCompleted(_ channel: Int, force: Bool = false) {
+    func playerCompleted(_ channel: Int, force: Bool = false, shouldCrossfadeOnSkip: Bool = true) {
         // If the active channel has completed and we are still crossfading then either
         // the next player has not been set yet or there was an error and the active player
         // could not play.
@@ -555,7 +560,7 @@ extension KZPlayer {
         persistentPlayNextSong()
     }
 
-    func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1) {
+    func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1, shouldCrossfadeOnSkip: Bool = true) {
         var played = false
         var i = 0
         while !played && i < times {
@@ -564,7 +569,7 @@ extension KZPlayer {
         }
     }
 
-    func playNextSong(_ item: KZPlayerItemBase? = nil) -> Bool {
+    func playNextSong(_ item: KZPlayerItemBase? = nil, shouldCrossfadeOnSkip: Bool = true) -> Bool {
         guard let nextItem = item ?? rotateSongs() else {
             return true
         }
@@ -577,7 +582,7 @@ extension KZPlayer {
             itemBeforeUpNextKey = itemForChannel(activePlayer)?.systemID
         }
 
-        if settings.crossfadeMode == .crossfade {
+        if settings.crossfade && shouldCrossfadeOnSkip {
             return crossfadeTo(nextItem)
         }
 
@@ -613,10 +618,10 @@ extension KZPlayer {
             return
         }
 
-        if !checkTimeFunctioning && settings.crossfadeMode == .crossfade && !crossfading && (currentItem.endTime - currentTime(item: currentItem)) < settings.crossfadeAtSeconds {
-            self.checkTimeFunctioning = true
+        if !checkTimeFunctioning && settings.crossfade && !crossfading && (currentItem.endTime - currentTime(item: currentItem)) < settings.crossfadeAtSeconds {
+            checkTimeFunctioning = true
             backgroundNext()
-            self.checkTimeFunctioning = false
+            checkTimeFunctioning = false
         }
     }
 
