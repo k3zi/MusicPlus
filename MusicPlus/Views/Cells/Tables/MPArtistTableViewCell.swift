@@ -8,10 +8,9 @@
 
 import UIKit
 
-class MPArtistTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
+class MPArtistTableViewCell: KZTableViewCell {
 
     let titleLabel = UILabel()
-    let optionsButton = MPOptionsButton(buttons: [(icon: "", name: "add to up next"), (icon: "", name: "add to playlist"), (icon: "", name: "edit metadata")])
 
     var indexPath: IndexPath?
 
@@ -24,9 +23,6 @@ class MPArtistTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
         titleLabel.textColor = RGB(255)
         titleLabel.font = .systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(titleLabel)
-
-        optionsButton.delegate = self
-        contentView.addSubview(optionsButton)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,13 +36,6 @@ class MPArtistTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
         titleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
         titleLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 17)
         titleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 50)
-
-        NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
-            self.optionsButton.autoSetContentCompressionResistancePriority(for: .horizontal)
-        }
-
-        optionsButton.autoPinEdge(toSuperviewEdge: .top, withInset: 13)
-        optionsButton.autoPinEdge(toSuperviewEdge: .right, withInset: 0)
     }
 
     override func estimatedHeight() -> CGFloat {
@@ -77,16 +66,6 @@ class MPArtistTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
         self.indexPath = indexPath
     }
 
-    override func hitTest(_ point: CGPoint, with witht: UIEvent?) -> UIView? {
-        let translatedPoint = optionsButton.convert(point, from: self)
-
-        if (optionsButton.bounds).contains(translatedPoint) {
-            return optionsButton.hitTest(translatedPoint, with: witht)
-        }
-
-        return super.hitTest(point, with: witht)
-    }
-
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
 
@@ -99,24 +78,6 @@ class MPArtistTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
             UIView.animate(withDuration: Constants.UI.Animation.cellHighlight, animations: runAnimations)
         } else {
             runAnimations()
-        }
-    }
-
-    // MARK: Handle Updates
-
-    func optionsButtonWillExpand(_ button: MPOptionsButton) {
-        self.superview?.bringSubviewToFront(self)
-        self.bringSubviewToFront(button)
-    }
-
-    func optionsButtonDidClick(_ button: MPOptionsButton, index: Int) {
-        button.toggle()
-        guard let item = model as? KZPlayerItem ?? (model as? KZThreadSafeReference<KZPlayerItem>)?.resolve() else {
-            return
-        }
-
-        if index == 0 {
-            KZPlayer.sharedInstance.addUpNext(item)
         }
     }
 

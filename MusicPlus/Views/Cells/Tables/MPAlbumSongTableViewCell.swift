@@ -8,13 +8,12 @@
 
 import UIKit
 
-class MPAlbumSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
+class MPAlbumSongTableViewCell: KZTableViewCell {
 
     let trackNumberLabel = UILabel()
     let titleLabel = UILabel()
 
     let heartButton = UIButton.styleForHeart()
-    let optionsButton = MPOptionsButton(buttons: [(icon: "", name: "add to up next"), (icon: "", name: "add to playlist"), (icon: "", name: "go to album"), (icon: "", name: "go to artist"), (icon: "", name: "edit metadata")])
 
     var indexPath: IndexPath?
 
@@ -35,9 +34,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
 
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
         contentView.addSubview(heartButton)
-
-        optionsButton.delegate = self
-        contentView.addSubview(optionsButton)
 
         NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: Constants.Notification.tintColorDidChange, object: nil)
     }
@@ -63,17 +59,13 @@ class MPAlbumSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
 
         heartButton.autoPinEdge(.left, to: .right, of: titleLabel, withOffset: 12, relation: .greaterThanOrEqual)
         heartButton.autoAlignAxis(toSuperviewAxis: .horizontal)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 50)
+        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
 
         NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
             self.heartButton.autoSetContentCompressionResistancePriority(for: .horizontal)
             if let image = self.heartButton.currentImage {
                 self.heartButton.autoSetDimensions(to: image.size)
             }
-            self.optionsButton.autoSetContentCompressionResistancePriority(for: .horizontal)
-
-            optionsButton.autoPinEdge(toSuperviewEdge: .top, withInset: 14)
-            optionsButton.autoPinEdge(toSuperviewEdge: .right, withInset: 0)
         }
     }
 
@@ -107,26 +99,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
         self.indexPath = indexPath
     }
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let translatedPoint = optionsButton.convert(point, from: self)
-
-        if (optionsButton.bounds).contains(translatedPoint) {
-            return optionsButton.hitTest(translatedPoint, with: event)
-        }
-
-        let view = super.hitTest(point, with: event)
-
-        if point.x > (heartButton.frame.origin.x - 20) {
-            if view != heartButton && view != optionsButton {
-                var point = point
-                point.y = frame.size.height/2
-                return optionsButton.hitTest(point, with: event)
-            }
-        }
-
-        return view
-    }
-
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
 
@@ -154,22 +126,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell, MPOptionsButtonDelegate {
 
         try? item.realm?.write {
             item.liked = heartButton.isSelected
-        }
-    }
-
-    func optionsButtonWillExpand(_ button: MPOptionsButton) {
-        self.superview?.bringSubviewToFront(self)
-        self.bringSubviewToFront(button)
-    }
-
-    func optionsButtonDidClick(_ button: MPOptionsButton, index: Int) {
-        button.toggle()
-        guard let item = model as? KZPlayerItem else {
-            return
-        }
-
-        if index == 0 {
-            KZPlayer.sharedInstance.addUpNext(item)
         }
     }
 

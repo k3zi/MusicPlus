@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
+class MPArtistSectionHeaderView: UIView {
 
     let imageView = UIImageView()
 
@@ -17,7 +17,6 @@ class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
     let infoHolder = UIView()
 
     let heartButton = UIButton.styleForHeart()
-    let optionsButton = MPOptionsButton(buttons: [(icon: "", name: "add to up next"), (icon: "", name: "add to playlist"), (icon: "", name: "go to album"), (icon: "", name: "go to artist"), (icon: "", name: "edit metadata")])
 
     let topSeperator = UIView()
     let bottomSeperator = UIView()
@@ -73,9 +72,6 @@ class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
         addSubview(heartButton)
 
-        optionsButton.delegate = self
-        addSubview(optionsButton)
-
         toggleButton.setImage(#imageLiteral(resourceName: "arrowDown"), for: .normal)
         toggleButton.setImage(#imageLiteral(resourceName: "arrowUp"), for: .selected)
         addSubview(toggleButton)
@@ -125,7 +121,6 @@ class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
 
         heartButton.autoPinEdge(.left, to: .right, of: infoHolder, withOffset: 12, relation: .greaterThanOrEqual)
         heartButton.autoAlignAxis(toSuperviewAxis: .horizontal)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 87)
 
         NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
             self.infoHolder.autoAlignAxis(toSuperviewAxis: .horizontal)
@@ -133,24 +128,11 @@ class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
             if let image = self.heartButton.currentImage {
                 self.heartButton.autoSetDimensions(to: image.size)
             }
-            self.optionsButton.autoSetContentCompressionResistancePriority(for: .horizontal)
         }
 
-        optionsButton.autoPinEdge(toSuperviewEdge: .top, withInset: 30)
-
+        toggleButton.autoPinEdge(.left, to: .right, of: heartButton, withOffset: 18)
         toggleButton.autoAlignAxis(toSuperviewAxis: .horizontal)
-        toggleButton.autoPinEdge(.left, to: .right, of: optionsButton, withOffset: 10)
-        toggleButton.autoPinEdge(toSuperviewEdge: .right, withInset: 10)
-    }
-
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let translatedPoint = optionsButton.convert(point, from: self)
-
-        if optionsButton.bounds.contains(translatedPoint) {
-            return optionsButton.hitTest(translatedPoint, with: event)
-        }
-
-        return super.hitTest(point, with: event)
+        toggleButton.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
     }
 
     // MARK: Handle Updates
@@ -161,19 +143,6 @@ class MPArtistSectionHeaderView: UIView, MPOptionsButtonDelegate {
 
         try? album.realm?.write {
             album.liked = heartButton.isSelected
-        }
-    }
-
-    func optionsButtonWillExpand(_ button: MPOptionsButton) {
-        self.superview?.bringSubviewToFront(self)
-        self.bringSubviewToFront(button)
-    }
-
-    func optionsButtonDidClick(_ button: MPOptionsButton, index: Int) {
-        button.toggle()
-
-        if index == 0 {
-            // KZPlayer.shared.addUpNext(item)
         }
     }
 

@@ -35,7 +35,6 @@ class SongsViewController: MPSongCollectionViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let percent = min((scrollView.contentOffset.y - shuffleButton.frame.size.height)/300.0, 0.3)
         shadowView.alpha = percent
-        NotificationCenter.default.post(name: Constants.Notification.hidePopup, object: nil)
     }
 
     override func viewDidLayoutSubviews() {

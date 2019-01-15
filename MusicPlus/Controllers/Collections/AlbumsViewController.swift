@@ -114,7 +114,6 @@ class AlbumsViewController: KZViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let percent = min(scrollView.contentOffset.y/300.0, 0.3)
         shadowView.alpha = percent
-        NotificationCenter.default.post(name: Constants.Notification.hidePopup, object: nil)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

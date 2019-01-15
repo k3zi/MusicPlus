@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
+class MPAlbumSectionHeaderView: UIView {
 
     let imageView = UIImageView()
 
@@ -16,7 +16,6 @@ class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
     let subtitleLabel = UILabel()
 
     let heartButton = UIButton.styleForHeart()
-    let optionsButton = MPOptionsButton(buttons: [(icon: "", name: "add to up next"), (icon: "", name: "add to playlist"), (icon: "", name: "go to album"), (icon: "", name: "go to artist"), (icon: "", name: "edit metadata")])
 
     let topSeperator = UIView()
     let bottomSeperator = UIView()
@@ -68,9 +67,6 @@ class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
         addSubview(heartButton)
 
-        optionsButton.delegate = self
-        addSubview(optionsButton)
-
         fillInView()
         setupConstraints()
     }
@@ -106,28 +102,14 @@ class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
         subtitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 14)
 
         heartButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 20)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 80)
+        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
 
         NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
             self.heartButton.autoSetContentCompressionResistancePriority(for: .horizontal)
             if let image = self.heartButton.currentImage {
                 self.heartButton.autoSetDimensions(to: image.size)
             }
-            self.optionsButton.autoSetContentCompressionResistancePriority(for: .horizontal)
         }
-
-        optionsButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 13)
-        optionsButton.autoPinEdge(toSuperviewEdge: .right, withInset: 28)
-    }
-
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        let translatedPoint = optionsButton.convert(point, from: self)
-
-        if optionsButton.bounds.contains(translatedPoint) {
-            return optionsButton.hitTest(translatedPoint, with: event)
-        }
-
-        return super.hitTest(point, with: event)
     }
 
     // MARK: Handle Updates
@@ -138,19 +120,6 @@ class MPAlbumSectionHeaderView: UIView, MPOptionsButtonDelegate {
 
         try? album.realm?.write {
             album.liked = heartButton.isSelected
-        }
-    }
-
-    func optionsButtonWillExpand(_ button: MPOptionsButton) {
-        self.superview?.bringSubviewToFront(self)
-        self.bringSubviewToFront(button)
-    }
-
-    func optionsButtonDidClick(_ button: MPOptionsButton, index: Int) {
-        button.toggle()
-
-        if index == 0 {
-            // KZPlayer.shared.addUpNext(item)
         }
     }
 

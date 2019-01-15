@@ -167,11 +167,8 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
                 return
             }
 
-            let player = KZPlayer.sharedInstance
-            player.play(collection, initialSong: collection[index])
+            KZPlayer.sharedInstance.play(collection, initialSong: collection[index])
         }
-
-        NotificationCenter.default.post(name: Constants.Notification.hidePopup, object: nil)
 
         if MPContainerViewController.sharedInstance.playerViewStyle  == .hidden {
             MPContainerViewController.sharedInstance.playerViewStyle = .full

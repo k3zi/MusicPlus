@@ -34,6 +34,7 @@ class ArtistViewController: MPSectionedTableViewController {
         tableView.register(cellType: MPSongTableViewCell.self)
         tableView.sectionIndexMinimumDisplayRowCount = Int.max
         tableView.tableHeaderView = shuffleButton
+        tableView.delaysContentTouches = false
 
         shuffleButton.label.text = "Shuffle Artist"
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
@@ -50,7 +51,7 @@ class ArtistViewController: MPSectionedTableViewController {
 
     override func fetchData() {
         sections.removeAll()
-        artist.albums.forEach({
+        artist.albums.forEach {
             var songs = [Any]()
             $0.songs.forEach({ songs.append($0) })
             let section = TableSection(sectionName: $0.name, sectionObjects: songs)
@@ -58,7 +59,7 @@ class ArtistViewController: MPSectionedTableViewController {
             if expandedSections.count < sections.count {
                 expandedSections.append(false)
             }
-        })
+        }
         tableView.reloadData()
     }
 
@@ -130,13 +131,34 @@ class ArtistViewController: MPSectionedTableViewController {
                 return
             }
 
-            let player = KZPlayer.sharedInstance
-            player.play(AnyRealmCollection(safeArtist.songs), shuffle: true)
+            let collection = AnyRealmCollection(safeArtist.songs)
+            KZPlayer.sharedInstance.play(collection, shuffle: true)
         }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+            return
+        }
 
+        guard let initialSong = tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZPlayerItem else {
+            return
+        }
+
+        let wrappedArtist = KZThreadSafeReference(to: artist)
+        let wrappedSong = KZThreadSafeReference(to: initialSong)
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            guard let safeInitialSong = wrappedSong.resolve(), let safeArtist = wrappedArtist.resolve() else {
+                return
+            }
+
+            let collection = AnyRealmCollection(safeArtist.songs)
+            guard let index = collection.firstIndex(of: safeInitialSong) else {
+                return
+            }
+
+            KZPlayer.sharedInstance.play(collection, initialSong: collection[index])
+        }
     }
 
 }
