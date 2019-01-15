@@ -45,11 +45,22 @@ class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDele
     }
 
     func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
-        guard let indexPath = tableView.indexPathForRow(at: location) else {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
             return nil
         }
 
-        return UIView()
+        guard let modelCell = cell as? KZTableViewCell, let item = modelCell.model as? KZPlayerItemBase else {
+            return nil
+        }
+
+        return PopupMenuItemView(item: item) { action in
+            switch action {
+            case .play:
+                self.tableView(self.tableView, didSelectRowAt: indexPath)
+            case .addUpNext:
+                KZPlayer.sharedInstance.addUpNext(item.originalItem)
+            }
+        }
     }
 
     override func setupConstraints() {
@@ -157,7 +168,5 @@ class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDele
             let player = KZPlayer.sharedInstance
             player.play(collection, initialSong: safeInitialSong, shuffle: false)
         }
-
-        NotificationCenter.default.post(name: Constants.Notification.hidePopup, object: nil)
     }
 }

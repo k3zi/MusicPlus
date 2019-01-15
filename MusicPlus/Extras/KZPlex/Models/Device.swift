@@ -13,9 +13,9 @@ class Device: XMLMappable {
     var nodeName: String!
     var plex: KZPlex! {
         didSet {
-            connections.forEach({
+            connections.forEach {
                 $0.plex = self.plex
-            })
+            }
         }
     }
 

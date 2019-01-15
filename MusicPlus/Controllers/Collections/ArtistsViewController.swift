@@ -11,6 +11,7 @@ import UIKit
 class ArtistsViewController: MPSectionedTableViewController {
 
     static let shared = ArtistsViewController()
+    var peekPop: PeekPop!
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -27,6 +28,9 @@ class ArtistsViewController: MPSectionedTableViewController {
 
         title = "Artists"
         tableView.register(cellType: MPArtistTableViewCell.self)
+
+        peekPop = PeekPop(viewController: self)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
 
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
             self.fetchData()
@@ -93,6 +97,38 @@ class ArtistsViewController: MPSectionedTableViewController {
         }
 
         tableView.reloadData()
+    }
+
+}
+
+extension ArtistsViewController: PeekPopPreviewingDelegate {
+
+    func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
+            return nil
+        }
+
+        guard let modelCell = cell as? KZTableViewCell, let item = modelCell.model as? KZPlayerArtist else {
+            return nil
+        }
+
+        return PopupMenuItemView(item: item) { action in
+            switch action {
+            case .play:
+                let wrappedArtist = KZThreadSafeReference(to: item)
+                KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+                    guard let safeArtist = wrappedArtist.resolve() else {
+                        return
+                    }
+
+                    let collection = AnyRealmCollection(safeArtist.songs)
+                    KZPlayer.sharedInstance.play(collection, shuffle: false)
+                }
+            case .addUpNext:
+                let collection = AnyRealmCollection(item.songs)
+                KZPlayer.sharedInstance.addUpNext(collection.toArray())
+            }
+        }
     }
 
 }

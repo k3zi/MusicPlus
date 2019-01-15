@@ -14,9 +14,9 @@ class LibrarySectionsGETResponse: XMLMappable, MediaContainer {
     var nodeName: String!
     var plex: KZPlex! {
         didSet {
-            directories.forEach({
+            directories.forEach {
                 $0.plex = self.plex
-            })
+            }
         }
     }
 

@@ -48,10 +48,10 @@ class Connection: XMLMappable {
                 }
 
                 response.plex = self.plex
-                response.directories.forEach({
+                response.directories.forEach {
                     $0.connection = self
                     $0.device = self.device
-                })
+                }
                 return response
             } catch {
                 print(error)

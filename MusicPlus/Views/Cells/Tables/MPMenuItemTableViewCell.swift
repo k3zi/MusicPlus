@@ -67,18 +67,18 @@ class MPMenuItemTableViewCell: KZTableViewCell {
 
         iconView.image = item.icon
         label.text = item.name
-    }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        let tintColor = selected ? AppDelegate.del().session.tintColor : Constants.UI.Color.gray
+        let tintColor = item.selected ? AppDelegate.del().session.tintColor : Constants.UI.Color.gray
         iconView.tintColor = tintColor
         label.textColor = tintColor
     }
 
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+    }
+
     @objc func updateTint() {
-        setSelected(isSelected, animated: false)
+        fillInCellData(false)
     }
 
 }

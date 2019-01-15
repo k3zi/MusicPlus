@@ -14,9 +14,9 @@ class APIResourcesGETResponse: XMLMappable, MediaContainer {
     var nodeName: String!
     var plex: KZPlex! {
         didSet {
-            devices.forEach({
+            devices.forEach {
                 $0.plex = self.plex
-            })
+            }
         }
     }
 

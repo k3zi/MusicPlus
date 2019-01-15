@@ -10,7 +10,7 @@ import UIKit
 import RealmSwift
 
 class KZPlayerPlaylist: Object {
-    var items = List<KZPlayerPlaylistItem>()
+    let items = List<KZPlayerPlaylistItem>()
 
     func add(_ item: KZPlayerItem) {
         let newItem = KZPlayerPlaylistItem(orig: item)
@@ -33,6 +33,13 @@ class KZPlayerPlaylist: Object {
     }
 }
 
-class KZPlayerPlaylistItem: KZPlayerUpNextItem {
-    @objc var order = 0
+class KZPlayerPlaylistItem: Object, KZPlayerItemBase {
+    @objc dynamic var orig: KZPlayerItem?
+    @objc dynamic var position = 0
+    @objc dynamic var order = 0
+
+    convenience init(orig: KZPlayerItem) {
+        self.init()
+        self.orig = orig
+    }
 }

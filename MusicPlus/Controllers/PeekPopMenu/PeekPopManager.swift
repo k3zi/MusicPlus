@@ -21,7 +21,9 @@ class PeekPopManager {
     fileprivate lazy var peekPopWindow: UIWindow = {
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.windowLevel = UIWindow.Level.alert
-        window.rootViewController = UIViewController()
+        let vc = MPNavigationController()
+        vc.backgroundView.isHidden = true
+        window.rootViewController = vc
         return window
     }()
 
@@ -82,7 +84,7 @@ class PeekPopManager {
      - parameter context: PreviewingContext
      */
     func commitTarget(_ context: PreviewingContext?) {
-        peekPopEnded()
+        // peekPopEnded()
     }
 
     /**
@@ -95,12 +97,14 @@ class PeekPopManager {
             return
         }
 
-        UIView.animate(withDuration: 0.2, delay: 0.5, options: [], animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.1, options: [], animations: {
             self.peekPopWindow.alpha = 0.0
         }) { _ in
             self.peekPop.peekPopGestureRecognizer?.resetValues()
             self.peekPopWindow.isHidden = true
             view.removeFromSuperview()
+            self.peekPopWindow.resignKey()
+            self.peekPopWindow.removeFromSuperview()
         }
 
         peekPopView = nil

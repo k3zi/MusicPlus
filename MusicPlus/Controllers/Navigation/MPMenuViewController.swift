@@ -107,7 +107,16 @@ class MPMenuViewController: KZViewController {
         view.addSubview(librarySelectionView)
         librarySelectionView.backgroundColor = UIColor.white.withAlphaComponent(0.05)
 
-        fetchData()
+        menuItems.removeAll()
+        menuItems.append(MPMenuItem(name: "SONGS", imageName: "sidebarSongIcon", controller: SongsViewController.shared, selected: true))
+        menuItems.append(MPMenuItem(name: "ALBUMS", imageName: "sidebarAlbumIcon", controller: AlbumsViewController.shared))
+        menuItems.append(MPMenuItem(name: "ARTISTS", imageName: "sidebarArtistIcon", controller: ArtistsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "PARTY PLAYLIST", imageName: "sidebarPartyPlaylistIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "SLEEP TIMER", imageName: "sidebarSleepTimerIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "COLOR", imageName: "sidebarColorIcon", controller: SongsViewController.shared))
+        // menuItems.append(MPMenuItem(name: "PLEX", imageName: "sidebarPlexIcon", controller: SongsViewController.shared))
+        menuItems.append(MPMenuItem(name: "SETTINGS", imageName: "sidebarSettingsIcon", controller: SettingsViewController.shared))
+        menuTableView.reloadData()
 
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
             self.libraryTableView.reloadData()
@@ -195,27 +204,6 @@ class MPMenuViewController: KZViewController {
         }
     }
 
-    override func fetchData() {
-        menuItems.removeAll()
-        menuItems.append(MPMenuItem(name: "SONGS", imageName: "sidebarSongIcon", controller: SongsViewController.shared))
-        menuItems.append(MPMenuItem(name: "ALBUMS", imageName: "sidebarAlbumIcon", controller: AlbumsViewController.shared))
-        menuItems.append(MPMenuItem(name: "ARTISTS", imageName: "sidebarArtistIcon", controller: ArtistsViewController.shared))
-        // menuItems.append(MPMenuItem(name: "PARTY PLAYLIST", imageName: "sidebarPartyPlaylistIcon", controller: SongsViewController.shared))
-        // menuItems.append(MPMenuItem(name: "SLEEP TIMER", imageName: "sidebarSleepTimerIcon", controller: SongsViewController.shared))
-        // menuItems.append(MPMenuItem(name: "COLOR", imageName: "sidebarColorIcon", controller: SongsViewController.shared))
-        // menuItems.append(MPMenuItem(name: "PLEX", imageName: "sidebarPlexIcon", controller: SongsViewController.shared))
-        menuItems.append(MPMenuItem(name: "SETTINGS", imageName: "sidebarSettingsIcon", controller: SettingsViewController.shared))
-
-        let selectedRow = menuTableView.indexPathForSelectedRow
-        menuTableView.reloadData()
-        menuTableView.selectRow(at: selectedRow, animated: false, scrollPosition: .top)
-
-        if !hasLoaded {
-            menuTableView.selectRow(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: .none)
-            hasLoaded = true
-        }
-    }
-
     // MARK: - TableView DataSource / Delegate
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
@@ -247,17 +235,20 @@ class MPMenuViewController: KZViewController {
 
             KZPlayer.sharedInstance.currentLibrary = library
         } else if tableView == menuTableView {
-            if let indexPathsForSelectedRows = tableView.indexPathsForSelectedRows {
-                indexPathsForSelectedRows.forEach {
-                    if $0.row != indexPath.row {
-                        tableView.deselectRow(at: $0, animated: false)
-                    }
-                }
-            }
-
-            guard let item = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? MPMenuItem else {
+            tableView.deselectRow(at: indexPath, animated: false)
+            guard let allItems = tableViewCellData(tableView, section: indexPath.section) as? [MPMenuItem] else {
                 return
             }
+
+            for i in 0..<allItems.count {
+                allItems[i].selected = i == indexPath.row
+            }
+
+            for cell in tableView.visibleCells {
+                (cell as? MPMenuItemTableViewCell)?.fillInCellData(false)
+            }
+
+            let item = allItems[indexPath.row]
 
             collapseLibrarySelection()
 

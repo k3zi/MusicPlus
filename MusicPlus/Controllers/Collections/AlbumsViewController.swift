@@ -11,6 +11,7 @@ import UIKit
 class AlbumsViewController: KZViewController {
 
     static let shared = AlbumsViewController()
+    var peekPop: PeekPop!
 
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -82,6 +83,9 @@ class AlbumsViewController: KZViewController {
         shadowView.alpha = 0.0
         view.addSubview(shadowView)
 
+        peekPop = PeekPop(viewController: self)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: collectionView)
+
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
             self.fetchData()
         }
@@ -138,6 +142,38 @@ class AlbumsViewController: KZViewController {
         layout.invalidateLayout()
         collectionView.delegate = self
         collectionView.dataSource = self
+    }
+
+}
+
+extension AlbumsViewController: PeekPopPreviewingDelegate {
+
+    func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
+        guard let indexPath = collectionView.indexPathForItem(at: location), let cell = collectionView.cellForItem(at: indexPath) else {
+            return nil
+        }
+
+        guard let modelCell = cell as? MPAlbumCollectionViewCell, let album = modelCell.album else {
+            return nil
+        }
+
+        return PopupMenuItemView(item: album) { action in
+            switch action {
+            case .play:
+                let wrappedAlbum = KZThreadSafeReference(to: album)
+                KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+                    guard let safeAlbum = wrappedAlbum.resolve() else {
+                        return
+                    }
+
+                    let collection = AnyRealmCollection(safeAlbum.songs.sorted(byKeyPath: "trackNum", ascending: true))
+                    KZPlayer.sharedInstance.play(collection, shuffle: false)
+                }
+            case .addUpNext:
+                let collection = AnyRealmCollection(album.songs.sorted(byKeyPath: "trackNum", ascending: true))
+                KZPlayer.sharedInstance.addUpNext(collection.toArray())
+            }
+        }
     }
 
 }

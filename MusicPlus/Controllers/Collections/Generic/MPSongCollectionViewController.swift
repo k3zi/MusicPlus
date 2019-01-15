@@ -15,10 +15,11 @@ enum MPCollectionSortBy {
     case trackNumber
 }
 
-class MPSongCollectionViewController: MPSectionedTableViewController {
+class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPreviewingDelegate {
 
     var displayedCollection: KZPlayerItemCollection?
     var currentCollectionToken: NotificationToken?
+    var peekPop: PeekPop!
 
     var collectionGenerator: () -> KZPlayerItemCollection? {
         didSet {
@@ -123,10 +124,32 @@ class MPSongCollectionViewController: MPSectionedTableViewController {
         super.viewDidLoad()
 
         tableView.register(cellType: MPSongTableViewCell.self)
+
+        peekPop = PeekPop(viewController: self)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
     }
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         return MPSongTableViewCell.self
+    }
+
+    func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else {
+            return nil
+        }
+
+        guard let modelCell = cell as? KZTableViewCell, let item = modelCell.model as? KZPlayerItemBase else {
+            return nil
+        }
+
+        return PopupMenuItemView(item: item) { action in
+            switch action {
+            case .play:
+                self.tableView(self.tableView, didSelectRowAt: indexPath)
+            case .addUpNext:
+                KZPlayer.sharedInstance.addUpNext(item.originalItem)
+            }
+        }
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

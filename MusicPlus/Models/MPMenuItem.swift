@@ -14,10 +14,13 @@ class MPMenuItem {
     let controller: KZViewController
     let shouldPresent: Bool
 
-    init(name: String, imageName: String, controller: KZViewController, shouldPresent: Bool = false) {
+    var selected = false
+
+    init(name: String, imageName: String, controller: KZViewController, shouldPresent: Bool = false, selected: Bool = false) {
         self.name = name
         self.icon = UIImage(named: imageName) ?? UIImage()
         self.controller = controller
         self.shouldPresent = shouldPresent
+        self.selected = selected
     }
 }

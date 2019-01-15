@@ -136,8 +136,24 @@ class KZPlayer: NSObject {
         return SessionManager(configuration: configuration)
     }()
 
+    open class func imageDownloaderConfiguration() -> URLSessionConfiguration {
+        let configuration = URLSessionConfiguration.default
+
+        configuration.httpAdditionalHeaders = SessionManager.defaultHTTPHeaders
+        configuration.httpShouldSetCookies = true
+        configuration.httpShouldUsePipelining = true
+
+        configuration.requestCachePolicy = .useProtocolCachePolicy
+        configuration.allowsCellularAccess = true
+        configuration.timeoutIntervalForRequest = 3
+
+        configuration.urlCache = URLCache(memoryCapacity: 30 * 1024 * 1024, diskCapacity: 300 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
+
+        return configuration
+    }
+
     static var imageDownloader: ImageDownloader = {
-        return ImageDownloader()
+        return ImageDownloader(configuration: KZPlayer.imageDownloaderConfiguration(), downloadPrioritization: .lifo, maximumActiveDownloads: 20, imageCache: AutoPurgingImageCache())
     }()
 }
 
@@ -195,6 +211,10 @@ extension KZPlayer {
             try audioSession.setActive(true)
         } catch {
             print("Error starting audio sesssion")
+        }
+
+        NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: OperationQueue.main) { _ in
+            self.pause()
         }
 
         NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: OperationQueue.main) { _ in
@@ -256,21 +276,26 @@ extension KZPlayer {
 
             let systemID = item.systemID
             item.fetchArtwork { artwork in
-                guard let currentItem = self.itemForChannel(), systemID == currentItem.systemID else {
-                    return
-                }
-
-                if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
-                    dict[MPMediaItemPropertyArtwork] = artwork
-                    AppDelegate.del().session.backgroundImage = image
-                    AppDelegate.del().session.tintColor = ObjectiveCProcessing.getDominatingColor(image)
-                } else {
-                    dict[MPMediaItemPropertyArtwork] = nil
-                    AppDelegate.del().session.backgroundImage = nil
-                    AppDelegate.del().session.tintColor = nil
-                }
-
+                let delegate = AppDelegate.del()
                 center.nowPlayingInfo = dict
+                DispatchQueue.global(qos: .background).async {
+                    guard let currentItem = self.itemForChannel(), systemID == currentItem.systemID else {
+                        return
+                    }
+
+                    dict[MPMediaItemPropertyArtwork] = artwork
+                    DispatchQueue.main.async {
+                        center.nowPlayingInfo = dict
+                    }
+
+                    if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
+                        delegate.session.tintColor = ObjectiveCProcessing.getDominatingColor(image)
+                        delegate.session.backgroundImage = image
+                    } else {
+                        delegate.session.tintColor = nil
+                        delegate.session.backgroundImage = nil
+                    }
+                }
             }
         }
     }
@@ -332,10 +357,10 @@ extension KZPlayer {
     ///   - initialSong: the first song to play, if nil then it will be the first item in `items`
     ///   - shuffle: whether to shuffle the items, nil ensures that the previous value is used
     func play(_ items: KZPlayerItemCollection, initialSong: KZPlayerItem? = nil, shuffle: Bool? = nil) {
-        self.resetPlayer()
+        resetPlayer()
 
-        let shuffle = self.setShuffle(shuffle)
-        self.setCollection(items, initialSong: initialSong, shuffle: shuffle)
+        let shuffle = setShuffle(shuffle)
+        setCollection(items, initialSong: initialSong, shuffle: shuffle)
 
         var index = 0
         if !shuffle, let initialSong = initialSong {
@@ -347,13 +372,13 @@ extension KZPlayer {
             index = items.index(of: initialSong) ?? 0
         }
 
-        let collection: [KZPlayerItemBase] = shuffle ? Array(self.sessionShuffledQueue()) : Array(self.sessionQueue())
+        let collection: [KZPlayerItemBase] = shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
 
         guard collection.count > 0 else {
             return
         }
 
-        self.persistentPlayNextSong(collection[index], times: collection.count)
+        persistentPlayNextSong(collection[index], times: collection.count)
     }
 
     // Play Single Item
@@ -409,7 +434,7 @@ extension KZPlayer {
     @objc func resume() {
         do {
             try audioEngine.start()
-            auPlayerSets.forEach({ $0.value.play() })
+            auPlayerSets.forEach { $0.value.play() }
 
             if let item = itemForChannel() {
                 updateNowPlayingInfo(item)
@@ -420,10 +445,12 @@ extension KZPlayer {
     }
 
     @objc func pause() {
-        if audioEngine.isRunning {
-            auPlayerSets.forEach({ $0.value.pause() })
-            audioEngine.pause()
+        guard audioEngine.isRunning else {
+            return
         }
+
+        auPlayerSets.forEach { $0.value.pause() }
+        audioEngine.pause()
     }
 
     func togglePlay() {
@@ -780,9 +807,10 @@ extension KZPlayer {
 
     func resetPlayer() {
         activePlayer = -1
-        auPlayerSets.forEach({
+        auPlayerSets.forEach {
+            $0.value.isRemoved = true
             $0.value.auPlayer.stop()
-        })
+        }
         stopCrossfade()
         auPlayerSets.removeAll()
         averagePower = 0.0
@@ -966,14 +994,18 @@ extension KZPlayer {
     }
 
     func addUpNext(_ orig: KZPlayerItem) {
+        addUpNext([orig])
+    }
+
+    func addUpNext(_ originalItems: [KZPlayerItem]) {
         guard let realm = currentLibrary?.realm() else {
             fatalError("No library is currently set.")
         }
 
-        let newItem = KZPlayerUpNextItem(orig: orig)
-
         try! realm.write {
-            realm.add(newItem)
+            for originalItem in originalItems {
+                realm.add(KZPlayerUpNextItem(orig: originalItem))
+            }
         }
     }
 

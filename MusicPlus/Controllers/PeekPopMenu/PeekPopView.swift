@@ -7,12 +7,8 @@
 //
 
 import UIKit
+
 class PeekPopView: UIView {
-
-    // MARK: Constants
-
-    // These are 'magic' values
-    let targePreviewPadding = CGSize(width: 28, height: 140)
 
     var targetView: UIView? {
         didSet {
@@ -20,28 +16,18 @@ class PeekPopView: UIView {
                 return
             }
 
-            targetPreviewView.targetViewContainer.addSubview(targetView)
+            targetViewContainer.subviews.forEach { $0.removeFromSuperview() }
+            targetViewContainer.addSubview(targetView)
             targetView.autoPinEdgesToSuperviewEdges()
         }
     }
 
     // MARK: Subviews
-    // Blurry image views, used for interpolation
     let blurViewHolder = UIView()
-    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-
-    // Overlay view
-    var overlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0.85, alpha: 0.5)
-        return view
-    }()
-
-    // Source image view
-    var sourceImageView = UIImageView()
+    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
 
     // Target preview view
-    var targetPreviewView = PeekPopTargetPreviewView()
+    var targetViewContainer = UIView()
 
     // MARK: Lifecycle
 
@@ -57,44 +43,29 @@ class PeekPopView: UIView {
 
     func setup() {
         blurViewHolder.addSubview(blurView)
-        self.addSubview(blurViewHolder)
+        addSubview(blurViewHolder)
+
+        targetViewContainer.layer.cornerRadius = 15
+        targetViewContainer.clipsToBounds = true
+        addSubview(targetViewContainer)
+
         blurViewHolder.autoPinEdgesToSuperviewEdges()
         blurView.autoPinEdgesToSuperviewEdges()
+
+        targetViewContainer.autoPinEdge(toSuperviewEdge: .left, withInset: 15)
+        targetViewContainer.autoPinEdge(toSuperviewEdge: .right, withInset: 15)
+        targetViewContainer.autoCenterInSuperview()
     }
 
     func didAppear() {
         blurViewHolder.alpha = 0.0
-        overlayView.frame = self.bounds
+        targetView?.becomeFirstResponder()
     }
 
     func animateProgress(_ progress: CGFloat) {
-        blurViewHolder.alpha = progress
-    }
-}
-
-class PeekPopTargetPreviewView: UIView {
-
-    var targetViewContainer = UIView()
-    var imageViewFrame = CGRect.zero
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
+        UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
+            self.blurViewHolder.alpha = min(progress, 1.0)
+        }, completion: nil)
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        targetViewContainer.frame = self.bounds
-    }
-
-    func setup() {
-        self.addSubview(targetViewContainer)
-        targetViewContainer.layer.cornerRadius = 15
-        targetViewContainer.clipsToBounds = true
-    }
 }

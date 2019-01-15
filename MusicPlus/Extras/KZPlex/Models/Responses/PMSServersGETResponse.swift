@@ -14,9 +14,9 @@ class PMSServersGETResponse: XMLMappable, MediaContainer {
     var nodeName: String!
     var plex: KZPlex! {
         didSet {
-            servers.forEach({
+            servers.forEach {
                 $0.plex = self.plex
-            })
+            }
         }
     }
 

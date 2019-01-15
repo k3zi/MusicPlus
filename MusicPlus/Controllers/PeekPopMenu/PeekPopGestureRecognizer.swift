@@ -13,7 +13,7 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
     var context: PreviewingContext?
     let peekPopManager: PeekPopManager
 
-    let interpolationSpeed: CGFloat = 0.06
+    let interpolationSpeed: CGFloat = 0.4
     let previewThreshold: CGFloat = 0.66
     let commitThreshold: CGFloat = 0.99
 
@@ -21,6 +21,16 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
     var targetProgress: CGFloat = 0.0 {
         didSet {
             updateProgress()
+        }
+    }
+
+    var firstHit = true
+
+    override var state: UIGestureRecognizer.State {
+        didSet {
+            if state == .began {
+                firstHit = true
+            }
         }
     }
 
@@ -51,6 +61,14 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         super.touchesMoved(touches, with: event)
+
+        if firstHit {
+            peekPopManager.targetView?.touchesBegan(touches, with: event)
+            firstHit = false
+        } else {
+            peekPopManager.targetView?.touchesMoved(touches, with: event)
+        }
+
         if state == .failed {
             self.cancelTouches()
         }
@@ -59,9 +77,8 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
             return
         }
 
-        print(touch.force)
         if touch.force > (touch.maximumPossibleForce / 2) && state == .possible {
-            perform(#selector(delayedFirstTouch), with: touch, afterDelay: 0.2)
+            perform(#selector(delayedFirstTouch), with: touch)
         }
 
         if peekPopStarted == true {
@@ -80,6 +97,7 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
             _ = peekPopManager.peekPopPossible(context, touchLocation: touchLocation)
         }
         peekPopStarted = true
+        firstHit = true
         initialMajorRadius = touch.majorRadius
         peekPopManager.peekPopBegan()
         targetProgress = previewThreshold
@@ -94,6 +112,7 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
         self.cancelTouches()
         super.touchesEnded(touches, with: event)
+        peekPopManager.targetView?.touchesEnded(touches, with: event)
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -133,8 +152,7 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
             progress = min(progress + interpolationSpeed, targetProgress)
             if progress >= targetProgress {
                 displayLink?.invalidate()
-                let generator = UIImpactFeedbackGenerator(style: .medium)
-                generator.impactOccurred()
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             }
         } else {
             progress = max(progress - interpolationSpeed*2, targetProgress)

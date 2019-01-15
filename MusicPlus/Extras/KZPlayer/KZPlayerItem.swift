@@ -32,7 +32,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
                 return
             }
 
-            self.observedKeys().forEach({ oItem.removeObserver(self, forKeyPath: $0) })
+            self.observedKeys().forEach { oItem.removeObserver(self, forKeyPath: $0) }
         }
 
         didSet {
@@ -44,7 +44,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
                 return
             }
 
-            self.observedKeys().forEach({ oItem.addObserver(self, forKeyPath: $0, options: .new, context: nil) })
+            self.observedKeys().forEach { oItem.addObserver(self, forKeyPath: $0, options: .new, context: nil) }
         }
     }
 
@@ -327,6 +327,8 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
     var artist: KZPlayerArtist? { get set }
     var album: KZPlayerAlbum? { get set }
     var plexTrack: KZPlayerPlexTrack? { get set }
+
+    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void)
 }
 
 extension KZPlayerItemBase {
@@ -434,6 +436,10 @@ extension KZPlayerItemBase {
 
     func realm() -> Realm? {
         return realmGenerator()()
+    }
+
+    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) {
+        orig?.fetchArtwork(completionHandler: completionHandler)
     }
 }
 

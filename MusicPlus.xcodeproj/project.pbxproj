@@ -61,7 +61,10 @@
 		EA1CB44F21ECC4B100CB1F23 /* PeekPopManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB44E21ECC4B100CB1F23 /* PeekPopManager.swift */; };
 		EA1CB45121ECC4EB00CB1F23 /* PeekPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45021ECC4EB00CB1F23 /* PeekPop.swift */; };
 		EA1CB45321ECC70600CB1F23 /* PeekPopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45221ECC70600CB1F23 /* PeekPopView.swift */; };
-		EA1CB45521ECC77600CB1F23 /* UIImage+ImageEffects.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45421ECC77600CB1F23 /* UIImage+ImageEffects.swift */; };
+		EA1CB45721ED7B7E00CB1F23 /* PopupItemHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45621ED7B7E00CB1F23 /* PopupItemHeaderView.swift */; };
+		EA1CB45A21ED9B4500CB1F23 /* PopupItemActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45921ED9B4500CB1F23 /* PopupItemActionView.swift */; };
+		EA1CB45C21EDA80B00CB1F23 /* PopupItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45B21EDA80B00CB1F23 /* PopupItemView.swift */; };
+		EA1CB45E21EDAAFD00CB1F23 /* PopupMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45D21EDAAFD00CB1F23 /* PopupMenuItemView.swift */; };
 		EA5389E221867EC400CFA9B7 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5389E121867EC400CFA9B7 /* SliderView.swift */; };
 		EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */; };
 		EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */; };
@@ -204,7 +207,10 @@
 		EA1CB44E21ECC4B100CB1F23 /* PeekPopManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeekPopManager.swift; sourceTree = "<group>"; };
 		EA1CB45021ECC4EB00CB1F23 /* PeekPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeekPop.swift; sourceTree = "<group>"; };
 		EA1CB45221ECC70600CB1F23 /* PeekPopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeekPopView.swift; sourceTree = "<group>"; };
-		EA1CB45421ECC77600CB1F23 /* UIImage+ImageEffects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+ImageEffects.swift"; sourceTree = "<group>"; };
+		EA1CB45621ED7B7E00CB1F23 /* PopupItemHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupItemHeaderView.swift; sourceTree = "<group>"; };
+		EA1CB45921ED9B4500CB1F23 /* PopupItemActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupItemActionView.swift; sourceTree = "<group>"; };
+		EA1CB45B21EDA80B00CB1F23 /* PopupItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupItemView.swift; sourceTree = "<group>"; };
+		EA1CB45D21EDAAFD00CB1F23 /* PopupMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupMenuItemView.swift; sourceTree = "<group>"; };
 		EA5389E121867EC400CFA9B7 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlexLibraryConfig.swift; sourceTree = "<group>"; };
 		EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZThreadSafeReference.swift; sourceTree = "<group>"; };
@@ -326,6 +332,7 @@
 		29C25DE31D0D144900309122 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				EA1CB45821ED9B2B00CB1F23 /* PopupMenu */,
 				29E6409A1D0DEFE1005BA3D7 /* MPContainerViewController.swift */,
 				29C25DE41D0D147F00309122 /* MPNavigationController.swift */,
 				29E640981D0DEE64005BA3D7 /* MPMenuViewController.swift */,
@@ -473,9 +480,19 @@
 				EA1CB44E21ECC4B100CB1F23 /* PeekPopManager.swift */,
 				EA1CB45021ECC4EB00CB1F23 /* PeekPop.swift */,
 				EA1CB45221ECC70600CB1F23 /* PeekPopView.swift */,
-				EA1CB45421ECC77600CB1F23 /* UIImage+ImageEffects.swift */,
 			);
 			path = PeekPopMenu;
+			sourceTree = "<group>";
+		};
+		EA1CB45821ED9B2B00CB1F23 /* PopupMenu */ = {
+			isa = PBXGroup;
+			children = (
+				EA1CB45621ED7B7E00CB1F23 /* PopupItemHeaderView.swift */,
+				EA1CB45921ED9B4500CB1F23 /* PopupItemActionView.swift */,
+				EA1CB45B21EDA80B00CB1F23 /* PopupItemView.swift */,
+				EA1CB45D21EDAAFD00CB1F23 /* PopupMenuItemView.swift */,
+			);
+			path = PopupMenu;
 			sourceTree = "<group>";
 		};
 		EA5389E021867EA400CFA9B7 /* Player */ = {
@@ -992,6 +1009,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA1CB45A21ED9B4500CB1F23 /* PopupItemActionView.swift in Sources */,
 				29E640A61D0E17FB005BA3D7 /* KZPlayerTag.swift in Sources */,
 				EA1CB44821EC250200CB1F23 /* KZUniqueCustomTableViewSectionProvider.swift in Sources */,
 				29C25DE51D0D147F00309122 /* MPNavigationController.swift in Sources */,
@@ -1003,11 +1021,13 @@
 				EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */,
 				EAF6AE8E21E2E49200E1F727 /* StreamingState.swift in Sources */,
 				EAF6AE4C21E2438500E1F727 /* MediaContainer.swift in Sources */,
+				EA1CB45721ED7B7E00CB1F23 /* PopupItemHeaderView.swift in Sources */,
 				29F0B8501D0F40A80094EEA2 /* UIButtonStyles.swift in Sources */,
 				EA1CB45121ECC4EB00CB1F23 /* PeekPop.swift in Sources */,
 				29DE1EDD1D12B933005C9E42 /* MPArtistSectionHeaderView.swift in Sources */,
 				29F941F71D129C1B001A3515 /* UIColor+UIColorAdditions.m in Sources */,
 				EAF6AE8721E2E49200E1F727 /* Reader.swift in Sources */,
+				EA1CB45E21EDAAFD00CB1F23 /* PopupMenuItemView.swift in Sources */,
 				29C25DDA1D0CF0E200309122 /* SongsViewController.swift in Sources */,
 				EA1CB44D21ECC47000CB1F23 /* PeekPopGestureRecognizer.swift in Sources */,
 				29F941E81D128600001A3515 /* KZPlayerArtist.swift in Sources */,
@@ -1034,6 +1054,7 @@
 				EAF6AE3821E1467B00E1F727 /* KZLibrary.swift in Sources */,
 				EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */,
 				29E640AA1D0EADD8005BA3D7 /* AlbumsViewController.swift in Sources */,
+				EA1CB45C21EDA80B00CB1F23 /* PopupItemView.swift in Sources */,
 				2940701B1D1295920069E27E /* ImageAnalyzer.swift in Sources */,
 				EAF6AE3A21E146AE00E1F727 /* KZLocalLibrary.swift in Sources */,
 				EAF6AE8121E2E49200E1F727 /* Parser.swift in Sources */,
@@ -1066,7 +1087,6 @@
 				EAF6AE8C21E2E49200E1F727 /* Streaming.swift in Sources */,
 				29C25DDD1D0CF4C000309122 /* Constants.swift in Sources */,
 				EA1CB43F21EC068500CB1F23 /* SwitchTableViewCellProvider.swift in Sources */,
-				EA1CB45521ECC77600CB1F23 /* UIImage+ImageEffects.swift in Sources */,
 				EA1CB44A21EC288E00CB1F23 /* DescriptionTableViewCellProvider.swift in Sources */,
 				29E640971D0D35F5005BA3D7 /* MPMenuItemTableViewCell.swift in Sources */,
 				EA1CB44321EC07C400CB1F23 /* SpacingSectionProvider.swift in Sources */,
