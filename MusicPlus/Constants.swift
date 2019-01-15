@@ -359,7 +359,7 @@ extension UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func dismissPopup() {
+    @objc func dismissPopup() {
         self.dismiss(animated: true, completion: nil)
     }
 

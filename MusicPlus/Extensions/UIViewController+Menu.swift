@@ -14,4 +14,10 @@ extension UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menuBT"), style: .plain, target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.toggleMenu))
     }
 
+    open func presentAlert(_ viewControllerToPresent: UIAlertController, animated flag: Bool, completion: (() -> Void)?) {
+        self.present(viewControllerToPresent, animated: flag) {
+            viewControllerToPresent.view.superview?.subviews.first?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissPopup)))
+        }
+    }
+
 }

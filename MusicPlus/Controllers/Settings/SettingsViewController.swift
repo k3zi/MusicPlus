@@ -38,7 +38,7 @@ class SettingsViewController: MPViewController {
                     UserDefaults.standard.synchronize()
                 })
             }
-            self.present(vc, animated: true, completion: nil)
+            self.presentAlert(vc, animated: true, completion: nil)
         }
 
         let crossfadDurationSecondseSetting = Constants.Settings.Info.crossfadeDurationSeconds
@@ -51,7 +51,7 @@ class SettingsViewController: MPViewController {
                     UserDefaults.standard.synchronize()
                 })
             }
-            self.present(vc, animated: true, completion: nil)
+            self.presentAlert(vc, animated: true, completion: nil)
         }
 
         let crossfadeOnNext = Constants.Settings.Info.crossfadeOnNext
