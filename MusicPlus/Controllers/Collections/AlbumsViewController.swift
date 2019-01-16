@@ -10,8 +10,18 @@ import UIKit
 
 class AlbumsViewController: KZViewController {
 
+    var displayedCollection: AnyRealmCollection<KZPlayerAlbum>?
     static let shared = AlbumsViewController()
+    var currentCollectionToken: NotificationToken?
     var peekPop: PeekPop!
+
+    var collectionGenerator: () -> AnyRealmCollection<KZPlayerAlbum>? {
+        didSet {
+            DispatchQueue.main.async {
+                self.registerNewCollection()
+            }
+        }
+    }
 
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -38,26 +48,48 @@ class AlbumsViewController: KZViewController {
     let shadowLayer = CAGradientLayer()
     var shadowTopConstraint: NSLayoutConstraint?
 
-    var uiCollection: Results<KZPlayerAlbum>?
     var imageCache = [(row: Int, image: UIImage)]()
     let cacheCapacity = 1000
 
     init() {
+        collectionGenerator = { return nil }
         self.imageCache.reserveCapacity(cacheCapacity)
         super.init(nibName: nil, bundle: nil)
     }
 
-    func collection() -> Results<KZPlayerAlbum>? {
-        return KZPlayer.sharedInstance.currentLibrary?.realm().objects(KZPlayerAlbum.self).sorted(byKeyPath: "name")
-    }
-
-    override func fetchData() {
-        uiCollection = collection()
-        collectionView.reloadData()
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func registerNewCollection() {
+        currentCollectionToken?.invalidate()
+        currentCollectionToken = nil
+
+        guard let collection = collectionGenerator() else {
+            displayedCollection = nil
+            collectionView.reloadData()
+            return
+        }
+
+        currentCollectionToken = collection.observe { [weak self] changes in
+            guard let self = self else {
+                return
+            }
+
+            switch changes {
+            case .initial(let collection):
+                self.displayedCollection = collection
+                self.collectionView.reloadData()
+                break
+            case .update(_, let deletions, let insertions, _):
+                if deletions.count > 0 || insertions.count > 0 {
+                    self.collectionView.reloadData()
+                }
+                break
+            case .error:
+                break
+            }
+        }
     }
 
     // MARK: Setup View
@@ -86,8 +118,19 @@ class AlbumsViewController: KZViewController {
         peekPop = PeekPop(viewController: self)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: collectionView)
 
+        setGenerator()
+
         NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
-            self.fetchData()
+            self.setGenerator()
+        }
+    }
+
+    func setGenerator() {
+        collectionGenerator = {
+            guard let collection = KZPlayer.sharedInstance.currentLibrary?.realm().objects(KZPlayerAlbum.self).sorted(byKeyPath: "name") else {
+                return nil
+            }
+            return AnyRealmCollection(collection)
         }
     }
 
@@ -156,7 +199,7 @@ extension AlbumsViewController: PeekPopPreviewingDelegate {
             return nil
         }
 
-        return PopupMenuItemView(item: album) { action in
+        return PopupMenuItemView(item: album, exclude: [.goToAlbum]) { action in
             switch action {
             case .play:
                 let wrappedAlbum = KZThreadSafeReference(to: album)
@@ -171,6 +214,14 @@ extension AlbumsViewController: PeekPopPreviewingDelegate {
             case .addUpNext:
                 let collection = AnyRealmCollection(album.songs.sorted(byKeyPath: "trackNum", ascending: true))
                 KZPlayer.sharedInstance.addUpNext(collection.toArray())
+            case .goToArtist:
+                guard let artist = album.artist else {
+                    return
+                }
+                let vc = ArtistViewController(artist: artist)
+                self.navigationController?.pushViewController(vc, animated: true)
+            default:
+                break
             }
         }
     }
@@ -180,13 +231,13 @@ extension AlbumsViewController: PeekPopPreviewingDelegate {
 extension AlbumsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return uiCollection?.count ?? 0
+        return displayedCollection?.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(for: indexPath) as MPAlbumCollectionViewCell
 
-        guard let uiCollection = uiCollection else {
+        guard let uiCollection = displayedCollection else {
             return cell
         }
 
@@ -194,34 +245,36 @@ extension AlbumsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.titleLabel.text = album.name
         cell.subtitleLabel.text = album.artist?.name
         cell.album = album
-        if let song = album.songs.first, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            DispatchQueue.main.async {
-                if let image = self.cachedImage(at: indexPath) {
-                    cell.imageView.image = image
-                } else {
-                    song.fetchArtwork { artwork in
-                        guard album.key == cell.album?.key, let image = artwork.image(at: layout.itemSize) else {
-                            return
-                        }
+        guard let song = album.songs.first, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+            return cell
+        }
 
-                        cell.imageView.image = image
-                        self.cache(image: image, at: indexPath)
+        DispatchQueue.main.async {
+            if let image = self.cachedImage(at: indexPath) {
+                cell.imageView.image = image
+            } else {
+                song.fetchArtwork { artwork in
+                    guard album.key == cell.album?.key, let image = artwork.image(at: layout.itemSize) else {
+                        return
                     }
+
+                    cell.imageView.image = image
+                    self.cache(image: image, at: indexPath)
                 }
             }
-            cell.widthConstraint?.constant = layout.itemSize.width
-            cell.layoutIfNeeded()
         }
+        cell.widthConstraint?.constant = layout.itemSize.width
+        cell.layoutIfNeeded()
 
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let uiCollection = uiCollection else {
+        guard let collection = displayedCollection else {
             return
         }
 
-        let album = uiCollection[indexPath.row]
+        let album = collection[indexPath.row]
         let vc = AlbumViewController(album: album)
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -246,12 +299,12 @@ extension AlbumsViewController: UICollectionViewDataSourcePrefetching {
     }
 
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        guard let uiCollection = uiCollection, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
+        guard let collection = displayedCollection, let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
             return
         }
 
         for indexPath in indexPaths {
-            let album = uiCollection[indexPath.row]
+            let album = collection[indexPath.row]
             guard let song = album.songs.first else {
                 continue
             }

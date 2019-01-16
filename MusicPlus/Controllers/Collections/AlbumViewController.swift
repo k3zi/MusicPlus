@@ -53,12 +53,20 @@ class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDele
             return nil
         }
 
-        return PopupMenuItemView(item: item) { action in
+        return PopupMenuItemView(item: item, exclude: .goToAlbum) { action in
             switch action {
             case .play:
                 self.tableView(self.tableView, didSelectRowAt: indexPath)
             case .addUpNext:
                 KZPlayer.sharedInstance.addUpNext(item.originalItem)
+            case .goToArtist:
+                guard let artist = item.artist else {
+                    return
+                }
+                let vc = ArtistViewController(artist: artist)
+                self.navigationController?.pushViewController(vc, animated: true)
+            default:
+                break
             }
         }
     }

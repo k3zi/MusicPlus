@@ -75,7 +75,7 @@ class PeekPopManager {
      - parameter context:  PreviewingContext
      */
     func animateProgressForContext(_ progress: CGFloat, context: PreviewingContext?) {
-        (progress < 0.99) ? peekPopView?.animateProgress(progress) : commitTarget(context)
+        peekPopView?.animateProgress(progress)
     }
 
     /**

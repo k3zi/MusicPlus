@@ -112,7 +112,7 @@ extension ArtistsViewController: PeekPopPreviewingDelegate {
             return nil
         }
 
-        return PopupMenuItemView(item: item) { action in
+        return PopupMenuItemView(item: item, exclude: [.goToAlbum, .goToArtist]) { action in
             switch action {
             case .play:
                 let wrappedArtist = KZThreadSafeReference(to: item)
@@ -127,6 +127,8 @@ extension ArtistsViewController: PeekPopPreviewingDelegate {
             case .addUpNext:
                 let collection = AnyRealmCollection(item.songs)
                 KZPlayer.sharedInstance.addUpNext(collection.toArray())
+            default:
+                break
             }
         }
     }

@@ -76,8 +76,8 @@ struct Constants {
             static let defaultTint = RGB(56, g: 155, b: 225)
             static let gray = RGB(198)
 
-            static let popupMenuItem = UIColor.init(white: 1.0, alpha: 0.2)
-            static let popupMenuItemSelected = UIColor.init(white: 0.2, alpha: 0.1)
+            static let popupMenuItem = UIColor.init(white: 1.0, alpha: 0.3)
+            static let popupMenuItemSelected = UIColor.init(white: 0.8, alpha: 0.1)
         }
 
         struct Image {

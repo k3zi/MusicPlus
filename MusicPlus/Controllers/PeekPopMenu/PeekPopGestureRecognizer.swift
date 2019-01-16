@@ -44,6 +44,8 @@ class PeekPopGestureRecognizer: UIGestureRecognizer {
     init(peekPop: PeekPop) {
         self.peekPopManager = PeekPopManager(peekPop: peekPop)
         super.init(target: nil, action: nil)
+        self.delaysTouchesBegan = true
+        self.delaysTouchesEnded = true
     }
 
     // MARK: Touch handling

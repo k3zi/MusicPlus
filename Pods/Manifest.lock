@@ -1,11 +1,11 @@
 PODS:
-  - Alamofire (4.8.0)
+  - Alamofire (4.8.1)
   - AlamofireImage (3.5.0):
     - Alamofire (~> 4.8)
   - AwaitKit (5.0.1):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
-  - Connectivity (2.0.3)
+  - Connectivity (2.0.4)
   - Crashlytics (3.12.0):
     - Fabric (~> 1.9.0)
   - Differentiator (3.1.0)
@@ -111,11 +111,11 @@ SPEC REPOS:
     - Zip
 
 SPEC CHECKSUMS:
-  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
   AwaitKit: a6d0b0b6d603cedda8ef1c1c249b8d6730359917
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Connectivity: 3f4021b98863230c8d916e4d3cf562b2e290dae5
+  Connectivity: 78c852fda3910863483b57775522acd615a2c944
   Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
   Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   Fabric: f988e33c97f08930a413e08123064d2e5f68d655

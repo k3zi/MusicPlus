@@ -148,6 +148,20 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
                 self.tableView(self.tableView, didSelectRowAt: indexPath)
             case .addUpNext:
                 KZPlayer.sharedInstance.addUpNext(item.originalItem)
+            case .goToArtist:
+                guard let artist = item.artist else {
+                    return
+                }
+                let vc = ArtistViewController(artist: artist)
+                self.navigationController?.pushViewController(vc, animated: true)
+            case .goToAlbum:
+                guard let album = item.album else {
+                    return
+                }
+                let vc = AlbumViewController(album: album)
+                self.navigationController?.pushViewController(vc, animated: true)
+            default:
+                break
             }
         }
     }

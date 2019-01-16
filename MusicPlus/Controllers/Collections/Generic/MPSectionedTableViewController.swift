@@ -20,24 +20,25 @@ class MPSectionedTableViewController: KZViewController {
     // MARK: Setup View
 
     override func viewDidLoad() {
+        fetchAUtomatically = false
         super.viewDidLoad()
 
         title = "Collection"
-        view.backgroundColor = UIColor.clear
+        view.backgroundColor = .clear
         automaticallyAdjustsScrollViewInsets = false
 
         setupMenuToggle()
 
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.backgroundColor = UIColor.clear
+        tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.sectionIndexBackgroundColor = UIColor.clear
+        tableView.sectionIndexBackgroundColor = .clear
         tableView.sectionIndexColor = RGB(255)
         view.addSubview(tableView)
 
-        shadowView.backgroundColor = UIColor.clear
+        shadowView.backgroundColor = .clear
         shadowLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         shadowLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         shadowLayer.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
@@ -87,8 +88,7 @@ class MPSectionedTableViewController: KZViewController {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let percent = min(scrollView.contentOffset.y/300.0, 0.3)
-        shadowView.alpha = percent
+        shadowView.alpha = min(scrollView.contentOffset.y / 300.0, 0.3)
     }
 
     override func tableViewShowsSectionHeader(_ tableView: UITableView) -> Bool {
@@ -96,7 +96,7 @@ class MPSectionedTableViewController: KZViewController {
     }
 
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        return .leastNormalMagnitude
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -104,7 +104,7 @@ class MPSectionedTableViewController: KZViewController {
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        return .leastNormalMagnitude
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

@@ -65,6 +65,7 @@
 		EA1CB45A21ED9B4500CB1F23 /* PopupItemActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45921ED9B4500CB1F23 /* PopupItemActionView.swift */; };
 		EA1CB45C21EDA80B00CB1F23 /* PopupItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45B21EDA80B00CB1F23 /* PopupItemView.swift */; };
 		EA1CB45E21EDAAFD00CB1F23 /* PopupMenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45D21EDAAFD00CB1F23 /* PopupMenuItemView.swift */; };
+		EA1CB46021EF1C6000CB1F23 /* CustomIntensityVisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB45F21EF1C6000CB1F23 /* CustomIntensityVisualEffectView.swift */; };
 		EA5389E221867EC400CFA9B7 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5389E121867EC400CFA9B7 /* SliderView.swift */; };
 		EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */; };
 		EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */; };
@@ -211,6 +212,7 @@
 		EA1CB45921ED9B4500CB1F23 /* PopupItemActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupItemActionView.swift; sourceTree = "<group>"; };
 		EA1CB45B21EDA80B00CB1F23 /* PopupItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupItemView.swift; sourceTree = "<group>"; };
 		EA1CB45D21EDAAFD00CB1F23 /* PopupMenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupMenuItemView.swift; sourceTree = "<group>"; };
+		EA1CB45F21EF1C6000CB1F23 /* CustomIntensityVisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomIntensityVisualEffectView.swift; sourceTree = "<group>"; };
 		EA5389E121867EC400CFA9B7 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlexLibraryConfig.swift; sourceTree = "<group>"; };
 		EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZThreadSafeReference.swift; sourceTree = "<group>"; };
@@ -480,6 +482,7 @@
 				EA1CB44E21ECC4B100CB1F23 /* PeekPopManager.swift */,
 				EA1CB45021ECC4EB00CB1F23 /* PeekPop.swift */,
 				EA1CB45221ECC70600CB1F23 /* PeekPopView.swift */,
+				EA1CB45F21EF1C6000CB1F23 /* CustomIntensityVisualEffectView.swift */,
 			);
 			path = PeekPopMenu;
 			sourceTree = "<group>";
@@ -1017,6 +1020,7 @@
 				EAC85DCA2184BB5C00C61B6F /* PlayerViewController.swift in Sources */,
 				EAF6AE8B21E2E49200E1F727 /* StreamingDelegate.swift in Sources */,
 				EAF6AE4221E17E7F00E1F727 /* CreateFirstLibraryViewController.swift in Sources */,
+				EA1CB46021EF1C6000CB1F23 /* CustomIntensityVisualEffectView.swift in Sources */,
 				EAF6AE5F21E2B12200E1F727 /* Track.swift in Sources */,
 				EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */,
 				EAF6AE8E21E2E49200E1F727 /* StreamingState.swift in Sources */,

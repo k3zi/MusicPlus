@@ -19,7 +19,6 @@ class PopupItemView: UIView {
     var didSelect: (() -> Void)?
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesMoved(touches, with: event)
         guard let touch = touches.first else {
             return
         }
@@ -35,8 +34,6 @@ class PopupItemView: UIView {
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-
         if isSelected {
             isSelected = false
             UIImpactFeedbackGenerator(style: .light).impactOccurred()

@@ -145,15 +145,15 @@ class KZPlayer: NSObject {
 
         configuration.requestCachePolicy = .useProtocolCachePolicy
         configuration.allowsCellularAccess = true
-        configuration.timeoutIntervalForRequest = 3
+        configuration.timeoutIntervalForRequest = 60
 
-        configuration.urlCache = URLCache(memoryCapacity: 30 * 1024 * 1024, diskCapacity: 300 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
+        configuration.urlCache = URLCache(memoryCapacity: 400 * 1024 * 1024, diskCapacity: 2048 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
 
         return configuration
     }
 
     static var imageDownloader: ImageDownloader = {
-        return ImageDownloader(configuration: KZPlayer.imageDownloaderConfiguration(), downloadPrioritization: .lifo, maximumActiveDownloads: 20, imageCache: AutoPurgingImageCache())
+        return ImageDownloader(configuration: KZPlayer.imageDownloaderConfiguration(), downloadPrioritization: .lifo, maximumActiveDownloads: 20)
     }()
 }
 

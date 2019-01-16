@@ -24,7 +24,7 @@ class PeekPopView: UIView {
 
     // MARK: Subviews
     let blurViewHolder = UIView()
-    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    let blurView = CustomIntensityVisualEffectView(effect: UIBlurEffect(style: .light), intensity: 0.5)
 
     // Target preview view
     var targetViewContainer = UIView()
@@ -42,6 +42,7 @@ class PeekPopView: UIView {
     }
 
     func setup() {
+        print("setup")
         blurViewHolder.addSubview(blurView)
         addSubview(blurViewHolder)
 
@@ -58,13 +59,15 @@ class PeekPopView: UIView {
     }
 
     func didAppear() {
+        print("didAppear")
         blurViewHolder.alpha = 0.0
         targetView?.becomeFirstResponder()
     }
 
     func animateProgress(_ progress: CGFloat) {
+        print("animateProgress: \(progress)")
         UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
-            self.blurViewHolder.alpha = min(progress, 1.0)
+            self.blurViewHolder.alpha = min(progress, 0.9)
         }, completion: nil)
     }
 
