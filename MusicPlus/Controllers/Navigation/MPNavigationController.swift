@@ -20,8 +20,13 @@ class MPNavigationController: UINavigationController {
         navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
         navigationBar.isTranslucent = true
-        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: RGB(255), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)]
-        navigationBar.tintColor = RGB(255)
+        navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.semibold)]
+        navigationBar.tintColor = .white
+
+        if #available(iOS 11.0, *) {
+            navigationBar.prefersLargeTitles = true
+            navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        }
 
         view.insertSubview(backgroundView, at: 0)
 

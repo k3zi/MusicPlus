@@ -62,6 +62,7 @@ class MPAlbumSectionHeaderView: UIView {
 
         subtitleLabel.textColor = RGB(255)
         subtitleLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
+        subtitleLabel.numberOfLines = 0
         addSubview(subtitleLabel)
 
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
@@ -78,8 +79,8 @@ class MPAlbumSectionHeaderView: UIView {
             }
         }
 
-        titleLabel.text = album.name
-        subtitleLabel.text = album.artist?.name
+        titleLabel.text = album.artist?.name
+        subtitleLabel.text = "\(album.songs.count) tracks / \(album.durationText())"
     }
 
     func setupConstraints() {

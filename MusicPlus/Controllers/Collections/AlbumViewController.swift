@@ -29,12 +29,8 @@ class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDele
         peekPop = PeekPop(viewController: self)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
 
-        let titleView = UILabel()
-        titleView.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-        titleView.textColor = RGB(255)
-        titleView.text = "\(album.songs.count) tracks / \(album.durationText())"
-        titleView.sizeToFit()
-        navigationItem.titleView = titleView
+        title = album.name
+
         let button = UIButton.styleForBack()
         button.addTarget(self, action: #selector(popNavigationController), for: .touchDown)
         navigationItem.leftBarButtonItems?.append(UIBarButtonItem(customView: button))
