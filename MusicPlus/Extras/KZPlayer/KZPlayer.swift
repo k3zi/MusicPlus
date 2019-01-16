@@ -587,14 +587,14 @@ extension KZPlayer {
             return
         }
 
-        persistentPlayNextSong()
+        persistentPlayNextSong(shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
     }
 
     func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1, shouldCrossfadeOnSkip: Bool = true) {
         var played = false
         var i = 0
         while !played && i < times {
-            played = playNextSong(item)
+            played = playNextSong(item, shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
             i += 1
         }
     }
