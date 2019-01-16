@@ -38,8 +38,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
-        if KZPlayer.sharedInstance.currentLibrary == nil {
-            KZPlayer.sharedInstance.currentLibrary = KZLibrary.libraries.first
+        let libraries = KZLibrary.libraries
+        KZPlayer.sharedInstance.currentLibrary = libraries.first
+        if !KZPlayer.sharedInstance.settings.upNextPreserve {
+            libraries.forEach {
+                let realm = $0.realm()
+                try! realm.write {
+                    realm.delete(realm.objects(KZPlayerUpNextItem.self))
+                }
+            }
         }
 
         connectivity = Connectivity()

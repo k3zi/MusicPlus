@@ -40,6 +40,9 @@ struct Settings {
     var crossfadeOnPrevious: Bool {
         return UserDefaults.standard.bool(forKey: Constants.Settings.Info.crossfadeOnPrevious.accessor)
     }
+    var upNextPreserve: Bool {
+        return UserDefaults.standard.bool(forKey: Constants.Settings.Info.upNextPreserve.accessor)
+    }
 }
 
 enum KZPlayerState {
@@ -1015,15 +1018,14 @@ extension KZPlayer {
         }
 
         let upNextItems = realm.objects(KZPlayerUpNextItem.self)
-        var result: KZPlayerHistoryItem?
 
-        if upNextItems.count > 0 {
-            if let item = upNextItems.first {
-                result = KZPlayerHistoryItem(orig: item.originalItem)
-                try! realm.write {
-                    realm.delete(item)
-                }
-            }
+        guard let item = upNextItems.first else {
+            return nil
+        }
+
+        let result = KZPlayerHistoryItem(orig: item.originalItem)
+        try! realm.write {
+            realm.delete(item)
         }
 
         return result

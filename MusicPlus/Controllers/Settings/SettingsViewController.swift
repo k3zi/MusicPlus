@@ -62,10 +62,17 @@ class SettingsViewController: MPViewController {
         let crossfadeOnPreviousProvider = SwitchTableViewCellProvider(title: crossfadeOnPrevious.title, subTitle: crossfadeOnPrevious.description, isOn: false)
         UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
 
-        let networkSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 20, footerHeight: 0)
+        let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 20, footerHeight: 0)
+
+        let upNextPreserve = Constants.Settings.Info.upNextPreserve
+        let upNextPreserveProvider = SwitchTableViewCellProvider(title: upNextPreserve.title, subTitle: upNextPreserve.description, isOn: false)
+        UserDefaults.standard.bidirectionalBind(control: upNextPreserveProvider.uiSwitch.rx.isOn, keyPath: upNextPreserve.accessor, defaultValue: false).disposed(by: disposeBag)
+
+        let upNextQueueSectionProvider = SpacingSectionProvider(providers: [upNextPreserveProvider], headerHeight: 20, footerHeight: 0)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        tableView.flix.build([networkSectionProvider])
+        tableView.flix.build([crossfadeSectionProvider, upNextQueueSectionProvider])
+
     }
 
     override func setupConstraints() {

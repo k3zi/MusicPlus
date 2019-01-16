@@ -83,6 +83,34 @@ class MPSectionedTableViewController: KZViewController {
         return sections[section].sectionName
     }
 
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        let targetNumber = 30
+        var result = [(title: String, numberOfItems: Int, originalIndex: Int)]()
+        for i in 0 ..< numberOfSections(in: tableView) {
+            if let s = self.tableView(tableView, titleForHeaderInSection: i) {
+                result.append((title: s, numberOfItems: self.tableViewCellData(tableView, section: i).count, originalIndex: i))
+            }
+        }
+
+        let numberToRemove = result.count - targetNumber
+        if numberToRemove > 0 {
+            // targetNumber is way greater than 2 so the array will have 2 elements to remove
+            let first = result.removeFirst()
+            let last = result.removeLast()
+            result.sort { $0.numberOfItems > $1.numberOfItems }
+            result.removeLast(numberToRemove)
+            result.sort { $0.originalIndex < $1.originalIndex }
+            result.insert(first, at: 0)
+            result.append(last)
+        }
+
+        return result.map { $0.title }
+    }
+
+    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return sections.firstIndex { $0.sectionName == title }!
+    }
+
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         return MPSongTableViewCell.self
     }

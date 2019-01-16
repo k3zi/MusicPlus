@@ -45,6 +45,8 @@ struct Constants {
             static let crossfadeDurationSeconds = SettingInfo(title: NSLocalizedString("Crossfade Duration", comment: ""), accessor: "crossfadeDurationSeconds", description: NSLocalizedString("The length of time taken to crossfade from one song to another.", comment: ""))
             static let crossfadeOnNext = SettingInfo(title: NSLocalizedString("Crossfade on Next", comment: ""), accessor: "crossfadeOnNext", description: NSLocalizedString("Crossfade if the current song is skipped manualy.", comment: ""))
             static let crossfadeOnPrevious = SettingInfo(title: NSLocalizedString("Crossfade on Previous", comment: ""), accessor: "crossfadeOnPrevious", description: NSLocalizedString("Crossfade when navigating to the previous song.", comment: ""))
+
+            static let upNextPreserve = SettingInfo(title: NSLocalizedString("Preserve Up Next on Restart", comment: ""), accessor: "upNextPreserve", description: NSLocalizedString("Upon restarting the application, the up next queue from the previous session will remain.", comment: ""))
         }
     }
 
