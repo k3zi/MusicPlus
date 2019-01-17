@@ -56,11 +56,11 @@ class SettingsViewController: MPViewController {
 
         let crossfadeOnNext = Constants.Settings.Info.crossfadeOnNext
         let crossfadeOnNextProvider = SwitchTableViewCellProvider(title: crossfadeOnNext.title, subTitle: crossfadeOnNext.description, isOn: false)
-        UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnNext.accessor, defaultValue: false).disposed(by: disposeBag)
+        UserDefaults.standard.bidirectionalBind(control: crossfadeOnNextProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnNext.accessor, defaultValue: false).disposed(by: disposeBag)
 
         let crossfadeOnPrevious = Constants.Settings.Info.crossfadeOnPrevious
         let crossfadeOnPreviousProvider = SwitchTableViewCellProvider(title: crossfadeOnPrevious.title, subTitle: crossfadeOnPrevious.description, isOn: false)
-        UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
+        UserDefaults.standard.bidirectionalBind(control: crossfadeOnPreviousProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
 
         let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 20, footerHeight: 0)
 
@@ -77,7 +77,7 @@ class SettingsViewController: MPViewController {
 
     override func setupConstraints() {
         super.setupConstraints()
-        tableView.autoPinEdgesToSuperviewEdges()
+        tableView.autoPinEdgesToSuperviewSafeArea()
     }
 
 }

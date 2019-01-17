@@ -126,6 +126,14 @@ class KZAudioPlayerSet: StreamingDelegate {
         return (lastSeekTime ?? 0) + (Double(playerTime.sampleTime) / Double(playerTime.sampleRate)) - item.startTime
     }
 
+    func duration(item: KZPlayerItemBase? = nil) -> Double {
+        guard let item = item ?? itemReference.resolve() else {
+            return 0
+        }
+
+        return item.endTime - item.startTime
+    }
+
     func seek(to time: TimeInterval, completionHandler: @escaping AVAudioNodeCompletionHandler) throws {
         guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
             return try KZPlayer.libraryQueue.sync {

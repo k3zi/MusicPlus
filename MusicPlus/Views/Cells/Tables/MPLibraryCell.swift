@@ -17,8 +17,8 @@ class MPLibraryCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         backgroundColor = UIColor.black.withAlphaComponent(0.27)
-        topSeperator.backgroundColor = RGB(0)
-        bottomSeperator.backgroundColor = RGB(0)
+        topSeperator.backgroundColor = .black
+        bottomSeperator.backgroundColor = .black
 
         selectionStyle = .none
         accessoryType = .none

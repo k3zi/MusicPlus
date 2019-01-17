@@ -21,14 +21,14 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        topSeperator.backgroundColor = RGB(0)
-        bottomSeperator.backgroundColor = RGB(0)
+        topSeperator.backgroundColor = .black
+        bottomSeperator.backgroundColor = .black
 
         trackNumberLabel.textColor = RGB(255, a: 0.5)
         trackNumberLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(trackNumberLabel)
 
-        titleLabel.textColor = RGB(255)
+        titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(titleLabel)
 

@@ -18,9 +18,9 @@ class MPArtistTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        bottomSeperator.backgroundColor = RGB(0)
+        bottomSeperator.backgroundColor = .black
 
-        titleLabel.textColor = RGB(255)
+        titleLabel.textColor = .white
         titleLabel.font = .systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(titleLabel)
     }

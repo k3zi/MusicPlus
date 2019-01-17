@@ -11,7 +11,7 @@ import UIKit
 class SongsViewController: MPSongCollectionViewController {
 
     static let shared = SongsViewController()
-    let shuffleButton = MPShuffleHeaderView(frame: CGRect.zero)
+    let shuffleButton = MPShuffleHeaderView(frame: .zero)
 
     // MARK: - Setup View
 
@@ -21,7 +21,6 @@ class SongsViewController: MPSongCollectionViewController {
         title = "Songs"
         tableView.tableHeaderView = shuffleButton
         tableView.delaysContentTouches = false
-        tableView.contentOffset = CGPoint(x: 0, y: shuffleButton.frame.height)
 
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 

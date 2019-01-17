@@ -12,7 +12,7 @@ class MPSectionedTableViewController: KZViewController {
 
     var sections = [TableSection]()
 
-    var tableView = UITableView(frame: CGRect.zero, style: .grouped)
+    var tableView = UITableView(frame: .zero, style: .grouped)
     let shadowView = UIView()
     let shadowLayer = CAGradientLayer()
     var shadowTopConstraint: NSLayoutConstraint?
@@ -26,6 +26,8 @@ class MPSectionedTableViewController: KZViewController {
         title = "Collection"
         view.backgroundColor = .clear
         automaticallyAdjustsScrollViewInsets = false
+        extendedLayoutIncludesOpaqueBars = true
+        edgesForExtendedLayout = .top
 
         setupMenuToggle()
 
@@ -35,7 +37,7 @@ class MPSectionedTableViewController: KZViewController {
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.sectionIndexBackgroundColor = .clear
-        tableView.sectionIndexColor = RGB(255)
+        tableView.sectionIndexColor = .white
         view.addSubview(tableView)
 
         shadowView.backgroundColor = .clear
@@ -135,12 +137,25 @@ class MPSectionedTableViewController: KZViewController {
         return .leastNormalMagnitude
     }
 
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableViewCellClass(tableView, indexPath: indexPath) == MPSongTableViewCell.self {
+            return 56 + 1 / 3
+        }
+
+        return super.tableView(tableView, estimatedHeightForRowAt: indexPath)
+    }
+
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if tableViewShowsSectionHeader(tableView), let name = self.tableView(tableView, titleForHeaderInSection: section) {
-            return MPSectionHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: 20), name: name)
+            return MPSectionHeaderView(frame: CGRect(x: 0.0, y: 0.0, width: view.frame.size.width, height: 20), name: name)
         }
 
         return nil
+    }
+
+    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
+        tableView.setContentOffset(.init(x: 0.0, y: 0.0), animated: true)
+        return false
     }
 
 }

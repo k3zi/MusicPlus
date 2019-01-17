@@ -44,7 +44,7 @@ class MPShuffleHeaderView: UIControl {
     }
 
     func setupView() {
-        label.textColor = RGB(255)
+        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         label.text = "Shuffle All"
         addSubview(label)

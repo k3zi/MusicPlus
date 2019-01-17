@@ -18,10 +18,13 @@ enum MPCollectionSortBy {
 class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPreviewingDelegate {
 
     var displayedCollection: KZPlayerItemCollection?
+    // Doesn't need to be updated frequently so we can just store an array
+    var displayedFilteredCollection: [KZPlayerItemBase]?
+    let searchViewController = UISearchController(searchResultsController: nil)
     var currentCollectionToken: NotificationToken?
     var peekPop: PeekPop!
 
-    var collectionGenerator: () -> KZPlayerItemCollection? {
+    var collectionGenerator: () -> KZPlayerItemCollection? = { return nil } {
         didSet {
             DispatchQueue.main.async {
                 self.registerNewCollection()
@@ -29,8 +32,14 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
         }
     }
 
+    var filteredCollectionnGenerator: () -> KZPlayerItemCollection? = { return nil } {
+        didSet {
+            displayedFilteredCollection = filteredCollectionnGenerator()?.toArray()
+            tableView.reloadData()
+        }
+    }
+
     init() {
-        collectionGenerator = { return nil }
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -109,7 +118,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 
     func playAllShuffled() {
         KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
-            guard let collection = self.collectionGenerator() else {
+            guard let collection = self.filteredCollectionnGenerator() ?? self.collectionGenerator() else {
                 return
             }
 
@@ -127,6 +136,35 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 
         peekPop = PeekPop(viewController: self)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
+
+        searchViewController.dimsBackgroundDuringPresentation = false
+        searchViewController.searchResultsUpdater = self
+        searchViewController.searchBar.tintColor = .white
+        searchViewController.hidesNavigationBarDuringPresentation = false
+        if #available(iOS 11.0, *) {
+            navigationItem.searchController = searchViewController
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if let textField = searchViewController.searchBar.textField {
+
+            textField.backgroundColor = AppDelegate.del().session.tintColor
+            let backgroundView = textField.subviews.first
+            if #available(iOS 11.0, *) { // If `searchController` is in `navigationItem`
+                backgroundView?.backgroundColor = UIColor.init(white: 0, alpha: 0.2)
+                backgroundView?.subviews.forEach { $0.removeFromSuperview() }
+            }
+            backgroundView?.layer.cornerRadius = 10.5
+            backgroundView?.layer.masksToBounds = true
+            //Continue changing more properties...
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
@@ -177,7 +215,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 
         let wrappedSong = KZThreadSafeReference(to: initialSong)
         KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
-            guard let safeInitialSong = wrappedSong.resolve(), let collection = self.collectionGenerator(), let index = collection.firstIndex(of: safeInitialSong) else {
+            guard let safeInitialSong = wrappedSong.resolve(), let collection = self.filteredCollectionnGenerator() ?? self.collectionGenerator(), let index = collection.firstIndex(of: safeInitialSong) else {
                 return
             }
 
@@ -186,6 +224,58 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 
         if MPContainerViewController.sharedInstance.playerViewStyle  == .hidden {
             MPContainerViewController.sharedInstance.playerViewStyle = .full
+        }
+    }
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        if let _ = displayedFilteredCollection {
+            return 1
+        }
+
+        return super.numberOfSections(in: tableView)
+    }
+
+    override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
+        if let displayedFilteredCollection = displayedFilteredCollection {
+            return displayedFilteredCollection as [Any]
+        }
+
+        return super.tableViewCellData(tableView, section: section)
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let _ = displayedFilteredCollection {
+            return nil
+        }
+
+        return super.tableView(tableView, titleForHeaderInSection: section)
+    }
+
+    override func tableViewShowsSectionHeader(_ tableView: UITableView) -> Bool {
+        if let _ = displayedFilteredCollection {
+            return false
+        }
+
+        return super.tableViewShowsSectionHeader(tableView)
+    }
+
+}
+
+extension MPSongCollectionViewController: UISearchResultsUpdating {
+
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchViewController.searchBar.text, text.count > 0 else {
+            filteredCollectionnGenerator = { return nil }
+            tableView.reloadData()
+            return
+        }
+
+        filteredCollectionnGenerator = {
+            guard let collection = self.collectionGenerator()?.filter("title CONTAINS[c] %@ OR artist.name CONTAINS[c] %@ OR album.name CONTAINS[c] %@", text, text, text) else {
+                return nil
+            }
+
+            return AnyRealmCollection(collection)
         }
     }
 

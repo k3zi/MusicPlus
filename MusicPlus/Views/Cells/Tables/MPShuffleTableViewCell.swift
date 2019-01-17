@@ -17,9 +17,9 @@ class MPShuffleTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        bottomSeperator.backgroundColor = RGB(0)
+        bottomSeperator.backgroundColor = .black
 
-        label.textColor = RGB(255)
+        label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         label.text = "Shuffle All"
         contentView.addSubview(label)

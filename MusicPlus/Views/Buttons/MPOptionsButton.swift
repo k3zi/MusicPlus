@@ -28,7 +28,7 @@ class MPOptionsButton: UIView {
         clipsToBounds = false
         translatesAutoresizingMaskIntoConstraints = false
 
-        toggleButton.tintColor = RGB(255)
+        toggleButton.tintColor = .white
         toggleButton.setImage(#imageLiteral(resourceName: "optionsUnfilled"), for: .normal)
         toggleButton.setImage(#imageLiteral(resourceName: "optionsFilled").withRenderingMode(.alwaysTemplate), for: .selected)
         toggleButton.addTarget(self, action: #selector(toggle), for: .touchUpInside)
@@ -69,10 +69,10 @@ class MPOptionsButton: UIView {
             if item.icon.count > 0 {
                 button.setImage(UIImage(named: item.icon), for: .normal)
             }
-            button.setBackgroundColor(RGB(0), forState: .normal)
-            button.setBackgroundColor(RGB(255), forState: .selected)
-            button.setTitleColor(RGB(255), for: .normal)
-            button.setTitleColor(RGB(0), for: .selected)
+            button.setBackgroundColor(.black, forState: .normal)
+            button.setBackgroundColor(.white, forState: .selected)
+            button.setTitleColor(.white, for: .normal)
+            button.setTitleColor(.black, for: .selected)
             button.setTitle(item.name, for: .normal)
             button.addTarget(self, action: #selector(didClickButton), for: .touchUpInside)
             button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
@@ -137,7 +137,7 @@ class MPOptionsButton: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(toggle), name: Constants.Notification.hidePopup, object: nil)
         toggleButton.isSelected = true
 
-        self.backgroundColor = RGB(0)
+        self.backgroundColor = .black
         self.superview?.addSubview(buttonHolder)
         expandedConstraints.append(contentsOf: [buttonHolder.autoPinEdge(.top, to: .bottom, of: self), buttonHolder.autoPinEdge(.left, to: .left, of: self), buttonHolder.autoPinEdge(.right, to: .right, of: self)])
         self.layoutIfNeeded()

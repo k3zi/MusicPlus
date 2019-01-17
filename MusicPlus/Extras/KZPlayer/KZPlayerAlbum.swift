@@ -52,14 +52,14 @@ class KZPlayerAlbum: Object, RealmGenerating {
 
     func durationText() -> String {
         let duration = totalDuration()
-        let (days, hrf) = modf(duration/86400)
+        let (days, hrf) = modf(duration / 86400)
         let (hours, minf) = modf(hrf * 24)
         let minutes = Int(minf * 60)
 
         var output = [String]()
 
         if days > 0 { output.append("\(days) day\(days == 1 ? "" : "s")") }
-        if hours > 0 { output.append("\(hours) hour\(hours == 1 ? "" : "s")") }
+        if hours > 0 { output.append("\(Int(hours)) hour\(hours == 1 ? "" : "s")") }
         if minutes > 0 { output.append("\(minutes) minute\(minutes == 1 ? "" : "s")") }
 
         return output.joined(separator: " ")

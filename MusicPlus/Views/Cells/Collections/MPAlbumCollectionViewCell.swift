@@ -31,11 +31,11 @@ class MPAlbumCollectionViewCell: UICollectionViewCell, Reusable {
 
         titleLabel.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.medium)
         titleLabel.numberOfLines = 2
-        titleLabel.textColor = RGB(255)
+        titleLabel.textColor = .white
         contentView.addSubview(titleLabel)
 
         subtitleLabel.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.light)
-        subtitleLabel.textColor = RGB(255)
+        subtitleLabel.textColor = .white
         contentView.addSubview(subtitleLabel)
 
         setupConstraints()

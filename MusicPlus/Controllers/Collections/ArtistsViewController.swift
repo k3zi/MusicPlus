@@ -28,6 +28,7 @@ class ArtistsViewController: MPSectionedTableViewController {
 
         title = "Artists"
         tableView.register(cellType: MPArtistTableViewCell.self)
+        tableView.tableHeaderView = UIView.init(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
 
         peekPop = PeekPop(viewController: self)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)

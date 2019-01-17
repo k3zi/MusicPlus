@@ -236,7 +236,7 @@ extension Calendar {
 extension Date {
     func shortRelativeDate() -> String {
 
-        let timeInterval = -self.timeIntervalSinceNow
+        let timeInterval = abs(timeIntervalSinceNow)
 
         let calendar = Calendar.current
         let oneMinute = calendar.timeIntervalOf(.minute)
@@ -248,13 +248,13 @@ extension Date {
         case 0..<oneMinute:
             return String(format: "%.fs", timeInterval)
         case oneMinute..<oneHour:
-            return String(format: "%.fm", timeInterval / 60)
+            return String(format: "%.fm", timeInterval / oneMinute)
         case oneHour..<oneDay:
-            return String(format: "%.fh", timeInterval / (60 * 60))
+            return String(format: "%.fh", timeInterval / oneHour)
         case oneDay..<oneYear:
-            return String(format: "%.fd", timeInterval / (60 * 60 * 24))
+            return String(format: "%.fd", timeInterval / oneDay)
         default:
-            return String(format: "%.fy", timeInterval / (60 * 60 * 24 * 365))
+            return String(format: "%.fy", timeInterval / oneYear)
         }
     }
 }
@@ -519,5 +519,11 @@ extension DispatchQueue {
         } else {
             return try DispatchQueue.main.sync(execute: work)
         }
+    }
+}
+
+extension UISearchBar {
+    var textField: UITextField? {
+        return subviews.map { $0.subviews.first { $0 is UITextInputTraits } as? UITextField }.compactMap { $0 }.first
     }
 }

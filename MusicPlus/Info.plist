@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -54,7 +52,11 @@
 	<string>19</string>
 	<key>CoreSpotlightContinuation</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
@@ -70,7 +72,7 @@
 		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>To display and playback audio from the user&apos;s personal library.</string>
+	<string>To display and playback audio from the user's personal library.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Speech recognition is required t o view lyrics to songs</string>
 	<key>UIBackgroundModes</key>
@@ -96,13 +98,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
 	<key>UISupportsDocumentBrowser</key>
 	<false/>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>kTCCServiceMediaLibrary</key>
-	<string>To display and playback audio from the user&apos;s personal library.</string>
+	<string>To display and playback audio from the user's personal library.</string>
 </dict>
 </plist>

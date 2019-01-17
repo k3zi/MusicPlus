@@ -45,11 +45,11 @@ class MPArtistSectionHeaderView: UIView {
     func setupView() {
         self.backgroundColor = UIColor.clear
 
-        topSeperator.backgroundColor = RGB(255)
+        topSeperator.backgroundColor = .white
         topSeperator.alpha = 0.14
         addSubview(topSeperator)
 
-        bottomSeperator.backgroundColor = RGB(0)
+        bottomSeperator.backgroundColor = .black
         bottomSeperator.alpha = 0.14
         addSubview(bottomSeperator)
 
@@ -58,12 +58,12 @@ class MPArtistSectionHeaderView: UIView {
         imageView.backgroundColor = Constants.UI.Color.gray
         addSubview(imageView)
 
-        titleLabel.textColor = RGB(255)
+        titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
         titleLabel.numberOfLines = 2
         infoHolder.addSubview(titleLabel)
 
-        subtitleLabel.textColor = RGB(255)
+        subtitleLabel.textColor = .white
         subtitleLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
         infoHolder.addSubview(subtitleLabel)
 

@@ -21,13 +21,13 @@ class MPSongTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        bottomSeperator.backgroundColor = RGB(0)
+        bottomSeperator.backgroundColor = .black
 
-        titleLabel.textColor = RGB(255)
+        titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(titleLabel)
 
-        subtitleLabel.textColor = RGB(255)
+        subtitleLabel.textColor = .white
         subtitleLabel.font = UIFont.systemFont(ofSize: 9, weight: UIFont.Weight.light)
         contentView.addSubview(subtitleLabel)
 

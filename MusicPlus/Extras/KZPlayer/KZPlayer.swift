@@ -79,7 +79,9 @@ class KZPlayer: NSObject {
 
     /// ------- Player ------- ///
     var audioEngine: AVAudioEngine
+    var shouldBeRunning = false
     var audioSession: AVAudioSession
+    var audioSessionNotifications = [NSObjectProtocol]()
     var auPlayerSets = [Int: KZAudioPlayerSet]()
     var auMixer: AVAudioMixerNode
 
@@ -103,6 +105,8 @@ class KZPlayer: NSObject {
     // Volume
     var averagePower: Float = 0.0
     var volumeView = MPVolumeView()
+
+    var currentTimeObservationHandler: ((_ currentTime: Double, _ duration: Double) -> Void)?
 
     // Library
     var currentLibrary: KZLibrary? {
@@ -216,15 +220,40 @@ extension KZPlayer {
             print("Error starting audio sesssion")
         }
 
-        NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: OperationQueue.main) { _ in
-            self.pause()
-        }
+        audioSessionNotifications.forEach(NotificationCenter.default.removeObserver)
 
-        NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: OperationQueue.main) { _ in
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: OperationQueue.main) { _ in
+            self.pause()
+        })
+
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: OperationQueue.main) { notification in
+            guard let reasonInt = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt, let reason = AVAudioSession.RouteChangeReason(rawValue: reasonInt) else {
+                return
+            }
+
             if self.audioEngine.isRunning {
+                self.pause()
+                switch reason {
+                case .oldDeviceUnavailable:
+                    self.shouldBeRunning = false
+                    break
+                default:
+                    self.resume()
+                }
+            }
+        })
+
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: OperationQueue.main) { notification in
+            guard let notifyingEngine = notification.object as? AVAudioEngine, notifyingEngine == self.audioEngine else {
+                return
+            }
+
+            if self.shouldBeRunning {
+                self.setUpAudioSession()
+                self.pause()
                 self.resume()
             }
-        }
+        })
 
         volumeView.frame = CGRect(x: -2000, y: -2000, width: 0, height: 0)
         volumeView.alpha = 0.1
@@ -381,7 +410,7 @@ extension KZPlayer {
             return
         }
 
-        persistentPlayNextSong(collection[index], times: collection.count)
+        persistentPlayNextSong(collection[index], times: collection.count, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
     }
 
     // Play Single Item
@@ -445,15 +474,20 @@ extension KZPlayer {
         } catch {
             print("Error starting audio engine")
         }
+        print("player did resume")
+        shouldBeRunning = true
     }
 
     @objc func pause() {
+        print("player pause called")
         guard audioEngine.isRunning else {
             return
         }
 
         auPlayerSets.forEach { $0.value.pause() }
         audioEngine.pause()
+        print("player paused")
+        shouldBeRunning = false
     }
 
     func togglePlay() {
@@ -542,17 +576,30 @@ extension KZPlayer {
         return set.currentTime(item: item)
     }
 
+    func duration(_ channel: Int = -1, item: KZPlayerItemBase? = nil) -> Double {
+        guard let set = setForChannel(channel) else {
+            return 0.0
+        }
+
+        return set.duration(item: item)
+    }
+
+    @discardableResult
     func setCurrentTime(_ value: Double, channel: Int = -1) -> Bool {
         guard let item = itemForChannel(channel) else {
             return false
         }
 
-        let timeInterval = TimeInterval(value)
+        if duration(item: item) <= value {
+            next()
+            return true
+        }
+
         do {
-            guard let filePlayer = setForChannel(channel) else {
+            guard let set = setForChannel(channel) else {
                 return false
             }
-            try filePlayer.seek(to: timeInterval) {
+            try set.seek(to: value) {
                 DispatchQueue.main.async {
                     self.playerCompleted(channel)
                 }
@@ -648,11 +695,14 @@ extension KZPlayer {
             return
         }
 
-        if !checkTimeFunctioning && settings.crossfade && !crossfading && (currentItem.endTime - currentTime(item: currentItem)) < settings.crossfadeAtSeconds {
+        let currentTime = self.currentTime(item: currentItem)
+        if !checkTimeFunctioning && settings.crossfade && !crossfading && (currentItem.endTime - currentTime) < settings.crossfadeAtSeconds {
             checkTimeFunctioning = true
             backgroundNext()
             checkTimeFunctioning = false
         }
+
+        currentTimeObservationHandler?(currentTime, self.duration(item: currentItem))
     }
 
     func stopCrossfade() {

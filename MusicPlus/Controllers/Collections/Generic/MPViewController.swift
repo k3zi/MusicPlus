@@ -18,8 +18,6 @@ class MPViewController: KZViewController {
         super.viewDidLoad()
 
         view.insertSubview(backgroundView, at: 0)
-
-        setupConstraints()
     }
 
     override func setupConstraints() {

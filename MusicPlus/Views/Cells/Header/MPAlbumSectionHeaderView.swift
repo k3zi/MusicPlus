@@ -13,6 +13,7 @@ class MPAlbumSectionHeaderView: UIView {
     let imageView = UIImageView()
 
     let titleLabel = UILabel()
+    let subtitleLabelHolderView = UIView()
     let subtitleLabel = UILabel()
 
     let heartButton = UIButton.styleForHeart()
@@ -42,11 +43,11 @@ class MPAlbumSectionHeaderView: UIView {
     func setupView() {
         self.backgroundColor = UIColor.clear
 
-        topSeperator.backgroundColor = RGB(255)
+        topSeperator.backgroundColor = .white
         topSeperator.alpha = 0.14
         addSubview(topSeperator)
 
-        bottomSeperator.backgroundColor = RGB(0)
+        bottomSeperator.backgroundColor = .black
         bottomSeperator.alpha = 0.14
         addSubview(bottomSeperator)
 
@@ -55,15 +56,18 @@ class MPAlbumSectionHeaderView: UIView {
         imageView.backgroundColor = Constants.UI.Color.gray
         addSubview(imageView)
 
-        titleLabel.textColor = RGB(255)
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.medium)
+        titleLabel.textColor = .white
+        titleLabel.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         titleLabel.numberOfLines = 2
         addSubview(titleLabel)
 
-        subtitleLabel.textColor = RGB(255)
-        subtitleLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFont.Weight.regular)
-        subtitleLabel.numberOfLines = 0
-        addSubview(subtitleLabel)
+        subtitleLabel.textColor = .white
+        subtitleLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        subtitleLabelHolderView.addSubview(subtitleLabel)
+
+        subtitleLabelHolderView.backgroundColor = RGB(0.2, a: 0.5)
+        subtitleLabelHolderView.layer.cornerRadius = 6
+        addSubview(subtitleLabelHolderView)
 
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
         addSubview(heartButton)
@@ -79,12 +83,12 @@ class MPAlbumSectionHeaderView: UIView {
             }
         }
 
-        titleLabel.text = album.artist?.name
-        subtitleLabel.text = "\(album.songs.count) tracks / \(album.durationText())"
+        titleLabel.text = album.name
+        subtitleLabel.text = album.artist?.name
     }
 
     func setupConstraints() {
-        bottomSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        bottomSeperator.autoSetDimension(.height, toSize: (1.0 / UIScreen.main.scale))
         bottomSeperator.autoPinEdge(toSuperviewEdge: .bottom)
         bottomSeperator.autoPinEdge(toSuperviewEdge: .left)
         bottomSeperator.autoPinEdge(toSuperviewEdge: .right)
@@ -98,9 +102,11 @@ class MPAlbumSectionHeaderView: UIView {
         titleLabel.autoPinEdge(.left, to: .right, of: imageView, withOffset: 10)
         titleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 14)
 
-        subtitleLabel.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: 4)
-        subtitleLabel.autoPinEdge(.left, to: .right, of: imageView, withOffset: 10)
-        subtitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 14)
+        subtitleLabel.autoPinEdgesToSuperviewEdges(with: .init(top: 3, left: 8, bottom: 3, right: 8))
+
+        subtitleLabelHolderView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: 4)
+        subtitleLabelHolderView.autoPinEdge(.left, to: .right, of: imageView, withOffset: 10)
+        subtitleLabelHolderView.autoPinEdge(toSuperviewEdge: .right, withInset: 14, relation: .greaterThanOrEqual)
 
         heartButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 20)
         heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)

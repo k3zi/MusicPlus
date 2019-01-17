@@ -95,7 +95,7 @@ class SliderView: UIView {
 
     // Delegate
 
-    var progressDidChange: ((_ prgress: CGFloat) -> Void)?
+    var progressDidChange: ((_ prgress: CGFloat, _ complete: Bool) -> Void)?
 
     // Initialization
 
@@ -119,6 +119,10 @@ class SliderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        return bounds.insetBy(dx: -10, dy: -10).contains(point)
+    }
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         guard let touch = touches.first else {
@@ -135,26 +139,29 @@ class SliderView: UIView {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
+        proccess(touches: touches, final: false)
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        proccess(touches: touches, final: true)
+        isSliding = false
+    }
+
+    func proccess(touches: Set<UITouch>, final: Bool) {
         guard isSliding, let touch = touches.first else {
             return
         }
 
         let progressTranslation = touch.location(in: backgroundTrackView)
-        guard progressTranslation.x > 0 && backgroundTrackView.bounds.width >= progressTranslation.x else {
-            return
-        }
+        let horizontalTranslation = min(max(progressTranslation.x, 0), backgroundTrackView.bounds.width)
 
-        let progress = progressTranslation.x / backgroundTrackView.bounds.width
+        let progress = horizontalTranslation / backgroundTrackView.bounds.width
         prgressConstraint?.autoRemove()
         prgressConstraint = progressTrackView.autoMatch(.width, to: .width, of: backgroundTrackView, withMultiplier: progress)
         self.progress = progress
-        self.progressDidChange?(progress)
+        self.progressDidChange?(progress, final)
         self.layoutIfNeeded()
-    }
-
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        isSliding = false
     }
 
     func setupConstraints() {
