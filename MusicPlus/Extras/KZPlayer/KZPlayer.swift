@@ -154,7 +154,7 @@ class KZPlayer: NSObject {
         configuration.allowsCellularAccess = true
         configuration.timeoutIntervalForRequest = 60
 
-        configuration.urlCache = URLCache(memoryCapacity: 400 * 1024 * 1024, diskCapacity: 2048 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
+        configuration.urlCache = URLCache(memoryCapacity: 400 * 1024 * 1024, diskCapacity: 500 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
 
         return configuration
     }
