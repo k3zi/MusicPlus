@@ -105,7 +105,7 @@ class KZPlex: NSObject {
         "X-Plex-Client-Identifier": KZPlex.clientIdentifier,
         "X-Plex-Product": Bundle.main.bundleIdentifier ?? "",
         "X-Plex-Version": Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "",
-        "X-Plex-Device": UIDevice.current.name ,
+        "X-Plex-Device": UIDevice.current.name,
         "X-Plex-Device-Name": "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "") (\(UIDevice.current.model))",
         "X-Plex-Sync-Version": "2"
     ]

@@ -11,7 +11,7 @@ import AVFoundation
 
 class KZAudioPlayerSet: StreamingDelegate {
     var auPlayer: AVAudioPlayerNode
-    var auSpeed: AVAudioUnitVarispeed
+    var auSpeed: AVAudioUnitTimePitch
     var auEqualizer: AVAudioUnitEQ
     var itemKey: String?
     var shouldUseCallback = true
@@ -34,7 +34,7 @@ class KZAudioPlayerSet: StreamingDelegate {
         } else {
             auPlayer = KZRemoteAudioPlayerNode()
         }
-        auSpeed = AVAudioUnitVarispeed()
+        auSpeed = AVAudioUnitTimePitch()
         auEqualizer = AVAudioUnitEQ(numberOfBands: 10)
 
         if let player = auPlayer as? KZRemoteAudioPlayerNode {

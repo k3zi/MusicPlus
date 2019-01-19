@@ -73,6 +73,7 @@ class KZPlayer: NSObject {
     static let sharedInstance = KZPlayer()
     static let libraryQueue = DispatchQueue(label: "io.kez.musicplus.librarythread", qos: .userInitiated, attributes: .concurrent)
     static let uiQueue = DispatchQueue(label: "io.kez.musicplus.uithread", qos: .userInteractive, attributes: .concurrent)
+    static let analysisQueue = DispatchQueue(label: "io.kez.musicplus.analysis", qos: .background, attributes: .concurrent)
     static var activeWorkers = [BackgroundWorker]()
 
     static let libraryQueueKey = DispatchSpecificKey<Void>()
@@ -414,7 +415,7 @@ extension KZPlayer {
     }
 
     // Play Single Item
-    func play(_ item: KZPlayerItemBase, silent: Bool = false, isQueueItem: Bool = false) -> Bool {
+    func play(_ item: KZPlayerItemBase, silent: Bool = false, isQueueItem: Bool = false, tempo customTempo: Double? = nil) -> Bool {
         guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
             let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
             return KZPlayer.libraryQueue.sync {
@@ -430,7 +431,7 @@ extension KZPlayer {
         auPlayerSets[channel] = playerSet
         print("will attempt to play \(item.title) on channel \(channel)")
 
-        let tempo = item.tempo
+        let tempo = customTempo ?? item.tempo
 
         if !audioEngine.isRunning {
             try? audioEngine.start()
@@ -455,6 +456,11 @@ extension KZPlayer {
 
         if !isQueueItem {
             setItemForChannel(item)
+        }
+
+        let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
+        KZPlayer.executeOn(queue: KZPlayer.analysisQueue) {
+            threadSafeItem.resolve()?.analyzeAudio()
         }
 
         playerSet.play()
@@ -530,12 +536,7 @@ extension KZPlayer {
     }
 
     func setSpeed(_ value: AudioUnitParameterValue, channel: Int = -1) {
-        var value = value
-        if value < 1 || value > 16 {
-            value = 4
-        }
-
-        speedNodeForChannel(channel)?.rate = value/4
+        speedNodeForChannel(channel)?.rate = value
     }
 
     var systemVolume: Float {
@@ -722,7 +723,37 @@ extension KZPlayer {
         let currentCFCount = crossfadeCount
         crossfading = true
 
-        guard play(item, silent: true, isQueueItem: item is KZPlayerHistoryItem) else {
+        var fadeOutDelay: Double = 0.0
+        var fadeInDelay: Double = 0.0
+        var startBPM: Double = 0.0
+        var endBPM: Double = 0.0
+        var shouldMatchBPM = false
+        var overrideTempo = 1.0
+
+        // This should make the two playing sets start on the same beat
+        if auPlayerSets.count == 1, let previousPlayer = auPlayerSets.first?.value, let oldItem = previousPlayer.itemReference.resolve() {
+            let firstBeat = item.firstUnplayedBeat(currentTime: 0)
+            fadeInDelay = firstBeat
+
+            print("will delay crossfade in by: \(firstBeat)")
+
+            let currentTime = previousPlayer.currentTime()
+            let firstUnplayedBeat = oldItem.firstUnplayedBeat(currentTime: currentTime)
+            fadeOutDelay = max(firstUnplayedBeat - currentTime, 0)
+
+            print("first unplayed beat: \(firstUnplayedBeat)")
+            print("will delay crossfade out by: \(fadeOutDelay)")
+            shouldMatchBPM = true
+            startBPM = oldItem.bpm
+            endBPM = item.bpm
+            overrideTempo = startBPM / endBPM
+        }
+
+        print("\n\n\n\n")
+        print("start bpm = \(startBPM)")
+        print("end bpm = \(endBPM)")
+
+        guard play(item, silent: true, isQueueItem: item is KZPlayerHistoryItem, tempo: overrideTempo) else {
             crossfading = false
             return false
         }
@@ -737,14 +768,24 @@ extension KZPlayer {
              crossfading = false
             return false
         }
+        period1.delay = CGFloat(fadeOutDelay)
 
         let operation1 = PRTweenOperation()
         operation1.period = period1
         operation1.target = self
         operation1.timingFunction = PRTweenTimingFunctionLinear
         operation1.updateBlock = { (p: PRTweenPeriod!) in
-            if currentCFCount == self.crossfadeCount {
-                p1.volume = Float(p.tweenedValue)
+            guard currentCFCount == self.crossfadeCount else {
+                return
+            }
+
+            p1.volume = Float(p.tweenedValue)
+            if startBPM > 0, endBPM > 0 {
+                let progress = abs(Double(p.tweenedValue / (p.endValue - p.startValue)))
+                let deltaRatio = (endBPM / startBPM) - 1
+                let speedValue = overrideTempo + (deltaRatio * progress)
+                self.setSpeed(AudioUnitParameterValue(speedValue))
+                print("setting new channel speed: \(speedValue)")
             }
         }
         operation1.completeBlock = { (completed: Bool) -> Void in
@@ -753,28 +794,67 @@ extension KZPlayer {
             }
         }
 
+        let operation1BPM = PRTweenOperation()
+        operation1BPM.period = (PRTweenPeriod.period(withStartValue: CGFloat(overrideTempo), endValue: 1.0, duration: duration) as! PRTweenPeriod)
+        operation1BPM.period.duration = operation1.period.duration
+        operation1BPM.period.delay = operation1.period.delay
+        operation1BPM.timingFunction = operation1.timingFunction
+        operation1BPM.updateBlock = { (p: PRTweenPeriod!) in
+            guard currentCFCount == self.crossfadeCount else {
+                return
+            }
+            self.setSpeed(AudioUnitParameterValue(p.tweenedValue))
+            print("setting new channel speed: \(p.tweenedValue)")
+        }
+
         for previousChannel in auPlayerSets.keys where previousChannel != activePlayer {
-            if let p2 = playerForChannel(previousChannel), let period2 = PRTweenPeriod.period(withStartValue: CGFloat(p2.volume), endValue: 0.0, duration: duration * CGFloat(p2.volume)) as? PRTweenPeriod {
-                let operation2 = PRTweenOperation()
-                operation2.period = period2
-                operation2.target = self
-                operation2.timingFunction = PRTweenTimingFunctionLinear
-                operation2.updateBlock = { (p: PRTweenPeriod!) in
-                    if currentCFCount == self.crossfadeCount {
-                        p2.volume = Float(p.tweenedValue)
-                    }
-                }
-                operation2.completeBlock = { (completed: Bool) -> Void in
-                    if currentCFCount == self.crossfadeCount {
-                        self.removeChannel(channel: previousChannel)
-                    }
+            guard let set = setForChannel(previousChannel) else {
+                continue
+            }
+            let startValue = CGFloat(set.volume)
+            guard let period2 = PRTweenPeriod.period(withStartValue: startValue, endValue: 0.0, duration: duration * startValue) as? PRTweenPeriod else {
+                continue
+            }
+            period2.delay = CGFloat(fadeInDelay)
+
+            let operation2 = PRTweenOperation()
+            operation2.period = period2
+            operation2.target = self
+            operation2.timingFunction = PRTweenTimingFunctionLinear
+            operation2.updateBlock = { (p: PRTweenPeriod!) in
+                guard currentCFCount == self.crossfadeCount else {
+                    return
                 }
 
-                PRTween.sharedInstance().add(operation2)
+                set.volume = Float(p.tweenedValue)
             }
+            operation2.completeBlock = { (completed: Bool) -> Void in
+                guard currentCFCount == self.crossfadeCount else {
+                    return
+                }
+
+                self.removeChannel(channel: previousChannel)
+            }
+
+            let operation2BPM = PRTweenOperation()
+            operation2BPM.period = (PRTweenPeriod.period(withStartValue: 1.0, endValue: CGFloat(overrideTempo / 1), duration: duration) as! PRTweenPeriod)
+            operation2BPM.period.duration = operation2.period.duration
+            operation2BPM.period.delay = operation2.period.delay
+            operation2BPM.timingFunction = operation2.timingFunction
+            operation2BPM.updateBlock = { (p: PRTweenPeriod!) in
+                guard currentCFCount == self.crossfadeCount else {
+                    return
+                }
+                self.setSpeed(AudioUnitParameterValue(p.tweenedValue), channel: previousChannel)
+                print("setting old channel speed: \(p.tweenedValue)")
+            }
+
+            PRTween.sharedInstance().add(operation2)
+            PRTween.sharedInstance()?.add(operation2BPM)
         }
 
         PRTween.sharedInstance().add(operation1)
+        PRTween.sharedInstance()?.add(operation1BPM)
         return true
     }
 }
@@ -806,7 +886,7 @@ extension KZPlayer {
         return setForChannel(channel)?.auPlayer
     }
 
-    func speedNodeForChannel(_ channel: Int = -1) -> AVAudioUnitVarispeed? {
+    func speedNodeForChannel(_ channel: Int = -1) -> AVAudioUnitTimePitch? {
         let channel = channel == -1 ? activePlayer : channel
 
         guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
