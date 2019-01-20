@@ -8,6 +8,18 @@
 
 import UIKit
 
+fileprivate extension CGSize {
+
+    static let albumImageSize = CGSize(width: 70, height: 70)
+
+}
+
+fileprivate extension CGFloat {
+
+    static let padding: CGFloat = 15
+
+}
+
 class PopupItemHeaderView: PopupItemView {
 
     let stackView = UIStackView(frame: .zero)
@@ -21,9 +33,7 @@ class PopupItemHeaderView: PopupItemView {
         super.init(frame: .zero)
         self.didSelect = didSelect
 
-        item.fetchArtwork { artwork in
-            self.albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
-        }
+        setRepresentative(item: item)
 
         songLabel.text = item.title
         artistLabel.text = item.artist?.name
@@ -37,11 +47,7 @@ class PopupItemHeaderView: PopupItemView {
         self.didSelect = didSelect
 
         if let song = item.songs.first {
-            if let artwork = song.fetchArtwork(completionHandler: { artwork in
-                self.albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
-            }) {
-                albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
-            }
+            setRepresentative(item: song)
         }
 
         songLabel.text = item.name
@@ -55,11 +61,7 @@ class PopupItemHeaderView: PopupItemView {
         self.didSelect = didSelect
 
         if let song = item.songs.first {
-            if let artwork = song.fetchArtwork(completionHandler: { artwork in
-                self.albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
-            }) {
-                albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
-            }
+            setRepresentative(item: song)
         }
 
         songLabel.text = item.name
@@ -73,6 +75,14 @@ class PopupItemHeaderView: PopupItemView {
 
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+
+    func setRepresentative(item: KZPlayerItemBase) {
+        if let artwork = item.fetchArtwork(completionHandler: { artwork in
+            self.albumImageView.image = artwork.image(at: .albumImageSize)
+        }) {
+            albumImageView.image = artwork.image(at: .albumImageSize)
+        }
     }
 
     func setupView() {
@@ -105,16 +115,16 @@ class PopupItemHeaderView: PopupItemView {
     }
 
     func setupConstraints() {
-        albumImageView.autoPinEdge(toSuperviewEdge: .top, withInset: 15)
-        albumImageView.autoPinEdge(toSuperviewEdge: .left, withInset: 15)
-        albumImageView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 15)
-        albumImageView.autoSetDimensions(to: CGSize(width: 70, height: 70))
+        albumImageView.autoPinEdge(toSuperviewEdge: .top, withInset: .padding)
+        albumImageView.autoPinEdge(toSuperviewEdge: .left, withInset: .padding)
+        albumImageView.autoPinEdge(toSuperviewEdge: .bottom, withInset: .padding)
+        albumImageView.autoSetDimensions(to: .albumImageSize)
 
         stackView.autoAlignAxis(toSuperviewAxis: .horizontal)
-        stackView.autoPinEdge(.left, to: .right, of: albumImageView, withOffset: 15)
-        stackView.autoPinEdge(toSuperviewEdge: .right, withInset: 14)
-        stackView.autoPinEdge(toSuperviewEdge: .top, withInset: 15, relation: .greaterThanOrEqual)
-        stackView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 15, relation: .greaterThanOrEqual)
+        stackView.autoPinEdge(.left, to: .right, of: albumImageView, withOffset: .padding)
+        stackView.autoPinEdge(toSuperviewEdge: .right, withInset: .padding)
+        stackView.autoPinEdge(toSuperviewEdge: .top, withInset: .padding, relation: .greaterThanOrEqual)
+        stackView.autoPinEdge(toSuperviewEdge: .bottom, withInset: .padding, relation: .greaterThanOrEqual)
     }
 
     @objc func updateTint() {

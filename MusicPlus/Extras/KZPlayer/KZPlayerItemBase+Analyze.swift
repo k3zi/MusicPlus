@@ -36,14 +36,14 @@ extension KZPlayerItemBase {
         var read: uint_t = 0
         var total_frames: uint_t = 0
         var firstBeatPosition = 0.0
-        while (true) {
+        while true {
             aubio_source_do(source, input, &read)
+            total_frames += read
+            if read < hop_size { break }
             aubio_tempo_do(tempo, input, output)
-            if (firstBeatPosition == 0) {
+            if firstBeatPosition == 0 {
                 firstBeatPosition = Double(aubio_tempo_get_last_s(tempo))
             }
-            total_frames += read
-            if (read < hop_size) { break }
         }
 
         try! realm?.write {

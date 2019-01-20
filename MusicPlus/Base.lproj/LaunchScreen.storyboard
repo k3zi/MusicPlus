@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -14,9 +18,29 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultBackground" translatesAutoresizingMaskIntoConstraints="NO" id="scE-o8-Qc4">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="largeFullLogo" translatesAutoresizingMaskIntoConstraints="NO" id="6W1-cx-OX2">
+                                <rect key="frame" x="103.66666666666669" y="344.66666666666669" width="207" height="207.00000000000006"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="6W1-cx-OX2" secondAttribute="height" id="AV8-lM-vEa"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="scE-o8-Qc4" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="TLW-OS-bLf"/>
+                            <constraint firstItem="6W1-cx-OX2" firstAttribute="centerY" secondItem="scE-o8-Qc4" secondAttribute="centerY" id="Zwv-4A-b1j"/>
+                            <constraint firstItem="scE-o8-Qc4" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="a36-xR-QMB"/>
+                            <constraint firstItem="6W1-cx-OX2" firstAttribute="centerX" secondItem="scE-o8-Qc4" secondAttribute="centerX" id="fP8-rv-gU1"/>
+                            <constraint firstAttribute="trailing" secondItem="scE-o8-Qc4" secondAttribute="trailing" id="ffX-rd-TFy"/>
+                            <constraint firstItem="scE-o8-Qc4" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="vKS-87-a9B"/>
+                            <constraint firstItem="6W1-cx-OX2" firstAttribute="width" secondItem="scE-o8-Qc4" secondAttribute="width" multiplier="0.5" id="xb4-86-qJB"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -24,4 +48,8 @@
             <point key="canvasLocation" x="53" y="375"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="defaultBackground" width="1000" height="1000"/>
+        <image name="largeFullLogo" width="793" height="523"/>
+    </resources>
 </document>

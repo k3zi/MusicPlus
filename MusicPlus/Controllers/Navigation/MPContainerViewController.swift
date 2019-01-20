@@ -95,8 +95,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         playerViewController.view.autoPinEdge(.left, to: .right, of: leftViewController.view)
         playerViewController.view.autoMatch(.height, to: .height, of: view, withOffset: 50)
         playerViewController.view.autoMatch(.width, to: .width, of: view)
-
-        playerViewStyle = .hidden
+        playerViewTopConstraint = playerViewController.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
 
         if let first = centerNavigationControllers.first {
             currentNavigationController = first
@@ -105,6 +104,15 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
             view.bringSubviewToFront(first.view)
             first.didMove(toParent: self)
         }
+
+        view.bringSubviewToFront(playerViewController.view)
+        if #available(iOS 11.0, *) {
+            self.centerNavigationControllers.forEach { vc in
+                vc.additionalSafeAreaInsets = .zero
+            }
+        }
+
+        self.view.layoutIfNeeded()
     }
 
     override func viewDidAppear(_ animated: Bool) {
