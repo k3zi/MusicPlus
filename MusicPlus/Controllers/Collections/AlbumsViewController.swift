@@ -253,11 +253,14 @@ extension AlbumsViewController: UICollectionViewDelegate, UICollectionViewDataSo
             if let image = self.cachedImage(at: indexPath) {
                 cell.imageView.image = image
             } else {
-                song.fetchArtwork { artwork in
+                if let artwork = song.fetchArtwork(completionHandler: { artwork in
                     guard album.key == cell.album?.key, let image = artwork.image(at: layout.itemSize) else {
                         return
                     }
 
+                    cell.imageView.image = image
+                    self.cache(image: image, at: indexPath)
+                }), let image = artwork.image(at: layout.itemSize) {
                     cell.imageView.image = image
                     self.cache(image: image, at: indexPath)
                 }
@@ -309,12 +312,14 @@ extension AlbumsViewController: UICollectionViewDataSourcePrefetching {
                 continue
             }
 
-            song.fetchArtwork { artwork in
+            if let artwork = song.fetchArtwork(completionHandler: { artwork in
                 guard let image = artwork.image(at: layout.itemSize) else {
                     return
                 }
 
                 self.cache(image: image, at: indexPath)
+            }), let image = artwork.image(at: layout.itemSize) {
+                cache(image: image, at: indexPath)
             }
         }
     }

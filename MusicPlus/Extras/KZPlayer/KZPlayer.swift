@@ -153,7 +153,7 @@ class KZPlayer: NSObject {
 
         configuration.requestCachePolicy = .useProtocolCachePolicy
         configuration.allowsCellularAccess = true
-        configuration.timeoutIntervalForRequest = 60
+        configuration.timeoutIntervalForRequest = 15
 
         configuration.urlCache = URLCache(memoryCapacity: 400 * 1024 * 1024, diskCapacity: 500 * 1024 * 1024, diskPath: "io.kez.musicplus.imagecache")
 
@@ -288,8 +288,8 @@ extension KZPlayer {
         MPRemoteCommandCenter.shared().changePlaybackPositionCommand.isEnabled = true
     }
 
-    func updateNowPlayingInfo(_ item: KZPlayerItem) {
-        guard !item.isInvalidated else {
+    func updateNowPlayingInfo(_ item: KZPlayerItem? = nil) {
+        guard let item = item ?? itemForChannel() else {
             return
         }
 
@@ -308,7 +308,7 @@ extension KZPlayer {
             }
 
             let systemID = item.systemID
-            item.fetchArtwork { artwork in
+            if let artwork = item.fetchArtwork(completionHandler: { artwork in
                 let delegate = AppDelegate.del()
                 center.nowPlayingInfo = dict
                 DispatchQueue.global(qos: .background).async {
@@ -327,6 +327,20 @@ extension KZPlayer {
                     } else {
                         delegate.session.tintColor = nil
                         delegate.session.backgroundImage = nil
+                    }
+                }
+            }) {
+                dict[MPMediaItemPropertyArtwork] = artwork
+                center.nowPlayingInfo = dict
+                let session = AppDelegate.del().session
+
+                DispatchQueue.global(qos: .background).async {
+                    if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
+                        session.tintColor = ObjectiveCProcessing.getDominatingColor(image)
+                        session.backgroundImage = image
+                    } else {
+                        session.tintColor = nil
+                        session.backgroundImage = nil
                     }
                 }
             }
@@ -465,7 +479,9 @@ extension KZPlayer {
 
         playerSet.play()
         print("started playing \"\(item.title)\" on channel: \(channel)")
-        updateNowPlayingInfo(item.originalItem)
+        DispatchQueue.main.async {
+            self.updateNowPlayingInfo()
+        }
         return true
     }
 
@@ -727,11 +743,13 @@ extension KZPlayer {
         var fadeInDelay: Double = 0.0
         var startBPM: Double = 0.0
         var endBPM: Double = 0.0
-        var shouldMatchBPM = false
         var overrideTempo = 1.0
 
         // This should make the two playing sets start on the same beat
-        if auPlayerSets.count == 1, let previousPlayer = auPlayerSets.first?.value, let oldItem = previousPlayer.itemReference.resolve() {
+        if item.bpm > 0 && auPlayerSets.count == 1,
+            let previousPlayer = auPlayerSets.first?.value,
+            let oldItem = previousPlayer.itemReference.resolve(),
+            oldItem.bpm > 0 {
             let firstBeat = item.firstUnplayedBeat(currentTime: 0)
             fadeInDelay = firstBeat
 
@@ -743,13 +761,11 @@ extension KZPlayer {
 
             print("first unplayed beat: \(firstUnplayedBeat)")
             print("will delay crossfade out by: \(fadeOutDelay)")
-            shouldMatchBPM = true
             startBPM = oldItem.bpm
             endBPM = item.bpm
             overrideTempo = startBPM / endBPM
         }
 
-        print("\n\n\n\n")
         print("start bpm = \(startBPM)")
         print("end bpm = \(endBPM)")
 
@@ -780,13 +796,6 @@ extension KZPlayer {
             }
 
             p1.volume = Float(p.tweenedValue)
-            if startBPM > 0, endBPM > 0 {
-                let progress = abs(Double(p.tweenedValue / (p.endValue - p.startValue)))
-                let deltaRatio = (endBPM / startBPM) - 1
-                let speedValue = overrideTempo + (deltaRatio * progress)
-                self.setSpeed(AudioUnitParameterValue(speedValue))
-                print("setting new channel speed: \(speedValue)")
-            }
         }
         operation1.completeBlock = { (completed: Bool) -> Void in
             if currentCFCount == self.crossfadeCount {
@@ -804,7 +813,6 @@ extension KZPlayer {
                 return
             }
             self.setSpeed(AudioUnitParameterValue(p.tweenedValue))
-            print("setting new channel speed: \(p.tweenedValue)")
         }
 
         for previousChannel in auPlayerSets.keys where previousChannel != activePlayer {
@@ -846,7 +854,6 @@ extension KZPlayer {
                     return
                 }
                 self.setSpeed(AudioUnitParameterValue(p.tweenedValue), channel: previousChannel)
-                print("setting old channel speed: \(p.tweenedValue)")
             }
 
             PRTween.sharedInstance().add(operation2)
@@ -952,13 +959,6 @@ extension KZPlayer {
 
 // MARK: - Library
 extension KZPlayer {
-    func find(_ q: String) -> Results<KZPlayerItem> {
-        guard let realm = currentLibrary?.realm() else {
-            fatalError("No library is currently set.")
-        }
-
-        return realm.objects(KZPlayerItem.self).filter("title CONTAINS[c] %@ OR artist CONTAINS[c] %@ OR album CONTAINS[c] %@ OR albumArtist CONTAINS[c] %@", q, q, q, q)
-    }
 
     // MARK: Collection
 
@@ -993,16 +993,14 @@ extension KZPlayer {
             x = collection[0]
         }
 
-        if let item = itemForChannel() {
-            if let position = collection.firstIndex(where: { $0.originalItem == item }) {
-                if (position - 1) < collection.count && (position - 1) > -1 {
-                    x = collection[position - 1]
+        if let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) {
+            if (position - 1) < collection.count && (position - 1) > -1 {
+                x = collection[position - 1]
+            } else {
+                if settings.repeatMode == .repeatAll {
+                    x = collection[collection.count - 1]
                 } else {
-                    if settings.repeatMode == .repeatAll {
-                        x = collection[collection.count - 1]
-                    } else {
-                        x = item
-                    }
+                    x = item
                 }
             }
         }
@@ -1103,6 +1101,12 @@ extension KZPlayer {
             case .update(_, let deletions, let insertions, _):
                 let objects = realm.objects(KZPlayerQueueItem.self).toArray()
 
+                if realm.isInWriteTransaction {
+                    return
+                }
+
+                realm.beginWrite()
+
                 // Handle deletions
                 objects.filter { deletions.contains($0.position) }.forEach { realm.delete($0) }
 
@@ -1115,6 +1119,7 @@ extension KZPlayer {
                     queueItem.position = i
                     realm.add(queueItem)
                 }
+                try! realm.commitWrite()
 
                 // No need to handle modifications as the queue items report back to their original items
                 break

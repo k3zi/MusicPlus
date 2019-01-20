@@ -11,7 +11,7 @@ import MediaPlayer
 import RealmSwift
 
 class KZPlayerItem: Object, KZPlayerItemBase {
-    @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", systemID = "", plexLibraryUniqueIdentifier = ""
+    @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", localArtworkURL = "", systemID = "", plexLibraryUniqueIdentifier = ""
     @objc dynamic var localAssetURL: String?
     @objc dynamic var trackNum = 1, playCount = 1, position = 0
     @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 1.0, bpm = 0.0, firstBeatPosition = 0.0, lastBeatPosition = 0.0
@@ -179,19 +179,43 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         return URL(string: assetURL)!
     }
 
-    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) {
+    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) -> MPMediaItemArtwork? {
         func callCompletionHandler(artwork: MPMediaItemArtwork) {
             DispatchQueue.main.async {
                 completionHandler(artwork)
             }
         }
 
+        var localArtworkURL = self.localArtworkURL
         var artworkURL = self.artworkURL
-        let systemID = self.systemID
         let config = plexLibraryConfig
+        let isStoredLocally = self.isStoredLocally
 
-        DispatchQueue.global(qos: .background).async {
-            if artworkURL.isNotEmpty {
+        if localArtworkURL.isEmpty {
+            localArtworkURL = URL(fileURLWithPath: "Locally Stored Artwork").appendingPathComponent("\(artworkURL.SHA256()).png").path
+        }
+
+        let threadSafeSelf = KZThreadSafeReference(to: self)
+
+        let fileManager = FileManager.default
+        let documentURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let localArtworkAbsoluteURL = documentURL.appendingPathComponent(localArtworkURL)
+
+        if let image = UIImage(contentsOfFile: localArtworkAbsoluteURL.path) {
+            return MPMediaItemArtwork.init(boundsSize: .zero, requestHandler: { _ in return image })
+        } else if self.localArtworkURL.isNotEmpty {
+            DispatchQueue.global().async {
+                guard let safeSelf = threadSafeSelf.resolve() else {
+                    return
+                }
+                try! safeSelf.realm?.write {
+                    safeSelf.localArtworkURL = ""
+                }
+            }
+        }
+
+        if artworkURL.isNotEmpty {
+            DispatchQueue.global(qos: .background).async {
                 if let config = config {
                     artworkURL = "\(config.connectionURI)/photo/:/transcode?url=\(artworkURL)&width=\(Int(UIScreen.main.bounds.height))&height=\(Int(UIScreen.main.bounds.height))&minSize=1&X-Plex-Token=\(config.authToken)"
                 }
@@ -201,39 +225,57 @@ class KZPlayerItem: Object, KZPlayerItemBase {
                         guard let image = response.result.value else {
                             return callCompletionHandler(artwork: .default)
                         }
+                        image.af_inflate()
 
-                        callCompletionHandler(artwork: MPMediaItemArtwork(boundsSize: .zero, requestHandler: { size in
-                            return image.af_imageAspectScaled(toFill: size)
+                        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+                            if isStoredLocally, let safeSelf = threadSafeSelf.resolve(), let pngData = image.pngData() {
+                                do {
+                                    let fileName = "\(artworkURL.SHA256()).png"
+                                    let documentURL = try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+                                    var absoluteFilePath = documentURL.appendingPathComponent("Locally Stored Artwork")
+                                    var filePath = URL(fileURLWithPath: "Locally Stored Artwork")
+                                    try FileManager.default.createDirectory(at: absoluteFilePath, withIntermediateDirectories: true, attributes: nil)
+
+                                    absoluteFilePath.appendPathComponent(fileName)
+                                    filePath.appendPathComponent(fileName)
+                                    try? FileManager.default.removeItem(at: absoluteFilePath)
+                                    try pngData.write(to: absoluteFilePath)
+                                    try safeSelf.realm?.write {
+                                        safeSelf.localArtworkURL = filePath.path
+                                    }
+                                } catch {
+                                    print(error)
+                                }
+                            }
+                        }
+                        callCompletionHandler(artwork: MPMediaItemArtwork(boundsSize: .zero, requestHandler: { _ in
+                            return image
                         }))
                     }
                     return // Alamofire will handle the default
                 }
-
-                let fileManager = FileManager.default
-                let documentURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-
-                let localArtworkURL = documentURL.appendingPathComponent(artworkURL)
-
-                if let image = UIImage(contentsOfFile: localArtworkURL.path) {
-                    return callCompletionHandler(artwork: MPMediaItemArtwork.init(boundsSize: .zero, requestHandler: { _ in return image }))
-                }
-
-                return callCompletionHandler(artwork: .default)
             }
 
-            guard let systemID = systemID.components(separatedBy: "-").last else {
-                return callCompletionHandler(artwork: .default)
-            }
-
-            let p = MPMediaPropertyPredicate(value: systemID, forProperty: MPMediaItemPropertyPersistentID)
-            let q = MPMediaQuery(filterPredicates: [p])
-
-            if let artwork = q.items?.first?.artwork {
-                return callCompletionHandler(artwork: artwork)
-            }
-
-            callCompletionHandler(artwork: .default)
+            return nil
         }
+
+        localArtworkURL = documentURL.appendingPathComponent(artworkURL).path
+        if let image = UIImage(contentsOfFile: localArtworkURL) {
+            return MPMediaItemArtwork.init(boundsSize: .zero, requestHandler: { _ in return image })
+        }
+
+        guard let systemID = systemID.components(separatedBy: "-").last else {
+            return .default
+        }
+
+        let p = MPMediaPropertyPredicate(value: systemID, forProperty: MPMediaItemPropertyPersistentID)
+        let q = MPMediaQuery(filterPredicates: [p])
+
+        if let artwork = q.items?.first?.artwork {
+            return artwork
+        }
+
+        return .default
     }
 
     func searchText() -> String {

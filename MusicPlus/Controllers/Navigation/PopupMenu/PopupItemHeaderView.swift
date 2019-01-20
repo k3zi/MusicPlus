@@ -37,8 +37,10 @@ class PopupItemHeaderView: PopupItemView {
         self.didSelect = didSelect
 
         if let song = item.songs.first {
-            song.fetchArtwork { artwork in
+            if let artwork = song.fetchArtwork(completionHandler: { artwork in
                 self.albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
+            }) {
+                albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
             }
         }
 
@@ -53,8 +55,10 @@ class PopupItemHeaderView: PopupItemView {
         self.didSelect = didSelect
 
         if let song = item.songs.first {
-            song.fetchArtwork { artwork in
+            if let artwork = song.fetchArtwork(completionHandler: { artwork in
                 self.albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
+            }) {
+                albumImageView.image = artwork.image(at: CGSize(width: 115, height: 115))
             }
         }
 

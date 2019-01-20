@@ -46,7 +46,7 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
 
     func fileURL() -> URL
 
-    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void)
+    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) -> MPMediaItemArtwork?
 }
 
 extension KZPlayerItemBase {
@@ -172,8 +172,8 @@ extension KZPlayerItemBase {
         return realmGenerator()()
     }
 
-    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) {
-        orig?.fetchArtwork(completionHandler: completionHandler)
+    func fetchArtwork(completionHandler: @escaping (_ artwork: MPMediaItemArtwork) -> Void) -> MPMediaItemArtwork? {
+        return orig?.fetchArtwork(completionHandler: completionHandler)
     }
 
     func duration() -> Double {

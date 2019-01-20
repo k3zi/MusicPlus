@@ -20,11 +20,10 @@ class KZPlexLibrary: KZLibrary {
         var config = Realm.Configuration()
         config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("KZPlexLibrary-\(uniqueIdentifier).realm")
         config.migrationBlock = { migration, oldSchemaVersion in
-            migration.enumerateObjects(ofType: KZPlayerItem.className()) { _, newObject in
-                newObject?["tempo"] = 1.0
+            migration.enumerateObjects(ofType: KZPlayerItem.className()) { _, _ in
             }
         }
-        config.schemaVersion = 5
+        config.schemaVersion = 6
         return try! Realm(configuration: config)
     }
 

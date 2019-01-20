@@ -83,8 +83,10 @@ class MPArtistSectionHeaderView: UIView {
     func fillInView() {
 
         if let song = album.songs.first {
-            song.fetchArtwork { artwork in
+            if let artwork = song.fetchArtwork(completionHandler: { artwork in
                 self.imageView.image = artwork.image(at: CGSize(width: 70, height: 70))
+            }) {
+                imageView.image = artwork.image(at: CGSize(width: 70, height: 70))
             }
         }
 
