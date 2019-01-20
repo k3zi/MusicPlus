@@ -16,10 +16,23 @@ class SettingsViewController: MPViewController {
     let disposeBag = DisposeBag()
 
     let tableView = UITableView()
+    let shadowView = UIView()
+    let shadowLayer = CAGradientLayer()
+    var shadowTopConstraint: NSLayoutConstraint?
+    var topLayoutGuideConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         view.addSubview(tableView)
+        view.addSubview(shadowView)
         super.viewDidLoad()
+
+        shadowView.backgroundColor = .clear
+        shadowLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        shadowLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        shadowLayer.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
+        shadowView.layer.insertSublayer(shadowLayer, at: 0)
+        shadowView.alpha = 0.0
+        view.addSubview(shadowView)
 
         title = "Settings"
         setupMenuToggle()
@@ -72,12 +85,31 @@ class SettingsViewController: MPViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.flix.build([crossfadeSectionProvider, upNextQueueSectionProvider])
+        tableView.rx.didScroll.bind {
+            self.shadowView.alpha = min(self.tableView.contentOffset.y / 300.0, 0.3)
+        }.disposed(by: disposeBag)
+    }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
     }
 
     override func setupConstraints() {
         super.setupConstraints()
-        tableView.autoPinEdgesToSuperviewSafeArea()
+
+        tableView.autoPinEdge(toSuperviewEdge: .left)
+        tableView.autoPinEdge(toSuperviewEdge: .right)
+        tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
+
+        shadowTopConstraint = shadowView.autoPinEdge(.top, to: .top, of: tableView)
+        shadowView.autoPinEdge(toSuperviewEdge: .left)
+        shadowView.autoPinEdge(toSuperviewEdge: .right)
+        shadowView.autoSetDimension(.height, toSize: 21)
     }
 
 }

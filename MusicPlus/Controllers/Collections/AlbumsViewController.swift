@@ -14,6 +14,7 @@ class AlbumsViewController: KZViewController {
     static let shared = AlbumsViewController()
     var currentCollectionToken: NotificationToken?
     var peekPop: PeekPop!
+    var topLayoutGuideConstraint: NSLayoutConstraint?
 
     var collectionGenerator: () -> AnyRealmCollection<KZPlayerAlbum>? {
         didSet {
@@ -99,12 +100,14 @@ class AlbumsViewController: KZViewController {
 
         title = "Albums"
         view.backgroundColor = UIColor.clear
+        automaticallyAdjustsScrollViewInsets = false
         setupMenuToggle()
 
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.prefetchDataSource = self
         collectionView.isPrefetchingEnabled = true
+        collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "UICollectionReusableView")
         view.addSubview(collectionView)
 
         shadowView.backgroundColor = UIColor.clear
@@ -138,12 +141,14 @@ class AlbumsViewController: KZViewController {
         super.viewDidLayoutSubviews()
 
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = collectionView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        collectionView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
         collectionView.autoPinEdge(toSuperviewEdge: .left)
         collectionView.autoPinEdge(toSuperviewEdge: .right)
         collectionView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
@@ -280,6 +285,14 @@ extension AlbumsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let album = collection[indexPath.row]
         let vc = AlbumViewController(album: album)
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            fatalError()
+        }
+
+        return UICollectionReusableView(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
     }
 
 }

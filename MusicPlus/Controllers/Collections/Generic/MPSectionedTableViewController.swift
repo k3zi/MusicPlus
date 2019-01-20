@@ -16,6 +16,7 @@ class MPSectionedTableViewController: KZViewController {
     let shadowView = UIView()
     let shadowLayer = CAGradientLayer()
     var shadowTopConstraint: NSLayoutConstraint?
+    var topLayoutGuideConstraint: NSLayoutConstraint?
 
     // MARK: Setup View
 
@@ -26,8 +27,6 @@ class MPSectionedTableViewController: KZViewController {
         title = "Collection"
         view.backgroundColor = .clear
         automaticallyAdjustsScrollViewInsets = false
-        extendedLayoutIncludesOpaqueBars = true
-        edgesForExtendedLayout = .top
 
         setupMenuToggle()
 
@@ -38,6 +37,7 @@ class MPSectionedTableViewController: KZViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.sectionIndexBackgroundColor = .clear
         tableView.sectionIndexColor = .white
+        tableView.tableHeaderView = UIView.init(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
         view.addSubview(tableView)
 
         shadowView.backgroundColor = .clear
@@ -55,12 +55,14 @@ class MPSectionedTableViewController: KZViewController {
         super.viewDidLayoutSubviews()
 
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        tableView.autoPin(toTopLayoutGuideOf: self, withInset: 0)
         tableView.autoPinEdge(toSuperviewEdge: .left)
         tableView.autoPinEdge(toSuperviewEdge: .right)
         tableView.autoPin(toBottomLayoutGuideOf: self, withInset: 0)
@@ -151,11 +153,6 @@ class MPSectionedTableViewController: KZViewController {
         }
 
         return nil
-    }
-
-    func scrollViewShouldScrollToTop(_ scrollView: UIScrollView) -> Bool {
-        tableView.setContentOffset(.init(x: 0.0, y: 0.0), animated: true)
-        return false
     }
 
 }
