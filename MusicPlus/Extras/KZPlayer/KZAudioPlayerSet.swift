@@ -106,6 +106,10 @@ class KZAudioPlayerSet: StreamingDelegate {
         auPlayer.stop()
     }
 
+    func reset() {
+        auPlayer.reset()
+    }
+
     func lastRenderTime() -> AVAudioTime? {
         return auPlayer.lastRenderTime
     }

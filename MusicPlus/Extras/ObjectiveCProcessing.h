@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface ObjectiveCProcessing : NSObject
+@interface TintColorOperation : NSOperation
 
-+ (UIColor *)getDominatingColor:(UIImage *)image;
+@property (nonatomic, retain) UIColor *result;
+
+- (instancetype)initWithImage:(UIImage *)image;
+
 
 @end

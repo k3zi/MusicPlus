@@ -95,6 +95,8 @@ class KZPlayer: NSObject {
     /// These are tokens that obsevre the current queue's original collections and update them accordingly.
     var currentQueueNotificationTokens = [NotificationToken]()
 
+    var colorChangeQueue = OperationQueue()
+
     var settings = Settings()
     var state = KZPlayerState.starting
 
@@ -309,7 +311,7 @@ extension KZPlayer {
 
             let systemID = item.systemID
             if let artwork = item.fetchArtwork(completionHandler: { artwork in
-                let delegate = AppDelegate.del()
+                let session = AppDelegate.del().session
                 center.nowPlayingInfo = dict
                 DispatchQueue.global(qos: .background).async {
                     guard let currentItem = self.itemForChannel(), systemID == currentItem.systemID else {
@@ -322,11 +324,15 @@ extension KZPlayer {
                     }
 
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
-                        delegate.session.tintColor = ObjectiveCProcessing.getDominatingColor(image)
-                        delegate.session.backgroundImage = image
+                        let operation = TintColorOperation(image: image)!
+                        operation.completionBlock = {
+                            session.tintColor = operation.result
+                        }
+                        self.colorChangeQueue.addOperation(operation)
+                        session.backgroundImage = image
                     } else {
-                        delegate.session.tintColor = nil
-                        delegate.session.backgroundImage = nil
+                        session.tintColor = nil
+                        session.backgroundImage = nil
                     }
                 }
             }) {
@@ -336,13 +342,20 @@ extension KZPlayer {
 
                 DispatchQueue.global(qos: .background).async {
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
-                        session.tintColor = ObjectiveCProcessing.getDominatingColor(image)
+                        self.colorChangeQueue.cancelAllOperations()
+                        let operation = TintColorOperation(image: image)!
+                        operation.completionBlock = {
+                            session.tintColor = operation.result
+                        }
+                        self.colorChangeQueue.addOperation(operation)
                         session.backgroundImage = image
                     } else {
                         session.tintColor = nil
                         session.backgroundImage = nil
                     }
                 }
+            } else {
+                center.nowPlayingInfo = dict
             }
         }
     }
@@ -633,14 +646,13 @@ extension KZPlayer {
             return
         }
 
-        DispatchQueue.global(qos: .background).async {
-            set.isRemoved = true
-            set.stop()
-            for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
-                self.audioEngine.detach(unit)
-            }
-            self.auPlayerSets.removeValue(forKey: channel)
+        set.isRemoved = true
+        set.stop()
+        set.reset()
+        for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
+            self.audioEngine.detach(unit)
         }
+        self.auPlayerSets.removeValue(forKey: channel)
     }
 
     func playerCompleted(_ channel: Int, force: Bool = false, shouldCrossfadeOnSkip: Bool = true) {
