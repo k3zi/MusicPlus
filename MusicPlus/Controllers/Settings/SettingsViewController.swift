@@ -37,6 +37,9 @@ class SettingsViewController: MPViewController {
         title = "Settings"
         setupMenuToggle()
 
+        // MARK: - Crossfade
+        let crossfadeHeader = TitleTableViewSectionProvider(name: "CROSSFADE")
+
         let crossfadeSetting = Constants.Settings.Info.crossfade
         let crossfadeProvider = SwitchTableViewCellProvider(title: crossfadeSetting.title, subTitle: crossfadeSetting.description, isOn: false)
         UserDefaults.standard.bidirectionalBind(control: crossfadeProvider.uiSwitch.rx.isOn, keyPath: crossfadeSetting.accessor, defaultValue: false).disposed(by: disposeBag)
@@ -75,13 +78,17 @@ class SettingsViewController: MPViewController {
         let crossfadeOnPreviousProvider = SwitchTableViewCellProvider(title: crossfadeOnPrevious.title, subTitle: crossfadeOnPrevious.description, isOn: false)
         UserDefaults.standard.bidirectionalBind(control: crossfadeOnPreviousProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
 
-        let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 20, footerHeight: 0)
+        let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeHeader, crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 5, footerHeight: 0)
+
+        // MARK: - Up Next
+
+        let upNextHeader = TitleTableViewSectionProvider(name: "UP NEXT")
 
         let upNextPreserve = Constants.Settings.Info.upNextPreserve
         let upNextPreserveProvider = SwitchTableViewCellProvider(title: upNextPreserve.title, subTitle: upNextPreserve.description, isOn: false)
         UserDefaults.standard.bidirectionalBind(control: upNextPreserveProvider.uiSwitch.rx.isOn, keyPath: upNextPreserve.accessor, defaultValue: false).disposed(by: disposeBag)
 
-        let upNextQueueSectionProvider = SpacingSectionProvider(providers: [upNextPreserveProvider], headerHeight: 20, footerHeight: 0)
+        let upNextQueueSectionProvider = SpacingSectionProvider(providers: [upNextHeader, upNextPreserveProvider], headerHeight: 5, footerHeight: 0)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.flix.build([crossfadeSectionProvider, upNextQueueSectionProvider])

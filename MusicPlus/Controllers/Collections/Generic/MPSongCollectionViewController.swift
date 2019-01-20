@@ -150,8 +150,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
         super.viewWillAppear(animated)
 
         if let textField = searchViewController.searchBar.textField {
-
-            textField.backgroundColor = AppDelegate.del().session.tintColor
             let backgroundView = textField.subviews.first
             if #available(iOS 11.0, *) { // If `searchController` is in `navigationItem`
                 backgroundView?.backgroundColor = UIColor.init(white: 0, alpha: 0.2)
@@ -159,7 +157,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
             }
             backgroundView?.layer.cornerRadius = 10.5
             backgroundView?.layer.masksToBounds = true
-            //Continue changing more properties...
         }
     }
 

@@ -71,6 +71,7 @@
 		EA4D565D21F391EF00CD3930 /* aubio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA4D565721F390F100CD3930 /* aubio.framework */; };
 		EA4D565F21F394C200CD3930 /* KZPlayerItemBase+Analyze.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D565E21F394C200CD3930 /* KZPlayerItemBase+Analyze.swift */; };
 		EA4D566121F399D400CD3930 /* KZPlayerItemBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D566021F399D400CD3930 /* KZPlayerItemBase.swift */; };
+		EA4D566321F506DE00CD3930 /* TitleTableViewSectionProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4D566221F506DE00CD3930 /* TitleTableViewSectionProvider.swift */; };
 		EA5389E221867EC400CFA9B7 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5389E121867EC400CFA9B7 /* SliderView.swift */; };
 		EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */; };
 		EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */; };
@@ -222,6 +223,7 @@
 		EA4D565B21F3918000CD3930 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		EA4D565E21F394C200CD3930 /* KZPlayerItemBase+Analyze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KZPlayerItemBase+Analyze.swift"; sourceTree = "<group>"; };
 		EA4D566021F399D400CD3930 /* KZPlayerItemBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZPlayerItemBase.swift; sourceTree = "<group>"; };
+		EA4D566221F506DE00CD3930 /* TitleTableViewSectionProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewSectionProvider.swift; sourceTree = "<group>"; };
 		EA5389E121867EC400CFA9B7 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		EA5C5AD721E5E83400B0B822 /* PlexLibraryConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlexLibraryConfig.swift; sourceTree = "<group>"; };
 		EA5C5AD921E836A700B0B822 /* KZThreadSafeReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZThreadSafeReference.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				EA1CB43E21EC068500CB1F23 /* SwitchTableViewCellProvider.swift */,
 				EA1CB44721EC250200CB1F23 /* KZUniqueCustomTableViewSectionProvider.swift */,
 				EA1CB44921EC288E00CB1F23 /* DescriptionTableViewCellProvider.swift */,
+				EA4D566221F506DE00CD3930 /* TitleTableViewSectionProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -1087,6 +1090,7 @@
 				EAF6AE8521E2E49200E1F727 /* DownloadingState.swift in Sources */,
 				EAF6AE7E21E2E49200E1F727 /* ParserError.swift in Sources */,
 				29F941F91D12A7FE001A3515 /* KZPlayerAlbum.swift in Sources */,
+				EA4D566321F506DE00CD3930 /* TitleTableViewSectionProvider.swift in Sources */,
 				29E640AE1D0EB9CC005BA3D7 /* MPSongTableViewCell.swift in Sources */,
 				EAF6AE8021E2E49200E1F727 /* Parsing.swift in Sources */,
 				29ECD1FB1D13D3B4009A2A45 /* MPAlbumSongTableViewCell.swift in Sources */,

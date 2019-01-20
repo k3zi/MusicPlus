@@ -31,13 +31,13 @@ class MPSectionHeaderView: UIView {
     }
 
     func setupView() {
-        backgroundColor = RGB(0, a: 0.2)
+        backgroundColor = .init(white: 0, alpha: 0.2)
 
         label.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.semibold)
         label.textColor = AppDelegate.del().session.tintColor
         addSubview(label)
 
-        label.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0))
+        label.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
 
         fillInView()
         setupConstraints()
