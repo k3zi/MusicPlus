@@ -367,6 +367,24 @@ extension UIViewController {
 
 }
 
+extension UIView {
+    static func isVisible(view: UIView) -> Bool {
+        guard view.window != nil else {
+            return false
+        }
+
+        var currentView: UIView = view
+        while let superview = currentView.superview {
+            guard superview.bounds.intersects(currentView.frame), !currentView.isHidden else {
+                return false
+            }
+            currentView = superview
+        }
+
+        return true
+    }
+}
+
 extension UIScrollView {
     func dg_stopScrollingAnimation() {}
 }

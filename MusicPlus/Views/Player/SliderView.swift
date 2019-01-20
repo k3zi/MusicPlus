@@ -80,7 +80,7 @@ class SliderView: UIView {
 
     var progress: CGFloat = 0.0 {
         didSet {
-            guard !isSliding else {
+            guard !isSliding, UIView.isVisible(view: self) else {
                 return
             }
 
@@ -190,4 +190,5 @@ class SliderView: UIView {
         innerScrubberView.layer.cornerRadius = innerScrubberView.bounds.height / 2
         outerScrubberView.layer.cornerRadius = outerScrubberView.bounds.height / 2
     }
+
 }

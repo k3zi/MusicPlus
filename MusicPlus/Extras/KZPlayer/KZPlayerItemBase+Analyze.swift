@@ -30,6 +30,8 @@ extension KZPlayerItemBase {
         let source = new_aubio_source(path, 0, hop_size)
         print("")
         print("analyzed sample rate: \(aubio_source_get_samplerate(source))")
+        print("analyzed channels: \(aubio_source_get_channels(source))")
+        print("analyzed duration: \(aubio_source_get_duration(source))")
         let tempo = new_aubio_tempo("default", win_size, hop_size, aubio_source_get_samplerate(source))
         var read: uint_t = 0
         var total_frames: uint_t = 0
