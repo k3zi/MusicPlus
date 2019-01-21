@@ -8,11 +8,57 @@
 
 import Foundation
 
+fileprivate extension UIImage {
+
+    static let play = #imageLiteral(resourceName: "playBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
+    static let pause = #imageLiteral(resourceName: "pauseBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
+    static let next = #imageLiteral(resourceName: "nextBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 120))
+    static let previous = #imageLiteral(resourceName: "Image").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
+}
+
 class MiniPlayerView: UIView {
 
     let backgroundImageView = UIImageView(image: Constants.UI.Image.defaultBackground)
     let tintOverlayView = GradientView()
     let darkOverlayView = GradientView()
+
+    lazy var playPauseButton: UIButton = {
+        let view = UIButton()
+        view.tintColor = .white
+        view.setImage(.play, for: .normal)
+        view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.togglePlay), for: .touchUpInside)
+        view.contentHorizontalAlignment = .fill
+        view.contentVerticalAlignment = .fill
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+
+    lazy var songTitleLabel: UILabel = {
+        let view = UILabel()
+        view.textColor = .white
+        view.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        view.textAlignment = .center
+        return view
+    }()
+
+    lazy var nextButton: UIButton = {
+        let view = ExtendedButton()
+        view.tintColor = .white
+        view.setImage(.next, for: .normal)
+        view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.next), for: .touchUpInside)
+        view.contentHorizontalAlignment = .fill
+        view.contentVerticalAlignment = .fill
+        view.imageView?.contentMode = .scaleAspectFit
+        return view
+    }()
+
+    lazy var subTitleLabel: UILabel = {
+        let view = UILabel()
+        view.textColor = .white
+        view.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        view.textAlignment = .center
+        return view
+    }()
 
     convenience init() {
         self.init(frame: CGRect.zero)
@@ -35,6 +81,13 @@ class MiniPlayerView: UIView {
         sendSubviewToBack(tintOverlayView)
         sendSubviewToBack(backgroundImageView)
 
+        addSubview(playPauseButton)
+
+        addSubview(songTitleLabel)
+        addSubview(subTitleLabel)
+
+        addSubview(nextButton)
+
         NotificationCenter.default.addObserver(self, selector: #selector(updateBackground), name: .backgroundImageDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(animateTint), name: .tintColorDidChange, object: nil)
 
@@ -53,6 +106,25 @@ class MiniPlayerView: UIView {
         backgroundImageView.autoPinEdgesToSuperviewEdges()
         tintOverlayView.autoPinEdgesToSuperviewEdges()
         darkOverlayView.autoPinEdgesToSuperviewEdges()
+
+        playPauseButton.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+        playPauseButton.autoAlignAxis(toSuperviewAxis: .horizontal)
+        playPauseButton.autoSetDimensions(to: .init(width: 25, height: 25))
+
+        songTitleLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 6)
+        songTitleLabel.autoPinEdge(.left, to: .right, of: playPauseButton, withOffset: 18)
+        songTitleLabel.autoAlignAxis(toSuperviewAxis: .vertical)
+
+        subTitleLabel.autoMatch(.width, to: .width, of: songTitleLabel)
+        subTitleLabel.autoPinEdge(.top, to: .bottom, of: songTitleLabel, withOffset: 0)
+        subTitleLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 6)
+        subTitleLabel.autoMatch(.height, to: .height, of: songTitleLabel)
+        subTitleLabel.autoAlignAxis(toSuperviewAxis: .vertical)
+
+        nextButton.autoPinEdge(.left, to: .right, of: songTitleLabel, withOffset: 18, relation: .greaterThanOrEqual)
+        nextButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+        nextButton.autoAlignAxis(toSuperviewAxis: .horizontal)
+        nextButton.autoSetDimensions(to: .init(width: 20, height: 20))
     }
 
     @objc func updateBackground() {

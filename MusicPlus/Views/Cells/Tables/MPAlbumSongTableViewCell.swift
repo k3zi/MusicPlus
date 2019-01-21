@@ -22,12 +22,12 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         topSeperator.backgroundColor = .black
         bottomSeperator.backgroundColor = .black
 
-        trackNumberLabel.textColor = RGB(255, a: 0.5)
-        trackNumberLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+        trackNumberLabel.textColor = .init(white: 1, alpha: 0.5)
+        trackNumberLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         contentView.addSubview(trackNumberLabel)
 
         titleLabel.textColor = .white
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         contentView.addSubview(titleLabel)
     }
 
@@ -49,7 +49,7 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         titleLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 15)
         titleLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 15)
         titleLabel.autoPinEdge(.left, to: .right, of: trackNumberLabel, withOffset: 15)
-        titleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+        titleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18, relation: .greaterThanOrEqual)
     }
 
     override func estimatedHeight() -> CGFloat {

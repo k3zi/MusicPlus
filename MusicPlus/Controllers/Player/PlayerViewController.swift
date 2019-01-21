@@ -14,10 +14,11 @@ fileprivate extension UIImage {
     static let pause = #imageLiteral(resourceName: "pauseBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
     static let next = #imageLiteral(resourceName: "nextBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
     static let previous = #imageLiteral(resourceName: "Image").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
+    static let smallPause = #imageLiteral(resourceName: "smallPauseBT")
 
 }
 
-class PlayerViewController: MPViewController {
+class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     static let shared = PlayerViewController()
     lazy var minimizeButton: ExtendedButton = {
@@ -29,7 +30,7 @@ class PlayerViewController: MPViewController {
 
     lazy var miniPlayerView: MiniPlayerView = {
         let view = MiniPlayerView()
-        view.autoSetDimension(.height, toSize: 50)
+        view.autoSetDimension(.height, toSize: .miniPlayerViewHeight)
 
         let tapRecognizer = UITapGestureRecognizer(target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.maximizePlayer))
         tapRecognizer.cancelsTouchesInView = true
@@ -68,6 +69,7 @@ class PlayerViewController: MPViewController {
         return view
     }()
 
+    let infoHolderView = UIView()
     lazy var songTitleLabel: UILabel = {
         let view = UILabel()
         view.textColor = .white
@@ -131,6 +133,7 @@ class PlayerViewController: MPViewController {
     // Must be an odd number
     let numberOfArtworkViews = 7
     var loadArtworkNumber = 0
+    var peekPop: PeekPop!
 
     var currentArtworkView: UIImageView {
         return artworkViews[numberOfArtworkViews / 2]
@@ -152,9 +155,10 @@ class PlayerViewController: MPViewController {
         view.addSubview(volumeSlider)
         view.addSubview(timeSlider)
 
-        view.addSubview(songTitleLabel)
-        view.addSubview(albumTitleLabel)
-        view.addSubview(artistTitleLabel)
+        infoHolderView.addSubview(songTitleLabel)
+        infoHolderView.addSubview(albumTitleLabel)
+        infoHolderView.addSubview(artistTitleLabel)
+        view.addSubview(infoHolderView)
 
         view.addSubview(previousButton)
         view.addSubview(playPauseButton)
@@ -168,6 +172,10 @@ class PlayerViewController: MPViewController {
         }
 
         super.viewDidLoad()
+
+        peekPop = PeekPop(viewController: self)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: infoHolderView)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: artworkViewHolder)
 
         KZPlayer.sharedInstance.audioSession.addObserver(self, forKeyPath: Constants.Observation.outputVolume, options: [.initial, .new], context: nil)
 
@@ -192,6 +200,10 @@ class PlayerViewController: MPViewController {
             self.albumTitleLabel.text = song.albumName()
             self.artistTitleLabel.text = song.artistName()
 
+            UIView.performWithoutAnimation {
+                self.miniPlayerView.songTitleLabel.text = song.title
+                self.miniPlayerView.subTitleLabel.text = song.subtitleText()
+            }
             if self.currentArtworkView.image == nil {
                 self.loadArtwork()
             }
@@ -199,6 +211,14 @@ class PlayerViewController: MPViewController {
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
             guard let self = self, self.currentArtworkView.image != nil else {
+                return
+            }
+
+            self.loadArtwork()
+        }
+
+        NotificationCenter.default.addObserver(forName: .didAddUpNext, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else {
                 return
             }
 
@@ -223,6 +243,7 @@ class PlayerViewController: MPViewController {
 
         NotificationCenter.default.addObserver(forName: .playStateDidChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
             self?.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
+            self?.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
         }
 
         KZPlayer.sharedInstance.currentTimeObservationHandler = { [weak self] currentTime, duration in
@@ -257,24 +278,25 @@ class PlayerViewController: MPViewController {
         timeSlider.autoPinEdge(.top, to: .bottom, of: artworkViewHolder, withOffset: 18)
         timeSlider.autoAlignAxis(toSuperviewAxis: .vertical)
 
-        songTitleLabel.autoPinEdge(.top, to: .bottom, of: timeSlider, withOffset: 18)
-        songTitleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-        songTitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+        infoHolderView.autoPinEdge(.top, to: .bottom, of: timeSlider, withOffset: 18)
+        infoHolderView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+        infoHolderView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+
+        songTitleLabel.autoPinEdgesToSuperviewSafeArea(with: .zero, excludingEdge: .bottom)
 
         albumTitleLabel.autoPinEdge(.top, to: .bottom, of: songTitleLabel, withOffset: 9)
-        albumTitleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-        albumTitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+        albumTitleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 0)
+        albumTitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 0)
 
         artistTitleLabel.autoPinEdge(.top, to: .bottom, of: albumTitleLabel, withOffset: 9)
-        artistTitleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-        artistTitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
+        artistTitleLabel.autoPinEdgesToSuperviewSafeArea(with: .zero, excludingEdge: .top)
         artistTitleLabel.autoMatch(.height, to: .height, of: albumTitleLabel)
 
         playPauseButton.autoSetDimension(.height, toSize: 80)
         previousButton.autoSetDimension(.height, toSize: 70)
         nextButton.autoSetDimension(.height, toSize: 70)
 
-        playPauseButton.autoPinEdge(.top, to: .bottom, of: artistTitleLabel, withOffset: 18)
+        playPauseButton.autoPinEdge(.top, to: .bottom, of: infoHolderView, withOffset: 18)
         playPauseButton.autoAlignAxis(toSuperviewAxis: .vertical)
 
         previousButton.autoPinEdge(.right, to: .left, of: playPauseButton, withOffset: -60)
@@ -287,6 +309,35 @@ class PlayerViewController: MPViewController {
         volumeSlider.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+    }
+
+    func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
+        guard let item = KZPlayer.sharedInstance.itemForChannel() else {
+            return nil
+        }
+
+        return PopupMenuItemView(item: item, exclude: [.play]) { action in
+            switch action {
+            case .addUpNext:
+                KZPlayer.sharedInstance.addUpNext(item.originalItem)
+            case .goToArtist:
+                guard let artist = item.artist else {
+                    return
+                }
+                let vc = ArtistViewController(artist: artist)
+                MPContainerViewController.sharedInstance.currentNavigationController?.pushViewController(vc, animated: true)
+                MPContainerViewController.sharedInstance.playerViewStyle = .mini
+            case .goToAlbum:
+                guard let album = item.album else {
+                    return
+                }
+                let vc = AlbumViewController(album: album)
+                MPContainerViewController.sharedInstance.currentNavigationController?.pushViewController(vc, animated: true)
+                MPContainerViewController.sharedInstance.playerViewStyle = .mini
+            default:
+                break
+            }
+        }
     }
 
     func appendArtwork() -> UIImageView {
@@ -375,7 +426,7 @@ class PlayerViewController: MPViewController {
         }
 
         for i in 0..<centerIndex {
-            guard let song = KZPlayer.sharedInstance.nextSong(index: i) else {
+            guard let song = KZPlayer.sharedInstance.nextSong(index: i, forPlay: false) else {
                 break
             }
 

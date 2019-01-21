@@ -31,6 +31,13 @@ extension Notification.Name {
     static let previousSongDidPlay = NSNotification.Name(rawValue: "MPNotificationPreviousSongDidPlay")
     static let playStateDidChange = NSNotification.Name(rawValue: "MPNotificationPlayStateDidChange")
     static let didStartNewCollection = NSNotification.Name(rawValue: "MPNotificationDidStartNewCollection")
+    static let didAddUpNext = NSNotification.Name(rawValue: "MPNotificationDidAddUpNext")
+
+}
+
+extension CGFloat {
+
+    static let miniPlayerViewHeight: CGFloat = 60
 
 }
 

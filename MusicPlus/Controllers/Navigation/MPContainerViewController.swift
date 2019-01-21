@@ -96,7 +96,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         view.addSubview(playerViewController.view)
         addChild(playerViewController)
         playerViewController.view.autoPinEdge(.left, to: .right, of: leftViewController.view)
-        playerViewController.view.autoMatch(.height, to: .height, of: view, withOffset: 50)
+        playerViewController.view.autoMatch(.height, to: .height, of: view, withOffset: .miniPlayerViewHeight)
         playerViewController.view.autoMatch(.width, to: .width, of: view)
         playerViewTopConstraint = playerViewController.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
 
@@ -116,6 +116,12 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         }
 
         self.view.layoutIfNeeded()
+
+        NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
+            if self?.playerViewStyle == .hidden {
+                self?.playerViewStyle = .full
+            }
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -291,7 +291,7 @@ extension KZPlayer {
     }
 
     func updateNowPlayingInfo(_ item: KZPlayerItem? = nil) {
-        guard let item = item ?? itemForChannel() else {
+        guard let item = item ?? itemForChannel(allowUpNext: true) else {
             return
         }
 
@@ -315,7 +315,7 @@ extension KZPlayer {
                 let session = AppDelegate.del().session
                 center.nowPlayingInfo = dict
                 DispatchQueue.global(qos: .background).async {
-                    guard let currentItem = self.itemForChannel(), systemID == currentItem.systemID else {
+                    guard let currentItem = self.itemForChannel(allowUpNext: true), systemID == currentItem.systemID else {
                         return
                     }
 
@@ -506,9 +506,7 @@ extension KZPlayer {
             try audioEngine.start()
             auPlayerSets.forEach { $0.value.play() }
 
-            if let item = itemForChannel() {
-                updateNowPlayingInfo(item)
-            }
+            updateNowPlayingInfo()
         } catch {
             print("Error starting audio engine")
         }
@@ -551,7 +549,7 @@ extension KZPlayer {
         guard let prevItem = songForPreviousSelection() else {
             return false
         }
-        let currentItem = itemForChannel()
+        let currentItem = itemForChannel(allowUpNext: true)
 
         print("previous = \(prevItem.title)")
 
@@ -626,7 +624,7 @@ extension KZPlayer {
 
     @discardableResult
     func setCurrentTime(_ value: Double, channel: Int = -1) -> Bool {
-        guard let item = itemForChannel(channel) else {
+        guard let item = itemForChannel(channel, allowUpNext: true) else {
             return false
         }
 
@@ -926,20 +924,20 @@ extension KZPlayer {
         return set.auSpeed
     }
 
-    func primaryKeyForChannel(_ channel: Int = -1) -> String? {
+    func primaryKeyForChannel(_ channel: Int = -1, allowUpNext: Bool = false) -> String? {
         guard let set = setForChannel(channel) else {
             return nil
         }
 
-        guard let primaryKey = itemBeforeUpNextKey ?? set.itemKey else {
+        guard let primaryKey = (allowUpNext ? set.itemKey : itemBeforeUpNextKey) ?? itemBeforeUpNextKey ?? set.itemKey else {
             return nil
         }
 
         return primaryKey
     }
 
-    func itemForChannel(_ channel: Int = -1) -> KZPlayerItem? {
-        guard let primaryKey = primaryKeyForChannel(channel) else {
+    func itemForChannel(_ channel: Int = -1, allowUpNext: Bool = false) -> KZPlayerItem? {
+        guard let primaryKey = primaryKeyForChannel(channel, allowUpNext: allowUpNext) else {
             return nil
         }
 
@@ -1031,22 +1029,26 @@ extension KZPlayer {
 
     func songForPreviousSelection() -> KZPlayerItemBase? {
         if currentTime() > 3 {
-            return itemForChannel()
+            return itemForChannel(allowUpNext: true)
         }
 
         return previouslyPlayedItem(index: 0)
     }
 
-    func nextSong(index: Int = 0) -> KZPlayerItemBase? {
-        if settings.repeatMode == .repeatSong {
-            return itemForChannel()
+    func nextSong(index: Int = 0, forPlay: Bool = true) -> KZPlayerItemBase? {
+        guard let realm = currentLibrary?.realm() else {
+            fatalError("No library is currently set.")
         }
 
-        if let item = popUpNext() {
+        if settings.repeatMode == .repeatSong {
+            return itemForChannel(allowUpNext: true)
+        }
+
+        if let item = popUpNext(index: index, forPlay: forPlay) {
             return item
         }
 
-        let plusOne = index + 1
+        let plusOne = index + 1 - realm.objects(KZPlayerUpNextItem.self).count
 
         var x: KZPlayerItemBase?
         let collection = currentCollection()
@@ -1175,22 +1177,27 @@ extension KZPlayer {
                 realm.add(KZPlayerUpNextItem(orig: originalItem))
             }
         }
+
+        NotificationCenter.default.post(name: .didAddUpNext, object: nil)
     }
 
-    func popUpNext() -> KZPlayerHistoryItem? {
+    func popUpNext(index: Int = 0, forPlay: Bool = true) -> KZPlayerHistoryItem? {
         guard let realm = currentLibrary?.realm() else {
             fatalError("No library is currently set.")
         }
 
         let upNextItems = realm.objects(KZPlayerUpNextItem.self)
 
-        guard let item = upNextItems.first else {
+        guard upNextItems.count > index else {
             return nil
         }
 
+        let item = upNextItems[index]
         let result = KZPlayerHistoryItem(orig: item.originalItem)
-        try! realm.write {
-            realm.delete(item)
+        if forPlay {
+            try! realm.write {
+                realm.delete(item)
+            }
         }
 
         return result

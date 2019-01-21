@@ -218,10 +218,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 
             KZPlayer.sharedInstance.play(collection, initialSong: collection[index])
         }
-
-        if MPContainerViewController.sharedInstance.playerViewStyle  == .hidden {
-            MPContainerViewController.sharedInstance.playerViewStyle = .full
-        }
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {

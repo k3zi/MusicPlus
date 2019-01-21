@@ -40,7 +40,7 @@ class SliderView: UIView {
 
     // Outer Scrubber
 
-    private static let outerScrubberHeight: CGFloat = 24.0
+    static let outerScrubberHeight: CGFloat = 24.0
 
     private lazy var outerScrubberView: UIView = {
         let view = UIView()
