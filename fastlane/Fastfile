@@ -16,6 +16,16 @@ lane :bump do |options|
   increment_build_number
 end
 
+lane :ci do |options|
+  if ENV['TRAVIS_BRANCH'] == 'master'
+    beta
+  elsif ENV['TRAVIS_BRANCH'] == 'store'
+    store
+  else
+    beta
+  end
+end
+
 lane :beta do |options|
   ensure_git_status_clean
 
@@ -87,35 +97,54 @@ end
 
 lane :store do
   ensure_git_status_clean
-  push_to_git_remote
-  changelog = changelog_from_git_commits(pretty: '- (%ae) %s')
-  increment_build_number
-  new_version = get_version_string
-  tag_name = "release/#{new_version}"
 
-  unlock_keychain(
-    path: 'login',
-    password: ENV['KEYCHAIN_PASSWORD']
+  if ENV['GITHUB_USERNAME']
+    writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
+    sh "git remote add http #{writable_remote}"
+    sh 'git fetch http'
+    sh "git checkout #{ENV['TRAVIS_BRANCH']}"
+  end
+
+  changelog = changelog_from_git_commits(
+    pretty: '- (%ae) %s',
+    merge_commit_filtering: "exclude_merges",
+    tag_match_pattern: 'store/*'
   )
 
+  increment_build_number
+  new_version = get_version_string
+  tag_name = "store/#{new_version}"
+
+  if ENV['KEYCHAIN_PASSWORD']
+    unlock_keychain(
+      path: 'fastlane_tmp_keychain',
+      password: ENV['KEYCHAIN_PASSWORD'],
+      add_to_search_list: :replace
+    )
+  end
+
   match(
-    type: "appstore",
+    type: 'appstore',
     keychain_password: ENV['KEYCHAIN_PASSWORD']
   )
   gym(
     clean: true,
-    scheme: "MusicPlus",
-    configuration: "Release",
+    scheme: 'MusicPlus',
+    configuration: 'Release',
     include_symbols: true,
     include_bitcode: true,
-    export_method: "app-store"
+    export_method: 'app-store'
   )
-  deliver(force: true, skip_screenshots: true, skip_metadata: true)
+
+  upload_to_app_store(force: true, skip_screenshots: true, skip_metadata: true)
+
+  reset_git_repo(force: true)
+  increment_build_number
 
   commit_version_bump(message: "Bump version to: #{get_build_number} [skip ci]")
+  add_git_tag(tag: tag_name)
+
   if ENV['GITHUB_USERNAME']
-    writable_remote = "https://#{ENV['GITHUB_USERNAME']}:#{ENV['GITHUB_TOKEN']}@github.com/#{repository_name}.git"
-    sh "git remote add http #{writable_remote}"
     push_to_git_remote(remote: 'http')
   else
     push_to_git_remote
@@ -123,10 +152,11 @@ lane :store do
 
   set_github_release(
     repository_name: repository_name,
-    api_token: ENV["GITHUB_TOKEN"],
+    api_token: ENV['GITHUB_TOKEN'],
     name: tag_name,
     tag_name: tag_name,
-    commitish: "master",
-    description: changelog
+    commitish: "store",
+    description: changelog,
+    is_prerelease: false
   )
 end

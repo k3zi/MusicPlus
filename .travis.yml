@@ -5,8 +5,8 @@ install:
   - brew install imagemagick librsvg
   - bundle install
 script:
-  - bundle exec fastlane beta --verbose
+  - bundle exec fastlane ci --verbose
 
 branches:
   only:
-    - master
+    - store
