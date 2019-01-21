@@ -16,8 +16,6 @@ class MPArtistSectionHeaderView: UIView {
     let subtitleLabel = UILabel()
     let infoHolder = UIView()
 
-    let heartButton = UIButton.styleForHeart()
-
     let topSeperator = UIView()
     let bottomSeperator = UIView()
 
@@ -30,8 +28,6 @@ class MPArtistSectionHeaderView: UIView {
         super.init(frame: CGRect.zero)
 
         setupView()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: .tintColorDidChange, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,9 +65,6 @@ class MPArtistSectionHeaderView: UIView {
 
         addSubview(infoHolder)
 
-        heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
-        addSubview(heartButton)
-
         toggleButton.setImage(#imageLiteral(resourceName: "arrowDown"), for: .normal)
         toggleButton.setImage(#imageLiteral(resourceName: "arrowUp"), for: .selected)
         addSubview(toggleButton)
@@ -83,11 +76,7 @@ class MPArtistSectionHeaderView: UIView {
     func fillInView() {
 
         if let song = album.songs.first {
-            if let artwork = song.fetchArtwork(completionHandler: { artwork in
-                self.imageView.image = artwork.image(at: CGSize(width: 70, height: 70))
-            }) {
-                imageView.image = artwork.image(at: CGSize(width: 70, height: 70))
-            }
+            imageView.setImage(with: song)
         }
 
         titleLabel.text = album.name
@@ -121,35 +110,13 @@ class MPArtistSectionHeaderView: UIView {
         subtitleLabel.autoPinEdge(toSuperviewEdge: .bottom)
         subtitleLabel.autoPinEdge(toSuperviewEdge: .right)
 
-        heartButton.autoPinEdge(.left, to: .right, of: infoHolder, withOffset: 12, relation: .greaterThanOrEqual)
-        heartButton.autoAlignAxis(toSuperviewAxis: .horizontal)
-
         NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
             self.infoHolder.autoAlignAxis(toSuperviewAxis: .horizontal)
-            self.heartButton.autoSetContentCompressionResistancePriority(for: .horizontal)
-            if let image = self.heartButton.currentImage {
-                self.heartButton.autoSetDimensions(to: image.size)
-            }
         }
 
-        toggleButton.autoPinEdge(.left, to: .right, of: heartButton, withOffset: 18)
+        toggleButton.autoPinEdge(.left, to: .right, of: infoHolder, withOffset: 18, relation: .greaterThanOrEqual)
         toggleButton.autoAlignAxis(toSuperviewAxis: .horizontal)
         toggleButton.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
-    }
-
-    // MARK: Handle Updates
-
-    @objc func toggleLike() {
-        let selected = !album.liked
-        heartButton.isSelected = selected
-
-        try? album.realm?.write {
-            album.liked = heartButton.isSelected
-        }
-    }
-
-    @objc func updateTint() {
-        heartButton.tintColor = AppDelegate.del().session.tintColor
     }
 
 }

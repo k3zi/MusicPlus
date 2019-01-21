@@ -13,8 +13,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
     let trackNumberLabel = UILabel()
     let titleLabel = UILabel()
 
-    let heartButton = UIButton.styleForHeart()
-
     var indexPath: IndexPath?
 
     required init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -31,11 +29,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
         contentView.addSubview(titleLabel)
-
-        heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
-        contentView.addSubview(heartButton)
-
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: .tintColorDidChange, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -56,17 +49,7 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         titleLabel.autoPinEdge(toSuperviewEdge: .top, withInset: 15)
         titleLabel.autoPinEdge(toSuperviewEdge: .bottom, withInset: 15)
         titleLabel.autoPinEdge(.left, to: .right, of: trackNumberLabel, withOffset: 15)
-
-        heartButton.autoPinEdge(.left, to: .right, of: titleLabel, withOffset: 12, relation: .greaterThanOrEqual)
-        heartButton.autoAlignAxis(toSuperviewAxis: .horizontal)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-
-        NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
-            self.heartButton.autoSetContentCompressionResistancePriority(for: .horizontal)
-            if let image = self.heartButton.currentImage {
-                self.heartButton.autoSetDimensions(to: image.size)
-            }
-        }
+        titleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
     }
 
     override func estimatedHeight() -> CGFloat {
@@ -89,7 +72,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         trackNumberLabel.text = item.trackNum > 0 ? String(item.trackNum) : "-"
 
         titleLabel.text = item.titleText()
-        heartButton.isSelected = item.liked
     }
 
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
@@ -112,25 +94,6 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         } else {
             runAnimations()
         }
-    }
-
-    // MARK: Handle Updates
-
-    @objc func toggleLike() {
-        guard let item = model as? KZPlayerItem else {
-            return
-        }
-
-        let selected = !item.liked
-        heartButton.isSelected = selected
-
-        try? item.realm?.write {
-            item.liked = heartButton.isSelected
-        }
-    }
-
-    @objc func updateTint() {
-        heartButton.tintColor = AppDelegate.del().session.tintColor
     }
 
 }

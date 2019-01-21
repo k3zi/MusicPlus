@@ -35,12 +35,6 @@ class PlayerViewController: MPViewController {
         tapRecognizer.cancelsTouchesInView = true
         view.addGestureRecognizer(tapRecognizer)
 
-        let heartButton = UIButton.styleForHeart()
-        view.addSubview(heartButton)
-        heartButton.autoPinEdge(toSuperviewEdge: .top, withInset: 18)
-        heartButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-
         return view
     }()
 

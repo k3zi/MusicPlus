@@ -15,9 +15,6 @@ class MPAlbumSectionHeaderView: UIView {
     let titleLabel = UILabel()
     let subtitleLabelHolderView = UIView()
     let subtitleLabel = UILabel()
-
-    let heartButton = UIButton.styleForHeart()
-
     let topSeperator = UIView()
     let bottomSeperator = UIView()
 
@@ -28,8 +25,6 @@ class MPAlbumSectionHeaderView: UIView {
         super.init(frame: CGRect.zero)
 
         setupView()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: .tintColorDidChange, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,9 +64,6 @@ class MPAlbumSectionHeaderView: UIView {
         subtitleLabelHolderView.layer.cornerRadius = 6
         addSubview(subtitleLabelHolderView)
 
-        heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
-        addSubview(heartButton)
-
         fillInView()
         setupConstraints()
     }
@@ -109,31 +101,6 @@ class MPAlbumSectionHeaderView: UIView {
         subtitleLabelHolderView.autoPinEdge(.top, to: .bottom, of: titleLabel, withOffset: 4)
         subtitleLabelHolderView.autoPinEdge(.left, to: .right, of: imageView, withOffset: 10)
         subtitleLabelHolderView.autoPinEdge(toSuperviewEdge: .right, withInset: 14, relation: .greaterThanOrEqual)
-
-        heartButton.autoPinEdge(toSuperviewEdge: .bottom, withInset: 20)
-        heartButton.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-
-        NSLayoutConstraint.autoSetPriority(UILayoutPriority.required) {
-            self.heartButton.autoSetContentCompressionResistancePriority(for: .horizontal)
-            if let image = self.heartButton.currentImage {
-                self.heartButton.autoSetDimensions(to: image.size)
-            }
-        }
-    }
-
-    // MARK: Handle Updates
-
-    @objc func toggleLike() {
-        let selected = !album.liked
-        heartButton.isSelected = selected
-
-        try? album.realm?.write {
-            album.liked = heartButton.isSelected
-        }
-    }
-
-    @objc func updateTint() {
-        heartButton.tintColor = AppDelegate.del().session.tintColor
     }
 
 }
