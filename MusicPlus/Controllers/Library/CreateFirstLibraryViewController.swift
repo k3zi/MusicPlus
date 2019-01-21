@@ -10,7 +10,7 @@ import Foundation
 import MediaPlayer
 import PromiseKit
 
-class CreateLibraryViewController: KZViewController {
+class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
 
     let welcomeLabel = UILabel()
     let nameTextField = UITextField()
@@ -47,6 +47,7 @@ class CreateLibraryViewController: KZViewController {
         nameTextField.font = .systemFont(ofSize: 25)
         nameTextField.textColor = .white
         nameTextField.textAlignment = .left
+        nameTextField.delegate = self
         nameTextField.attributedPlaceholder = NSAttributedString(string: "Enter a Name", attributes: [NSAttributedString.Key.foregroundColor: RGB(172)])
         nameTextField.layer.sublayerTransform = CATransform3DMakeTranslation(12, 0, 0)
         view.addSubview(nameTextField)
@@ -73,7 +74,7 @@ class CreateLibraryViewController: KZViewController {
         view.addSubview(nextButoon)
 
         if KZRealmLibrary.libraries.count == 0 {
-            welcomeLabel.text =  "Let's start by creating your first library."
+            welcomeLabel.text =  "Add A Library"
             welcomeLabel.textAlignment = .center
 
             typeLabel.textAlignment = .center
@@ -123,6 +124,16 @@ class CreateLibraryViewController: KZViewController {
         nextButoon.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
         nextButoon.autoSetDimension(.height, toSize: 44)
         nextButoon.autoPin(toBottomLayoutGuideOf: self, withInset: 24, relation: .greaterThanOrEqual)
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        nameTextField.resignFirstResponder()
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {

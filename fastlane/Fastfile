@@ -16,6 +16,15 @@ lane :bump do |options|
   increment_build_number
 end
 
+lane :reg do |options|
+  register_devices(
+    devices: {
+      options[:name] => options[:uuid]
+    },
+    username: options[:username]
+  )
+end
+
 lane :ci do |options|
   if ENV['TRAVIS_BRANCH'] == 'master'
     beta
