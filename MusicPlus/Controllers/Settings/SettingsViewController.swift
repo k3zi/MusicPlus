@@ -78,7 +78,7 @@ class SettingsViewController: MPViewController {
         let crossfadeOnPreviousProvider = SwitchTableViewCellProvider(title: crossfadeOnPrevious.title, subTitle: crossfadeOnPrevious.description, isOn: false)
         UserDefaults.standard.bidirectionalBind(control: crossfadeOnPreviousProvider.uiSwitch.rx.isOn, keyPath: crossfadeOnPrevious.accessor, defaultValue: false).disposed(by: disposeBag)
 
-        let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeHeader, crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 5, footerHeight: 0)
+        let crossfadeSectionProvider = SpacingSectionProvider(providers: [crossfadeHeader, crossfadeProvider, crossfadeAtProvider, crossfadeDurationProvider, crossfadeOnNextProvider, crossfadeOnPreviousProvider], headerHeight: 0, footerHeight: 0)
 
         // MARK: - Up Next
 
@@ -97,13 +97,18 @@ class SettingsViewController: MPViewController {
         }.disposed(by: disposeBag)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
+        view.layoutSubviews()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
-
-        topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
     }
 
     override func setupConstraints() {

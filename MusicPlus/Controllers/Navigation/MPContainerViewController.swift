@@ -30,6 +30,9 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
     var playerViewTopConstraint: NSLayoutConstraint?
     var playerViewStyle: PlayerViewStyle = .hidden {
         didSet {
+            if playerViewStyle != .hidden {
+                playerViewController.viewWillAppear(true)
+            }
             view.bringSubviewToFront(playerViewController.view)
 
             UIView.animate(withDuration: Constants.UI.Animation.menuSlide, delay: 0.0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
@@ -194,11 +197,14 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
             return hideMenu()
         }
 
+        navigationController.willMove(toParent: self)
+        navigationController.viewWillAppear(true)
         navigationController.view.isHidden = false
         prevNavigationController?.view.isHidden = true
         view.bringSubviewToFront(navigationController.view)
         view.bringSubviewToFront(playerViewController.view)
         navigationController.didMove(toParent: self)
+        navigationController.viewDidAppear(true)
 
         navigationController.view.frame.origin.x = prevNavigationController?.view.frame.origin.x ?? 0
 

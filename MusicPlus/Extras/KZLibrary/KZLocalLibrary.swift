@@ -88,7 +88,7 @@ class KZLocalLibrary: KZLibrary {
 
         if changed {
             DispatchQueue.main.async(execute: {
-                NotificationCenter.default.post(name: Constants.Notification.libraryDataDidChange, object: nil)
+                NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
             })
         }
 
@@ -186,7 +186,7 @@ class KZLocalLibrary: KZLibrary {
 
             if update {
                 DispatchQueue.main.async(execute: {
-                    NotificationCenter.default.post(name: Constants.Notification.libraryDataDidChange, object: nil)
+                    NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
                 })
             }
         }

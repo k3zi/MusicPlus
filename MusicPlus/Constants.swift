@@ -19,6 +19,21 @@ typealias KZPlayerItemCollection = AnyRealmCollection<KZPlayerItem>
 
 typealias SettingInfo = (title: String, accessor: String, description: String)
 
+extension Notification.Name {
+
+    static let hidePopup = NSNotification.Name(rawValue: "MPNotificationHidePopup")
+    static let libraryDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDidChange")
+    static let libraryDataDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDataDidChange")
+    static let backgroundImageDidChange = NSNotification.Name(rawValue: "MPNotificationBackgroundImageDidChange")
+    static let tintColorDidChange = NSNotification.Name(rawValue: "MPNotificationTintColorDidChange")
+    static let songDidChange = NSNotification.Name(rawValue: "MPNotificationSongDidChange")
+    static let nextSongDidPlay = NSNotification.Name(rawValue: "MPNotificationNextSongDidPlay")
+    static let previousSongDidPlay = NSNotification.Name(rawValue: "MPNotificationPreviousSongDidPlay")
+    static let playStateDidChange = NSNotification.Name(rawValue: "MPNotificationPlayStateDidChange")
+    static let didStartNewCollection = NSNotification.Name(rawValue: "MPNotificationDidStartNewCollection")
+
+}
+
 struct Constants {
 
 	struct Config {
@@ -56,6 +71,9 @@ struct Constants {
         static let libraryDataDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDataDidChange")
         static let backgroundImageDidChange = NSNotification.Name(rawValue: "MPNotificationBackgroundImageDidChange")
         static let tintColorDidChange = NSNotification.Name(rawValue: "MPNotificationTintColorDidChange")
+        static let songDidChange = NSNotification.Name(rawValue: "MPNotificationSongDidChange")
+        static let nextSongDidPlay = NSNotification.Name(rawValue: "MPNotificationNextSongDidPlay")
+        static let playStateDidChange = NSNotification.Name(rawValue: "MPNotificationPlayStateDidChange")
 	}
 
     struct Observation {

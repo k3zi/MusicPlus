@@ -39,7 +39,7 @@ class ArtistViewController: MPSectionedTableViewController {
         shuffleButton.label.text = "Shuffle Artist"
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
-        NotificationCenter.default.addObserver(forName: Constants.Notification.libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
             self.fetchData()
         }
     }

@@ -139,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         }
 
                         DispatchQueue.main.async(execute: {
-                            NotificationCenter.default.post(name: Constants.Notification.libraryDataDidChange, object: nil)
+                            NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
                         })
                     } catch {
                         print("Something went wrong")

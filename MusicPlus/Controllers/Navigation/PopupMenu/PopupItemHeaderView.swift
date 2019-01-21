@@ -111,7 +111,7 @@ class PopupItemHeaderView: PopupItemView {
         stackView.addArrangedSubview(albumLabel)
 
         setupConstraints()
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: Constants.Notification.tintColorDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: .tintColorDidChange, object: nil)
     }
 
     func setupConstraints() {

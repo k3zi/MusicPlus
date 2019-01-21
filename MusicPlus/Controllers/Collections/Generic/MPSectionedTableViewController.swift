@@ -48,7 +48,7 @@ class MPSectionedTableViewController: KZViewController {
         shadowView.alpha = 0.0
         view.addSubview(shadowView)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(fetchData), name: Constants.Notification.libraryDataDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchData), name: .libraryDataDidChange, object: nil)
     }
 
     override func viewDidLayoutSubviews() {

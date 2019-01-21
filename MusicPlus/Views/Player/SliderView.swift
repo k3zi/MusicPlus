@@ -77,10 +77,11 @@ class SliderView: UIView {
     var prgressConstraint: NSLayoutConstraint?
 
     private var isSliding = false
+    var updateWhenOffScreen = false
 
     var progress: CGFloat = 0.0 {
         didSet {
-            guard !isSliding, UIView.isVisible(view: self) else {
+            guard !isSliding, updateWhenOffScreen || UIView.isVisible(view: self) else {
                 return
             }
 

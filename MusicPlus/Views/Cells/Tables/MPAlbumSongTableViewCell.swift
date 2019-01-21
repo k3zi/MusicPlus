@@ -35,7 +35,7 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         heartButton.addTarget(self, action: #selector(toggleLike), for: .touchUpInside)
         contentView.addSubview(heartButton)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: Constants.Notification.tintColorDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateTint), name: .tintColorDidChange, object: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {

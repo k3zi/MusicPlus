@@ -16,7 +16,7 @@ class MPSession {
             }
 
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Constants.Notification.tintColorDidChange, object: nil)
+                NotificationCenter.default.post(name: .tintColorDidChange, object: nil)
             }
         }
     }
@@ -28,7 +28,7 @@ class MPSession {
             }
 
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Constants.Notification.backgroundImageDidChange, object: nil)
+                NotificationCenter.default.post(name: .backgroundImageDidChange, object: nil)
             }
         }
     }

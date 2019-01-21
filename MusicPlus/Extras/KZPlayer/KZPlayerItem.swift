@@ -355,6 +355,19 @@ extension Array where Element: KZPlayerItemBase {
     }
 }
 
+extension UIImageView {
+
+    func setImage(with item: KZPlayerItemBase, isStillValid: (() -> Bool)? = nil) {
+        image = item.fetchArtwork { artwork in
+            if let isStillValid = isStillValid, !isStillValid() {
+                return
+            }
+            self.image = artwork.image(at: self.bounds.size)
+            }?.image(at: bounds.size)
+    }
+
+}
+
 extension AnyRealmCollection where Element: KZPlayerItemBase {
     func withShuffledPosition() -> Results<Element> {
         for result in self {

@@ -22,7 +22,7 @@ extension KZPlayerItemBase {
         }
 
         let path = url.path
-        let accuracy: uint_t = 10 // 1-10??
+        let accuracy: uint_t = 2 // Probably best to keep squares of 2: 1, 2, 4, 8, 16
         let win_size: uint_t = 1024
         let hop_size: uint_t = win_size / accuracy
         let input = new_fvec(hop_size)
@@ -38,12 +38,12 @@ extension KZPlayerItemBase {
         var firstBeatPosition = 0.0
         while true {
             aubio_source_do(source, input, &read)
-            total_frames += read
-            if read < hop_size { break }
             aubio_tempo_do(tempo, input, output)
             if firstBeatPosition == 0 {
                 firstBeatPosition = Double(aubio_tempo_get_last_s(tempo))
             }
+            total_frames += read
+            if read < hop_size { break }
         }
 
         try! realm?.write {

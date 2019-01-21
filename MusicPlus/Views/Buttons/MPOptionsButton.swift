@@ -133,8 +133,8 @@ class MPOptionsButton: UIView {
     }
 
     func expand() {
-        NotificationCenter.default.post(name: Constants.Notification.hidePopup, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(toggle), name: Constants.Notification.hidePopup, object: nil)
+        NotificationCenter.default.post(name: .hidePopup, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(toggle), name: .hidePopup, object: nil)
         toggleButton.isSelected = true
 
         self.backgroundColor = .black

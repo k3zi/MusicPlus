@@ -35,8 +35,8 @@ class MiniPlayerView: UIView {
         sendSubviewToBack(tintOverlayView)
         sendSubviewToBack(backgroundImageView)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(updateBackground), name: Constants.Notification.backgroundImageDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(animateTint), name: Constants.Notification.tintColorDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateBackground), name: .backgroundImageDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(animateTint), name: .tintColorDidChange, object: nil)
 
         setupConstraints()
     }

@@ -115,7 +115,7 @@ class KZPlayer: NSObject {
     var currentLibrary: KZLibrary? {
         didSet {
             DispatchQueue.main.async {
-                NotificationCenter.default.post(name: Constants.Notification.libraryDidChange, object: nil)
+                NotificationCenter.default.post(name: .libraryDidChange, object: nil)
             }
 
             DispatchQueue.global(qos: .background).async {
@@ -304,6 +304,7 @@ extension KZPlayer {
             dict[MPMediaItemPropertyAlbumTitle] = item.album?.name ?? ""
             dict[MPMediaItemPropertyPlaybackDuration] = item.endTime - item.startTime
             dict[MPNowPlayingInfoPropertyPlaybackRate] = audioEngine.isRunning ? 1.0 : 0.0
+            NotificationCenter.default.post(name: .playStateDidChange, object: nil)
             dict[MPNowPlayingInfoPropertyElapsedPlaybackTime] = currentTime(item: item)
             if #available(iOS 10.0, *) {
                 dict[MPNowPlayingInfoPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
@@ -439,6 +440,7 @@ extension KZPlayer {
         }
 
         persistentPlayNextSong(collection[index], times: collection.count, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
+        NotificationCenter.default.post(name: .didStartNewCollection, object: nil)
     }
 
     // Play Single Item
@@ -495,6 +497,7 @@ extension KZPlayer {
         DispatchQueue.main.async {
             self.updateNowPlayingInfo()
         }
+        NotificationCenter.default.post(name: .songDidChange, object: nil)
         return true
     }
 
@@ -525,12 +528,13 @@ extension KZPlayer {
         shouldBeRunning = false
     }
 
-    func togglePlay() {
+    @objc func togglePlay() {
         if audioEngine.isRunning {
             pause()
         } else {
             resume()
         }
+        NotificationCenter.default.post(name: .playStateDidChange, object: nil)
     }
 
     @objc func next() {
@@ -544,23 +548,29 @@ extension KZPlayer {
     }
 
     @objc func prev() -> Bool {
-        guard let prevItem = prevSong() else {
+        guard let prevItem = songForPreviousSelection() else {
             return false
         }
+        let currentItem = itemForChannel()
 
         print("previous = \(prevItem.title)")
 
+        var result = false
+
         if settings.crossfade && settings.crossfadeOnPrevious {
-            return crossfadeTo(prevItem)
+            result = crossfadeTo(prevItem)
+        } else {
+            stopCrossfade()
+            result = play(prevItem)
+
+            for channel in auPlayerSets.keys where channel != activePlayer {
+                removeChannel(channel: channel)
+            }
         }
 
-        stopCrossfade()
-        let result = play(prevItem)
-
-        for channel in auPlayerSets.keys where channel != activePlayer {
-            removeChannel(channel: channel)
+        if prevItem.originalItem != currentItem {
+            NotificationCenter.default.post(name: .previousSongDidPlay, object: nil)
         }
-
         return result
     }
 
@@ -586,7 +596,7 @@ extension KZPlayer {
             if let view = volumeView.subviews.first as? UISlider {
                 return view.value
             }
-            return 0.0
+            return audioSession.outputVolume
         }
     }
 
@@ -664,6 +674,7 @@ extension KZPlayer {
         }
 
         persistentPlayNextSong(shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
+        NotificationCenter.default.post(name: .nextSongDidPlay, object: nil)
     }
 
     func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1, shouldCrossfadeOnSkip: Bool = true) {
@@ -676,7 +687,7 @@ extension KZPlayer {
     }
 
     func playNextSong(_ item: KZPlayerItemBase? = nil, shouldCrossfadeOnSkip: Bool = true) -> Bool {
-        guard let nextItem = item ?? rotateSongs() else {
+        guard let nextItem = item ?? nextSong() else {
             return true
         }
 
@@ -992,35 +1003,41 @@ extension KZPlayer {
 
     // MARK: Session
 
-    func prevSong() -> KZPlayerItemBase? {
-        if currentTime() > 3 {
-            return itemForChannel()
-        }
-
+    func previouslyPlayedItem(index: Int = 0) -> KZPlayerItemBase? {
         var x: KZPlayerItemBase?
+        let plusOne = index + 1
 
         let collection = currentCollection()
 
-        if collection.count > 0 {
-            x = collection[0]
+        if collection.count > index {
+            x = collection[index]
         }
 
-        if let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) {
-            if (position - 1) < collection.count && (position - 1) > -1 {
-                x = collection[position - 1]
-            } else {
-                if settings.repeatMode == .repeatAll {
-                    x = collection[collection.count - 1]
-                } else {
-                    x = item
-                }
-            }
+        guard let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) else {
+            return x
+        }
+
+        if (position - plusOne) < collection.count && (position - plusOne) > -1 {
+            x = collection[position - plusOne]
+        } else if settings.repeatMode == .repeatAll {
+            // Go to end of collection
+            x = collection[collection.count - 1]
+        } else {
+            x = item
         }
 
         return x
     }
 
-    func rotateSongs() -> KZPlayerItemBase? {
+    func songForPreviousSelection() -> KZPlayerItemBase? {
+        if currentTime() > 3 {
+            return itemForChannel()
+        }
+
+        return previouslyPlayedItem(index: 0)
+    }
+
+    func nextSong(index: Int = 0) -> KZPlayerItemBase? {
         if settings.repeatMode == .repeatSong {
             return itemForChannel()
         }
@@ -1029,25 +1046,26 @@ extension KZPlayer {
             return item
         }
 
+        let plusOne = index + 1
+
         var x: KZPlayerItemBase?
         let collection = currentCollection()
 
-        if collection.count > 0 {
-            x = collection[0]
+        if collection.count > index {
+            x = collection[index]
         }
 
         guard let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) else {
             return x
         }
 
-        if (position + 1) < collection.count {
-            x = collection[position + 1]
+        if (position + plusOne) < collection.count {
+            x = collection[position + plusOne]
+        } else if settings.repeatMode == .repeatAll {
+            // Go to start of collection
+            x = collection[0]
         } else {
-            if settings.repeatMode == .repeatAll {
-                x = collection[0]
-            } else {
-                x = nil
-            }
+            x = nil
         }
 
         return x

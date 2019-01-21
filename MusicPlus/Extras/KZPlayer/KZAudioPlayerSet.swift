@@ -79,8 +79,14 @@ class KZAudioPlayerSet: StreamingDelegate {
                 return
             }
 
-            auPlayer.scheduleFile(file, at: nil) {
-                self.callCompletionHandler(completionHandler)
+            if #available(iOS 11.0, *) {
+                auPlayer.scheduleFile(file, at: nil, completionCallbackType: .dataPlayedBack) { _ in
+                    self.callCompletionHandler(completionHandler)
+                }
+            } else {
+                auPlayer.scheduleFile(file, at: nil) {
+                    self.callCompletionHandler(completionHandler)
+                }
             }
         }
     }
@@ -177,8 +183,15 @@ class KZAudioPlayerSet: StreamingDelegate {
         let startingFrame = AVAudioFramePosition(playerTime.sampleRate * value)
         let frameLength =  AVAudioFrameCount(playerTime.sampleRate * (item.endTime - value))
         auPlayer.stop()
-        auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil) {
-            self.callCompletionHandler(completionHandler)
+        if #available(iOS 11.0, *) {
+            auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil, completionCallbackType: .dataPlayedBack) { _ in
+                print("data finished playing back")
+                self.callCompletionHandler(completionHandler)
+            }
+        } else {
+            auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil) {
+                self.callCompletionHandler(completionHandler)
+            }
         }
         auPlayer.play()
         isSeeking = false
