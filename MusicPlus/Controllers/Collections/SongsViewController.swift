@@ -24,10 +24,14 @@ class SongsViewController: MPSongCollectionViewController {
 
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
+        setUpLibraryBarItem()
+
         NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
             self.collectionGenerator = {
                 return KZPlayer.sharedInstance.currentLibrary?.allSongs
             }
+
+           self.setUpLibraryBarItem()
         }
     }
 

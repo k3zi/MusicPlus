@@ -32,8 +32,11 @@ class ArtistsViewController: MPSectionedTableViewController {
         peekPop = PeekPop(viewController: self)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: tableView)
 
+        self.setUpLibraryBarItem()
+
         NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
             self.fetchData()
+            self.setUpLibraryBarItem()
         }
     }
 

@@ -20,10 +20,13 @@ class KZPlexLibrary: KZLibrary {
         var config = Realm.Configuration()
         config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("KZPlexLibrary-\(uniqueIdentifier).realm")
         config.migrationBlock = { migration, oldSchemaVersion in
-            migration.enumerateObjects(ofType: KZPlayerItem.className()) { _, _ in
+            migration.enumerateObjects(ofType: KZPlayerItem.className()) { old, new in
+                if oldSchemaVersion < 7 {
+                    new?["libraryUniqueIdentifier"] = old?["plexLibraryUniqueIdentifier"]
+                }
             }
         }
-        config.schemaVersion = 6
+        config.schemaVersion = 7
         return try! Realm(configuration: config)
     }
 
@@ -73,7 +76,7 @@ class KZPlexLibrary: KZLibrary {
                     let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.ratingKey!)'")
                     if results.count == 0 {
                         // Add new item
-                        let newItem = item.asPlayerItem(realm: realm, plexLibraryUniqueIdentifier: self.uniqueIdentifier)
+                        let newItem = item.asPlayerItem(realm: realm, libraryUniqueIdentifier: self.uniqueIdentifier)
                         self.addItemToSpotlight(newItem)
                         realm.add(newItem)
                         changed = true

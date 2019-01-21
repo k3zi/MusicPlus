@@ -20,7 +20,7 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
     var assetURL: String { get set }
     var artworkURL: String { get set }
     var systemID: String { get set }
-    var plexLibraryUniqueIdentifier: String { get set }
+    var libraryUniqueIdentifier: String { get set }
 
     var localAssetURL: String? { get set }
 
@@ -78,9 +78,9 @@ extension KZPlayerItemBase {
         get { return orig!.systemID }
         set { orig!.title = systemID }
     }
-    var plexLibraryUniqueIdentifier: String {
-        get { return orig!.plexLibraryUniqueIdentifier }
-        set { orig!.plexLibraryUniqueIdentifier = newValue }
+    var libraryUniqueIdentifier: String {
+        get { return orig!.libraryUniqueIdentifier }
+        set { orig!.libraryUniqueIdentifier = newValue }
     }
 
     var localAssetURL: String? {
@@ -154,9 +154,9 @@ extension KZPlayerItemBase {
 
     func realmGenerator() -> (() -> Realm?) {
         // First aquire things that can not go across threads
-        let identifier = plexLibraryUniqueIdentifier
+        let identifier = libraryUniqueIdentifier
         return {
-            guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
+            guard let library = KZPlexLibrary.libraries.first(where: { $0.uniqueIdentifier == identifier }) else {
                 return nil
             }
 

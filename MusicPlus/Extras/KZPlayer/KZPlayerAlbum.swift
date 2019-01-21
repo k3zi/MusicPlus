@@ -32,7 +32,7 @@ class KZPlayerAlbum: Object, RealmGenerating {
 
     func realmGenerator() -> (() -> Realm?) {
         // First aquire things that can not go across threads
-        let identifier = songs.first { $0.plexLibraryUniqueIdentifier.isNotEmpty }?.plexLibraryUniqueIdentifier
+        let identifier = songs.first { $0.libraryUniqueIdentifier.isNotEmpty }?.libraryUniqueIdentifier
         return {
             guard let library = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == identifier }) else {
                 return nil

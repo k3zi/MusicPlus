@@ -128,6 +128,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     }()
 
     let artworkViewHolder = UIView()
+    let artworkViewHolderViewHolder = UIView()
     var artworkViews = [UIImageView]()
     var artworkViewConstraints = [NSLayoutConstraint]()
     // Must be an odd number
@@ -165,7 +166,10 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         view.addSubview(nextButton)
 
         artworkViewHolder.clipsToBounds = false
-        view.addSubview(artworkViewHolder)
+        artworkViewHolderViewHolder.addSubview(artworkViewHolder)
+
+        artworkViewHolderViewHolder.clipsToBounds = true
+        view.addSubview(artworkViewHolderViewHolder)
 
         for _ in 0..<numberOfArtworkViews {
             addArtwork(at: 0)
@@ -268,14 +272,16 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView, withOffset: 30)
         minimizeButton.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
 
-        artworkViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
+        artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
+        artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
+        artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .right)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .vertical)
-        artworkViewHolder.autoMatch(.width, to: .width, of: view, withMultiplier: 0.9)
+        artworkViewHolder.autoMatch(.width, to: .width, of: artworkViewHolderViewHolder, withMultiplier: 0.9)
 
         resetArtwork()
 
+        timeSlider.autoPinEdge(.top, to: .bottom, of: artworkViewHolderViewHolder, withOffset: 18)
         timeSlider.autoMatch(.width, to: .width, of: view, withMultiplier: 0.9)
-        timeSlider.autoPinEdge(.top, to: .bottom, of: artworkViewHolder, withOffset: 18)
         timeSlider.autoAlignAxis(toSuperviewAxis: .vertical)
 
         infoHolderView.autoPinEdge(.top, to: .bottom, of: timeSlider, withOffset: 18)

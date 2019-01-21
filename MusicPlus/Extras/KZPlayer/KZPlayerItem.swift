@@ -11,7 +11,7 @@ import MediaPlayer
 import RealmSwift
 
 class KZPlayerItem: Object, KZPlayerItemBase {
-    @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", localArtworkURL = "", systemID = "", plexLibraryUniqueIdentifier = ""
+    @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", localArtworkURL = "", systemID = "", libraryUniqueIdentifier = ""
     @objc dynamic var localAssetURL: String?
     @objc dynamic var trackNum = 1, playCount = 1, position = 0
     @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 1.0, bpm = 0.0, firstBeatPosition = 0.0, lastBeatPosition = 0.0
@@ -53,10 +53,9 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         return self
     }
 
-    convenience init(item: MPMediaItem) {
+    convenience init(item: MPMediaItem, realm: Realm, libraryUniqueIdentifier: String) {
         self.init()
 
-        let realm = try! Realm()
         let artist = [item.albumArtist, item.artist].filter({ $0?.isNotEmpty ?? false }).first ?? "Unknown Artist"
         if let artist = realm.object(ofType: KZPlayerArtist.self, forPrimaryKey: artist! as AnyObject) {
             self.artist = artist
@@ -92,7 +91,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         self.oItem = self
     }
 
-    convenience init(realm: Realm, artist: String, album: String, title: String, duration: Double, assetURL: String, isDocumentURL: Bool, artworkURL: String, uniqueIdentifier: String, trackNum: Int = 1, plexLibraryUniqueIdentifier: String = "", plexTrack: Track? = nil) {
+    convenience init(realm: Realm, artist: String, album: String, title: String, duration: Double, assetURL: String, isDocumentURL: Bool, artworkURL: String, uniqueIdentifier: String, libraryUniqueIdentifier: String, trackNum: Int = 1, plexTrack: Track? = nil) {
         self.init()
 
         if let artist = realm.object(ofType: KZPlayerArtist.self, forPrimaryKey: artist as AnyObject) {
@@ -121,7 +120,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         self.endTime = duration
         self.systemID = "KZPlayerItem-\(uniqueIdentifier)"
         self.isDocumentURL = isDocumentURL
-        self.plexLibraryUniqueIdentifier = plexLibraryUniqueIdentifier
+        self.libraryUniqueIdentifier = libraryUniqueIdentifier
         if let plexTrack = plexTrack {
             self.plexTrack = KZPlayerPlexTrack(track: plexTrack)
         }
@@ -137,7 +136,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     }
 
     var plexLibraryConfig: PlexLibraryConfig? {
-        guard plexLibraryUniqueIdentifier.isNotEmpty, let config = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == plexLibraryUniqueIdentifier })?.plexLibraryConfig else {
+        guard libraryUniqueIdentifier.isNotEmpty, let config = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == libraryUniqueIdentifier })?.plexLibraryConfig else {
             return nil
         }
 
@@ -145,7 +144,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     }
 
     var isStoredLocally: Bool {
-        if isDocumentURL || localAssetURL != nil || plexLibraryUniqueIdentifier.isEmpty {
+        if isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || !["http://", "ftp://", "https://"].contains(where: { assetURL.contains($0) }) {
             return true
         }
 

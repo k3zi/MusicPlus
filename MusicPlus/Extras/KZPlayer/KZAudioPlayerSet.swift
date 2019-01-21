@@ -28,7 +28,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     init(item: KZPlayerItem) {
         self.item = item
         itemReference = KZThreadSafeReference(to: item)
-        libraryIdentifier = item.plexLibraryUniqueIdentifier
+        libraryIdentifier = item.libraryUniqueIdentifier
         if item.isStoredLocally {
             auPlayer = AVAudioPlayerNode()
         } else {

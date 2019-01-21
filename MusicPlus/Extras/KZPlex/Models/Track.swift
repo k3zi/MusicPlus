@@ -91,10 +91,10 @@ class Track: XMLMappable, Hashable {
         media <- map["Media"]
     }
 
-    func asPlayerItem(realm: Realm, plexLibraryUniqueIdentifier: String) -> KZPlayerItem {
+    func asPlayerItem(realm: Realm, libraryUniqueIdentifier: String) -> KZPlayerItem {
         let url = key!
         let artworkURL = thumb ?? parentThumb ?? grandparentThumb ?? art ?? parentArt ?? grandparentArt ?? ""
 
-        return KZPlayerItem(realm: realm, artist: grandparentTitle, album: parentTitle, title: title, duration: duration / 1000, assetURL: url, isDocumentURL: false, artworkURL: artworkURL, uniqueIdentifier: String(ratingKey), trackNum: index, plexLibraryUniqueIdentifier: plexLibraryUniqueIdentifier, plexTrack: self)
+        return KZPlayerItem(realm: realm, artist: grandparentTitle, album: parentTitle, title: title, duration: duration / 1000, assetURL: url, isDocumentURL: false, artworkURL: artworkURL, uniqueIdentifier: String(ratingKey), libraryUniqueIdentifier: libraryUniqueIdentifier, trackNum: index, plexTrack: self)
     }
 }

@@ -445,16 +445,6 @@ extension KZPlayer {
 
     // Play Single Item
     func play(_ item: KZPlayerItemBase, silent: Bool = false, isQueueItem: Bool = false, tempo customTempo: Double? = nil) -> Bool {
-        guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
-            let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
-            return KZPlayer.libraryQueue.sync {
-                guard let item = threadSafeItem.resolve() else {
-                    return false
-                }
-                return self.play(item, silent: silent, isQueueItem: isQueueItem)
-            }
-        }
-
         let channel = rotateChannelInt()
         let playerSet = addPlayerSet(bus: channel, item: item)
         auPlayerSets[channel] = playerSet

@@ -14,6 +14,14 @@ class KZLocalLibrary: KZLibrary {
     override func realm() -> Realm {
         var config = Realm.Configuration()
         config.fileURL = config.fileURL!.deletingLastPathComponent().appendingPathComponent("KZLocalLibrary-\(uniqueIdentifier).realm")
+        config.migrationBlock = { migration, oldSchemaVersion in
+            migration.enumerateObjects(ofType: KZPlayerItem.className()) { old, new in
+                if oldSchemaVersion < 7 {
+                    new?["libraryUniqueIdentifier"] = old?["plexLibraryUniqueIdentifier"]
+                }
+            }
+        }
+        config.schemaVersion = 7
         return try! Realm(configuration: config)
     }
 
@@ -28,6 +36,13 @@ class KZLocalLibrary: KZLibrary {
         }
 
         return []
+    }
+
+    override func refresh() {
+        MPMediaLibrary.requestAuthorization { _ in
+            self.addAllItems { (_, _) in
+            }
+        }
     }
 
     override func save() {
@@ -75,11 +90,15 @@ class KZLocalLibrary: KZLibrary {
             i += 0
             progressCallback("Saving \(i) of \(items.count) Items...", false)
             let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.persistentID)'")
-            if results.count == 0 && (item.assetURL?.absoluteString.count ?? 0) > 0 {
-                let newItem = KZPlayerItem(item: item)
+            if results.isEmpty && (item.assetURL?.absoluteString.isNotEmpty ?? false) {
+                let newItem = KZPlayerItem(item: item, realm: realm, libraryUniqueIdentifier: uniqueIdentifier)
                 addItemToSpotlight(newItem)
                 realm.add(newItem)
                 changed = true
+            } else if results.count > 0 {
+                results.filter { $0.libraryUniqueIdentifier.isEmpty }.forEach {
+                    $0.libraryUniqueIdentifier = uniqueIdentifier
+                }
             }
         }
 
@@ -177,7 +196,7 @@ class KZLocalLibrary: KZLibrary {
             let realm = self.realm()
             realm.beginWrite()
 
-            let item = KZPlayerItem(realm: realm, artist: artist, album: albumName, title: title, duration: duration, assetURL: newFileURL.path, isDocumentURL: true, artworkURL: artworkFileUrl ?? "", uniqueIdentifier: randomIdentifier, trackNum: trackNumber)
+            let item = KZPlayerItem(realm: realm, artist: artist, album: albumName, title: title, duration: duration, assetURL: newFileURL.path, isDocumentURL: true, artworkURL: artworkFileUrl ?? "", uniqueIdentifier: randomIdentifier, libraryUniqueIdentifier: self.uniqueIdentifier, trackNum: trackNumber)
             item.artworkURL = mediaFileURL.path
             self.addItemToSpotlight(item)
             realm.add(item)

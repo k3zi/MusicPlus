@@ -123,8 +123,11 @@ class AlbumsViewController: KZViewController {
 
         setGenerator()
 
+        self.setUpLibraryBarItem()
+
         NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
             self.setGenerator()
+            self.setUpLibraryBarItem()
         }
     }
 

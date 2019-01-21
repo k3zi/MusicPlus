@@ -20,15 +20,15 @@ class MPMenuViewController: KZViewController {
     let logoImageView = UIImageView(image: #imageLiteral(resourceName: "menuLogo"))
     lazy var selectLibraryButton: ExtendedButton = {
         let button = ExtendedButton()
-        button.setTitle("Local", for: .normal)
+        button.setTitle("Library", for: .normal)
         button.setImage(#imageLiteral(resourceName: "disclosureArrow"), for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
 
         button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.titleLabel?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
         button.imageView?.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)
-        button.imageEdgeInsets = .init(top: 0, left: -60, bottom: 0, right: 0)
-        button.titleEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: -60)
+        button.imageEdgeInsets = .init(top: 0, left: -30, bottom: 0, right: 0)
+        button.titleEdgeInsets = .init(top: 0, left: 0, bottom: 0, right: -30)
         button.contentEdgeInsets = .init(top: -30, left: 0, bottom: -30, right: 0)
         button.sizeToFit()
 
@@ -204,6 +204,10 @@ class MPMenuViewController: KZViewController {
         }
     }
 
+    @objc func addAlibrary() {
+        self.parent?.present(CreateLibraryViewController(), animated: true, completion: nil)
+    }
+
     // MARK: - TableView DataSource / Delegate
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
@@ -220,6 +224,52 @@ class MPMenuViewController: KZViewController {
         }
 
         return MPMenuItemTableViewCell.self
+    }
+
+    override func tableViewShowsSectionHeader(_ tableView: UITableView) -> Bool {
+       return tableView == libraryTableView
+    }
+
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if tableView == libraryTableView {
+            return 44
+        }
+
+        return super.tableView(tableView, heightForHeaderInSection: section)
+    }
+
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if tableView == libraryTableView {
+            return 44
+        }
+
+        return super.tableView(tableView, heightForFooterInSection: section)
+    }
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if tableView == libraryTableView {
+            let button = UIButton()
+            button.setTitle("Library Selection:", for: .normal)
+            return button
+        }
+
+        return super.tableView(tableView, viewForHeaderInSection: section)
+    }
+
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        if tableView == libraryTableView {
+            let button = UIButton()
+            button.setTitle("+ Create a Library", for: .normal)
+            button.backgroundColor = UIColor.init(white: 1.0, alpha: 0.1)
+            button.addTarget(self, action: #selector(addAlibrary), for: .touchUpInside)
+            return button
+        }
+
+        return nil
+    }
+
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return nil
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
