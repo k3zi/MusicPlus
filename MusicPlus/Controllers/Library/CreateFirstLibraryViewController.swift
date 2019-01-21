@@ -72,7 +72,7 @@ class CreateLibraryViewController: KZViewController {
         nextButoon.layer.masksToBounds = true
         view.addSubview(nextButoon)
 
-        if KZLibrary.libraries.count == 0 {
+        if KZRealmLibrary.libraries.count == 0 {
             welcomeLabel.text =  "Let's start by creating your first library."
             welcomeLabel.textAlignment = .center
 
@@ -162,13 +162,19 @@ class CreateLibraryViewController: KZViewController {
 
         switch typeSelectedIndexPath.row {
         case 0:
-            let library = KZLocalLibrary(name: name, readOnly: false)
-            library.save()
+            let library = KZRealmLibrary(name: name, type: .localEmpty)
+            let realm = Realm.main
+            try! realm.write {
+                realm.add(library)
+            }
             KZPlayer.sharedInstance.currentLibrary = library
             self.presentingViewController?.dismiss(animated: true, completion: nil)
         case 1:
-            let library = KZLocalLibrary(name: name, readOnly: false)
-            library.save()
+            let library = KZRealmLibrary(name: name, type: .local)
+            let realm = Realm.main
+            try! realm.write {
+                realm.add(library)
+            }
             nextButoon.setTitle("Importing Songs...", for: .normal)
             MPMediaLibrary.requestAuthorization { _ in
                 library.addAllItems { (status, complete) in
@@ -206,8 +212,11 @@ class CreateLibraryViewController: KZViewController {
                                 }
 
                                 let directory = libraries[index]
-                                let plexLibrary = KZPlexLibrary(name: name, readOnly: true, plexLibraryConfig: .init(authToken: directory.device.accessToken, clientIdentifier: directory.device.clientIdentifier, dircetoryUUID: directory.uuid, connectionURI: directory.connection.uri))
-                                plexLibrary.save()
+                                let plexLibrary = KZRealmLibrary(name: name, type: .plex, plexLibraryConfig: .init(authToken: directory.device.accessToken, clientIdentifier: directory.device.clientIdentifier, dircetoryUUID: directory.uuid, connectionURI: directory.connection.uri))
+                                let realm = Realm.main
+                                try! realm.write {
+                                    realm.add(plexLibrary)
+                                }
                                 KZPlayer.sharedInstance.currentLibrary = plexLibrary
                                 self.presentingViewController?.dismiss(animated: true, completion: nil)
                             }

@@ -49,6 +49,7 @@
 		29F941F91D12A7FE001A3515 /* KZPlayerAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */; };
 		29F941FB1D12B179001A3515 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941FA1D12B179001A3515 /* ArtistViewController.swift */; };
 		D8EDEBB9A638767A3E483FD4 /* Pods_MusicPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */; };
+		EA02198421F6444600EE067E /* KZRealmLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA02198321F6444600EE067E /* KZRealmLibrary.swift */; };
 		EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */; };
 		EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */; };
 		EA1CB43F21EC068500CB1F23 /* SwitchTableViewCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43E21EC068500CB1F23 /* SwitchTableViewCellProvider.swift */; };
@@ -94,11 +95,8 @@
 		EAC85DCA2184BB5C00C61B6F /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DC92184BB5C00C61B6F /* PlayerViewController.swift */; };
 		EAC85DCC2184CC8E00C61B6F /* MPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DCB2184CC8E00C61B6F /* MPViewController.swift */; };
 		EAC85DCF2184DA0100C61B6F /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DCE2184DA0100C61B6F /* MiniPlayerView.swift */; };
-		EAF6AE3821E1467B00E1F727 /* KZLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE3721E1467B00E1F727 /* KZLibrary.swift */; };
-		EAF6AE3A21E146AE00E1F727 /* KZLocalLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE3921E146AE00E1F727 /* KZLocalLibrary.swift */; };
 		EAF6AE3F21E17CD000E1F727 /* UserDefaults+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE3E21E17CD000E1F727 /* UserDefaults+Codable.swift */; };
 		EAF6AE4221E17E7F00E1F727 /* CreateFirstLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4121E17E7F00E1F727 /* CreateFirstLibraryViewController.swift */; };
-		EAF6AE4421E1A63E00E1F727 /* KZPlexLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4321E1A63E00E1F727 /* KZPlexLibrary.swift */; };
 		EAF6AE4621E237A600E1F727 /* PMSServersGETResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4521E237A600E1F727 /* PMSServersGETResponse.swift */; };
 		EAF6AE4821E2430600E1F727 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4721E2430600E1F727 /* Server.swift */; };
 		EAF6AE4C21E2438500E1F727 /* MediaContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4B21E2438500E1F727 /* MediaContainer.swift */; };
@@ -201,6 +199,7 @@
 		29F941FA1D12B179001A3515 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistViewController.swift; sourceTree = "<group>"; };
 		38D130D20C0A026B911BD341 /* Pods-MusicPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPlus/Pods-MusicPlus.release.xcconfig"; sourceTree = "<group>"; };
 		5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA02198321F6444600EE067E /* KZRealmLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZRealmLibrary.swift; sourceTree = "<group>"; };
 		EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Menu.swift"; sourceTree = "<group>"; };
 		EA1CB43E21EC068500CB1F23 /* SwitchTableViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCellProvider.swift; sourceTree = "<group>"; };
@@ -252,11 +251,8 @@
 		EAC85DC92184BB5C00C61B6F /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		EAC85DCB2184CC8E00C61B6F /* MPViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPViewController.swift; sourceTree = "<group>"; };
 		EAC85DCE2184DA0100C61B6F /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
-		EAF6AE3721E1467B00E1F727 /* KZLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZLibrary.swift; sourceTree = "<group>"; };
-		EAF6AE3921E146AE00E1F727 /* KZLocalLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZLocalLibrary.swift; sourceTree = "<group>"; };
 		EAF6AE3E21E17CD000E1F727 /* UserDefaults+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Codable.swift"; sourceTree = "<group>"; };
 		EAF6AE4121E17E7F00E1F727 /* CreateFirstLibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFirstLibraryViewController.swift; sourceTree = "<group>"; };
-		EAF6AE4321E1A63E00E1F727 /* KZPlexLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlexLibrary.swift; sourceTree = "<group>"; };
 		EAF6AE4521E237A600E1F727 /* PMSServersGETResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMSServersGETResponse.swift; sourceTree = "<group>"; };
 		EAF6AE4721E2430600E1F727 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		EAF6AE4B21E2438500E1F727 /* MediaContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaContainer.swift; sourceTree = "<group>"; };
@@ -695,9 +691,7 @@
 		EAF6AE3621E1465200E1F727 /* KZLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				EAF6AE3721E1467B00E1F727 /* KZLibrary.swift */,
-				EAF6AE3921E146AE00E1F727 /* KZLocalLibrary.swift */,
-				EAF6AE4321E1A63E00E1F727 /* KZPlexLibrary.swift */,
+				EA02198321F6444600EE067E /* KZRealmLibrary.swift */,
 			);
 			path = KZLibrary;
 			sourceTree = "<group>";
@@ -1057,6 +1051,7 @@
 				EAF6AE5321E2527000E1F727 /* Device.swift in Sources */,
 				29E640A71D0E17FB005BA3D7 /* KZPlayerPlaylist.swift in Sources */,
 				295DACCC1D136C6A002E6C47 /* MPSectionHeaderView.swift in Sources */,
+				EA02198421F6444600EE067E /* KZRealmLibrary.swift in Sources */,
 				29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */,
 				EAF6AE5B21E271B700E1F727 /* Location.swift in Sources */,
 				29E640941D0D352B005BA3D7 /* MPMenuItem.swift in Sources */,
@@ -1074,12 +1069,10 @@
 				29E6409B1D0DEFE1005BA3D7 /* MPContainerViewController.swift in Sources */,
 				EAF6AE4F21E2490500E1F727 /* XMLBoolFromIntTransform.swift in Sources */,
 				EAF6AE8D21E2E49200E1F727 /* Streamer+DownloadableDelegate.swift in Sources */,
-				EAF6AE3821E1467B00E1F727 /* KZLibrary.swift in Sources */,
 				EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */,
 				29E640AA1D0EADD8005BA3D7 /* AlbumsViewController.swift in Sources */,
 				EA1CB45C21EDA80B00CB1F23 /* PopupItemView.swift in Sources */,
 				2940701B1D1295920069E27E /* ImageAnalyzer.swift in Sources */,
-				EAF6AE3A21E146AE00E1F727 /* KZLocalLibrary.swift in Sources */,
 				EAF6AE8121E2E49200E1F727 /* Parser.swift in Sources */,
 				29E640AC1D0EADEF005BA3D7 /* ArtistsViewController.swift in Sources */,
 				EAF6AE8221E2E49200E1F727 /* Downloading.swift in Sources */,
@@ -1096,7 +1089,6 @@
 				29ECD1FB1D13D3B4009A2A45 /* MPAlbumSongTableViewCell.swift in Sources */,
 				EAF6AE4821E2430600E1F727 /* Server.swift in Sources */,
 				EAF6AE5121E251D900E1F727 /* APIResourcesGETResponse.swift in Sources */,
-				EAF6AE4421E1A63E00E1F727 /* KZPlexLibrary.swift in Sources */,
 				EAF6AE8821E2E49200E1F727 /* Reading.swift in Sources */,
 				EA1CB45321ECC70600CB1F23 /* PeekPopView.swift in Sources */,
 				EAF6AE8921E2E49200E1F727 /* ReaderError.swift in Sources */,

@@ -112,15 +112,26 @@ class KZPlayer: NSObject {
     var currentTimeObservationHandler: ((_ currentTime: Double, _ duration: Double) -> Void)?
 
     // Library
-    var currentLibrary: KZLibrary? {
-        didSet {
+
+    var currentLibraryThreadSafe: KZThreadSafeReference<KZRealmLibrary>?
+
+    var currentLibrary: KZRealmLibrary? {
+        set {
+            self.currentLibraryThreadSafe = newValue?.safeRefrence
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .libraryDidChange, object: nil)
             }
 
+            UserDefaults.standard.set(newValue?.uniqueIdentifier, forKey: .lastOpennedLibraryUniqueIdentifier)
+
+            let safeRefrence = newValue?.safeRefrence
             DispatchQueue.global(qos: .background).async {
-                self.currentLibrary?.refresh()
+                safeRefrence?.resolve()?.refresh()
             }
+        }
+
+        get {
+            return currentLibraryThreadSafe?.resolve()
         }
     }
 
@@ -1222,10 +1233,10 @@ extension KZPlayer {
             fatalError("No library is currently set.")
         }
 
-        guard let localLibrary = library as? KZLocalLibrary else {
+        guard library.libraryType == .local || library.libraryType == .localEmpty else {
             fatalError("This operation requires a local library.")
         }
 
-        localLibrary.addMediaItem(at: fileURL, update: update)
+        library.addMediaItem(at: fileURL, update: update)
     }
 }

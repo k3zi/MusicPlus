@@ -21,23 +21,48 @@ typealias SettingInfo = (title: String, accessor: String, description: String)
 
 extension Notification.Name {
 
-    static let hidePopup = NSNotification.Name(rawValue: "MPNotificationHidePopup")
-    static let libraryDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDidChange")
-    static let libraryDataDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDataDidChange")
-    static let backgroundImageDidChange = NSNotification.Name(rawValue: "MPNotificationBackgroundImageDidChange")
-    static let tintColorDidChange = NSNotification.Name(rawValue: "MPNotificationTintColorDidChange")
-    static let songDidChange = NSNotification.Name(rawValue: "MPNotificationSongDidChange")
-    static let nextSongDidPlay = NSNotification.Name(rawValue: "MPNotificationNextSongDidPlay")
-    static let previousSongDidPlay = NSNotification.Name(rawValue: "MPNotificationPreviousSongDidPlay")
-    static let playStateDidChange = NSNotification.Name(rawValue: "MPNotificationPlayStateDidChange")
-    static let didStartNewCollection = NSNotification.Name(rawValue: "MPNotificationDidStartNewCollection")
-    static let didAddUpNext = NSNotification.Name(rawValue: "MPNotificationDidAddUpNext")
+    static let hidePopup = NSNotification.Name(rawValue: "MusicPlusNotificationHidePopup")
+    static let libraryDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationLibraryDidChange")
+    static let libraryDataDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationLibraryDataDidChange")
+    static let backgroundImageDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationBackgroundImageDidChange")
+    static let tintColorDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationTintColorDidChange")
+    static let songDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationSongDidChange")
+    static let nextSongDidPlay = NSNotification.Name(rawValue: "MusicPlusNotificationNextSongDidPlay")
+    static let previousSongDidPlay = NSNotification.Name(rawValue: "MusicPlusNotificationPreviousSongDidPlay")
+    static let playStateDidChange = NSNotification.Name(rawValue: "MusicPlusNotificationPlayStateDidChange")
+    static let didStartNewCollection = NSNotification.Name(rawValue: "MusicPlusNotificationDidStartNewCollection")
+    static let didAddUpNext = NSNotification.Name(rawValue: "MusicPlusNotificationDidAddUpNext")
 
 }
 
 extension CGFloat {
 
     static let miniPlayerViewHeight: CGFloat = 60
+
+}
+
+extension String {
+
+    static let lastOpennedLibraryUniqueIdentifier = "MusicPlusSettingLastOpennedLibraryUniqueIdentifier"
+
+}
+
+extension Realm {
+
+    static let currentSchemaVersion: UInt64 = 8
+
+    static var main: Realm {
+        var config = Realm.Configuration()
+        config.schemaVersion = Realm.currentSchemaVersion
+        config.migrationBlock = { migration, oldSchemaVersion in
+            migration.enumerateObjects(ofType: KZRealmLibrary.className()) { old, new in
+                if oldSchemaVersion < 7 {
+                    new?["libraryTypeRaw"] = old?["libraryTyeRaw"]
+                }
+            }
+        }
+        return try! Realm(configuration: config)
+    }
 
 }
 
@@ -71,17 +96,6 @@ struct Constants {
             static let upNextPreserve = SettingInfo(title: NSLocalizedString("Preserve Up Next on Restart", comment: ""), accessor: "upNextPreserve", description: NSLocalizedString("Upon restarting the application, the up next queue from the previous session will remain.", comment: ""))
         }
     }
-
-	struct Notification {
-        static let hidePopup = NSNotification.Name(rawValue: "MPNotificationHidePopup")
-        static let libraryDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDidChange")
-        static let libraryDataDidChange = NSNotification.Name(rawValue: "MPNotificationLibraryDataDidChange")
-        static let backgroundImageDidChange = NSNotification.Name(rawValue: "MPNotificationBackgroundImageDidChange")
-        static let tintColorDidChange = NSNotification.Name(rawValue: "MPNotificationTintColorDidChange")
-        static let songDidChange = NSNotification.Name(rawValue: "MPNotificationSongDidChange")
-        static let nextSongDidPlay = NSNotification.Name(rawValue: "MPNotificationNextSongDidPlay")
-        static let playStateDidChange = NSNotification.Name(rawValue: "MPNotificationPlayStateDidChange")
-	}
 
     struct Observation {
         static let outputVolume = "outputVolume"

@@ -13,6 +13,14 @@ protocol RealmGenerating {
     func realmGenerator() -> (() -> Realm?)
 }
 
+extension RealmGenerating where Self: ThreadConfined {
+
+    var safeRefrence: KZThreadSafeReference<Self> {
+        return KZThreadSafeReference(to: self)
+    }
+
+}
+
 class KZThreadSafeReference<T: RealmGenerating> where T: ThreadConfined {
 
     var reference: ThreadSafeReference<T>

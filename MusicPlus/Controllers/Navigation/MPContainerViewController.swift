@@ -127,7 +127,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if KZLibrary.libraries.isEmpty {
+        if KZRealmLibrary.libraries.isEmpty {
             self.present(CreateLibraryViewController(), animated: true, completion: nil)
         }
     }

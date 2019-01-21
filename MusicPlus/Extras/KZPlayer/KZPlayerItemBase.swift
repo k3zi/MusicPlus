@@ -156,7 +156,7 @@ extension KZPlayerItemBase {
         // First aquire things that can not go across threads
         let identifier = libraryUniqueIdentifier
         return {
-            guard let library = KZPlexLibrary.libraries.first(where: { $0.uniqueIdentifier == identifier }) else {
+            guard let library = KZRealmLibrary.libraries.first(where: { $0.uniqueIdentifier == identifier }) else {
                 return nil
             }
 

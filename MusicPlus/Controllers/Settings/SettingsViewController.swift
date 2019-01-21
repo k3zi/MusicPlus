@@ -51,7 +51,6 @@ class SettingsViewController: MPViewController {
             Constants.Settings.Options.crossfadeAtSeconds.forEach { option in
                 vc.addAction(.init(title: "\(currentValue == option ? "✔︎  " : "")\(Int(option)) seconds", style: .default) { _ in
                     UserDefaults.standard.set(option, forKey: crossfadAtSecondseSetting.accessor)
-                    UserDefaults.standard.synchronize()
                 })
             }
             self.presentAlert(vc, animated: true, completion: nil)
@@ -64,7 +63,6 @@ class SettingsViewController: MPViewController {
             Constants.Settings.Options.crossfadeDurationSeconds.forEach { option in
                 vc.addAction(.init(title: "\(currentValue == option ? "✔︎  " : "")\(Int(option)) seconds", style: .default) { _ in
                     UserDefaults.standard.set(option, forKey: crossfadDurationSecondseSetting.accessor)
-                    UserDefaults.standard.synchronize()
                 })
             }
             self.presentAlert(vc, animated: true, completion: nil)

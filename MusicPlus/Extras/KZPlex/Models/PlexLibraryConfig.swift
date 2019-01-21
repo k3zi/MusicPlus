@@ -22,3 +22,27 @@ class PlexLibraryConfig: Codable {
         self.connectionURI = connectionURI
     }
 }
+
+class PlexRealmLibraryConfig: Object, RealmGenerating {
+
+    @objc dynamic var authToken: String = ""
+    @objc dynamic var clientIdentifier: String = ""
+    @objc dynamic var dircetoryUUID: String = ""
+
+    @objc dynamic var connectionURI: String = ""
+
+    convenience init(authToken: String, clientIdentifier: String, dircetoryUUID: String, connectionURI: String) {
+        self.init()
+        self.authToken = authToken
+        self.clientIdentifier = clientIdentifier
+        self.dircetoryUUID = dircetoryUUID
+        self.connectionURI = connectionURI
+    }
+
+    func realmGenerator() -> (() -> Realm?) {
+        return {
+            return Realm.main
+        }
+    }
+
+}

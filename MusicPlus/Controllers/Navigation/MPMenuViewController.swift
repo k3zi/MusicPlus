@@ -212,7 +212,7 @@ class MPMenuViewController: KZViewController {
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         if tableView == libraryTableView {
-            return KZLibrary.libraries
+            return KZRealmLibrary.libraries.toArray()
         }
 
         return menuItems
@@ -279,9 +279,11 @@ class MPMenuViewController: KZViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == libraryTableView {
-            guard let library = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZLibrary else {
+            guard let library = self.tableViewCellData(tableView, section: indexPath.section)[indexPath.row] as? KZRealmLibrary else {
                 return
             }
+
+            collapseLibrarySelection()
 
             KZPlayer.sharedInstance.currentLibrary = library
         } else if tableView == menuTableView {

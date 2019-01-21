@@ -41,7 +41,6 @@ extension UserDefaults {
         let first = UserDefaults.standard.rx.observe(T.self, keyPath).map { $0 ?? defaultValue }.bind(to: control)
         let second = control.bind(onNext: { value in
             UserDefaults.standard.set(value, forKey: keyPath)
-            UserDefaults.standard.synchronize()
         })
 
         return CompositeDisposable(first, second)

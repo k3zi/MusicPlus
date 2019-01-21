@@ -135,8 +135,8 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         }
     }
 
-    var plexLibraryConfig: PlexLibraryConfig? {
-        guard libraryUniqueIdentifier.isNotEmpty, let config = KZPlexLibrary.plexLibraries.first(where: { $0.uniqueIdentifier == libraryUniqueIdentifier })?.plexLibraryConfig else {
+    var plexLibraryConfig: PlexRealmLibraryConfig? {
+        guard libraryUniqueIdentifier.isNotEmpty, let config = KZRealmLibrary.libraries.first(where: { $0.uniqueIdentifier == libraryUniqueIdentifier })?.plexLibraryConfig else {
             return nil
         }
 
@@ -214,8 +214,9 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         }
 
         if artworkURL.isNotEmpty {
+            let safeConfig = config?.safeRefrence
             DispatchQueue.global(qos: .background).async {
-                if let config = config {
+                if let config = safeConfig?.resolve() {
                     artworkURL = "\(config.connectionURI)/photo/:/transcode?url=\(artworkURL)&width=\(Int(UIScreen.main.bounds.height))&height=\(Int(UIScreen.main.bounds.height))&minSize=1&X-Plex-Token=\(config.authToken)"
                 }
 

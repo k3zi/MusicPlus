@@ -22,7 +22,7 @@ extension KZPlayerItemBase {
         }
 
         let path = url.path
-        let accuracy: uint_t = 2 // Probably best to keep squares of 2: 1, 2, 4, 8, 16
+        let accuracy: uint_t = 2 // 1-10??
         let win_size: uint_t = 1024
         let hop_size: uint_t = win_size / accuracy
         let input = new_fvec(hop_size)

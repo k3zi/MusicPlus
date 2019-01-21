@@ -42,8 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
-        let libraries = KZLibrary.libraries
-        KZPlayer.sharedInstance.currentLibrary = libraries.first
+        let libraries = KZRealmLibrary.libraries
+        KZPlayer.sharedInstance.currentLibrary = libraries.first { $0.uniqueIdentifier == UserDefaults.standard.string(forKey: .lastOpennedLibraryUniqueIdentifier) } ?? libraries.first
         if !KZPlayer.sharedInstance.settings.upNextPreserve {
             libraries.forEach {
                 let realm = $0.realm()

@@ -69,10 +69,10 @@ class MPLibraryCell: KZTableViewCell {
         if let item = model as? MPLibraryItem {
             iconView.image = item.icon
             label.text = item.name
-        } else if let item = model as? KZLibrary {
-            iconView.image = item is KZPlexLibrary ? #imageLiteral(resourceName: "sidebarPlexIcon") : #imageLiteral(resourceName: "serverIItunesIcon")
+        } else if let item = model as? KZRealmLibrary {
+            iconView.image = item.libraryType == .plex ? #imageLiteral(resourceName: "sidebarPlexIcon") : #imageLiteral(resourceName: "serverIItunesIcon")
             label.text = item.name
-            let selected = KZPlayer.sharedInstance.currentLibrary == item
+            let selected = KZPlayer.sharedInstance.currentLibrary?.uniqueIdentifier == item.uniqueIdentifier
             let tintColor = selected ? AppDelegate.del().session.tintColor : Constants.UI.Color.gray
             iconView.tintColor = tintColor
             label.textColor = tintColor
@@ -90,7 +90,7 @@ class MPLibraryCell: KZTableViewCell {
     }
 
     @objc func updateTint() {
-        setSelected(isSelected, animated: false)
+        fillInCellData(true)
     }
 
 }
