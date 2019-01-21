@@ -275,10 +275,12 @@ class KZRealmLibrary: Object, RealmGenerating {
                 throw KZPlex.Error(errorDescription: "Unable to find library.")
             }
 
-            safeSelf.plexLibraryConfig?.connectionURI = library.connection.uri
+            try! safeSelf.realm?.write {
+                safeSelf.plexLibraryConfig?.connectionURI = library.connection.uri
+            }
 
             let allTracksResponse = try await(library.all())
-            let realm = self.realm()
+            let realm = safeSelf.realm()
             let items = allTracksResponse.tracks!
             var changed = false
             realm.beginWrite()
@@ -301,8 +303,8 @@ class KZRealmLibrary: Object, RealmGenerating {
                     let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.ratingKey!)'")
                     if results.count == 0 {
                         // Add new item
-                        let newItem = item.asPlayerItem(realm: realm, libraryUniqueIdentifier: self.uniqueIdentifier)
-                        self.addItemToSpotlight(newItem)
+                        let newItem = item.asPlayerItem(realm: realm, libraryUniqueIdentifier: safeSelf.uniqueIdentifier)
+                        safeSelf.addItemToSpotlight(newItem)
                         realm.add(newItem)
                         changed = true
                     } else if let oldItem = results.filter({ $0.plexTrack?.updatedAt != item.updatedAt }).first {
@@ -344,7 +346,10 @@ class KZRealmLibrary: Object, RealmGenerating {
                 let track = allSyncTracks.removeFirst()
 
                 return async {
-                    let realm = self.realm()
+                    guard let realm = selfRefrence.realm() else {
+                        return
+                    }
+
                     i += 1
                     guard let item = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(track.ratingKey!)'").first else {
                         return

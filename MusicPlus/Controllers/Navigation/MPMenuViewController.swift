@@ -80,7 +80,7 @@ class MPMenuViewController: KZViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         fetchAUtomatically = false
 
-        backgroundImageView.contentMode = .left
+        backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
         view.addSubview(backgroundImageView)
 

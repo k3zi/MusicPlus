@@ -464,7 +464,9 @@ extension KZPlayer {
         let tempo = customTempo ?? item.tempo
 
         if !audioEngine.isRunning {
+            #if !targetEnvironment(simulator)
             try? audioEngine.start()
+            #endif
         }
 
         print("activePlayer = \(channel)")

@@ -121,8 +121,8 @@ class KZPlex: NSObject {
         super.init()
 
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = .greatestFiniteMagnitude
-        configuration.timeoutIntervalForResource = .greatestFiniteMagnitude
+        configuration.timeoutIntervalForRequest = 1000
+        configuration.timeoutIntervalForResource = 1000
         self.urlSession = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
 

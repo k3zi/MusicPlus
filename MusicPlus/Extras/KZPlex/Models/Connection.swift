@@ -37,7 +37,7 @@ class Connection: XMLMappable {
     func sections() -> Promise<LibrarySectionsGETResponse?> {
         return async {
             do {
-                let result = try await(self.plex.get(KZPlex.Path.library(self).sections, token: self.device.accessToken))
+                let result = try await(self.plex.get(KZPlex.Path.library(self).sections, token: self.device.accessToken, timeoutInterval: 5))
 
                 guard let data = String(bytes: result.data, encoding: .utf8) else {
                     throw KZPlex.Error.dataParsingError

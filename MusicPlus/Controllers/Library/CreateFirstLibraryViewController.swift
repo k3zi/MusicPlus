@@ -57,9 +57,11 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         view.addSubview(typeLabel)
 
         infoLabel.text = ""
-        infoLabel.font = .systemFont(ofSize: 15)
+        infoLabel.font = .systemFont(ofSize: 20)
         infoLabel.numberOfLines = 0
         infoLabel.textAlignment = .center
+        infoLabel.isUserInteractionEnabled = true
+        infoLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openRequestLink)))
         view.addSubview(infoLabel)
 
         nextButoon.setTitle("Create", for: .normal)
@@ -129,6 +131,10 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         nameTextField.resignFirstResponder()
+    }
+
+    @objc func openRequestLink() {
+        UIApplication.shared.open(URL.init(string: KZPlex.Path.linkAccount)!, options: [:], completionHandler: nil)
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -206,6 +212,9 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                     self.infoLabel.attributedText = status
                 }
             }) { request in
+                DispatchQueue.main.async {
+                    self.nextButoon.setTitle("Loading Libraries...", for: .normal)
+                }
                 plex.authToken = request.authToken
                 plex.resources().then { response -> Promise<[LibrarySectionsGETResponse?]> in
                     let arrayOfPromises = response.devices.flatMap({ $0.connections }).map({ $0.sections() })
@@ -232,6 +241,11 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                                 self.presentingViewController?.dismiss(animated: true, completion: nil)
                             }
                             librarySelectionAlertController.addAction(action)
+                        }
+                        if let popoverController = librarySelectionAlertController.popoverPresentationController {
+                            popoverController.sourceView = self.nextButoon
+                            popoverController.sourceRect = CGRect(x: self.nextButoon.bounds.midX, y: self.nextButoon.bounds.midY, width: 0, height: 0)
+                            popoverController.permittedArrowDirections = []
                         }
                         self.present(librarySelectionAlertController, animated: true, completion: nil)
                     }
