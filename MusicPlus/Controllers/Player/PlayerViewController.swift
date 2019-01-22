@@ -196,7 +196,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         }
 
         NotificationCenter.default.addObserver(forName: .songDidChange, object: nil, queue: .main) { [weak self] _ in
-            guard let self = self, let song = KZPlayer.sharedInstance.itemForChannel() else {
+            guard let self = self, let song = KZPlayer.sharedInstance.itemForChannel(allowUpNext: true)  else {
                 return
             }
 
@@ -318,7 +318,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     }
 
     func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
-        guard let item = KZPlayer.sharedInstance.itemForChannel() else {
+        guard let item = KZPlayer.sharedInstance.itemForChannel(allowUpNext: true) else {
             return nil
         }
 
