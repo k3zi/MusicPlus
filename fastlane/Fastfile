@@ -26,7 +26,7 @@ lane :reg do |options|
 end
 
 lane :ci do |options|
-  if ENV['TRAVIS_BRANCH'] == 'master'
+  if ENV['TRAVIS_BRANCH'] == 'beta'
     beta
   elsif ENV['TRAVIS_BRANCH'] == 'store'
     store
@@ -98,7 +98,7 @@ lane :beta do |options|
     api_token: ENV['GITHUB_TOKEN'],
     name: tag_name,
     tag_name: tag_name,
-    commitish: "master",
+    commitish: "beta",
     description: changelog,
     is_prerelease: true
   )
