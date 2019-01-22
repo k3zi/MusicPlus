@@ -180,6 +180,7 @@ class KZRealmLibrary: Object, RealmGenerating {
         }
 
         let asset = AVURLAsset(url: absoluteNewFileURL)
+        let safeSelf = self.safeRefrence
         asset.loadValuesAsynchronously(forKeys: [#keyPath(AVAsset.tracks), #keyPath(AVAsset.commonMetadata), #keyPath(AVAsset.duration)]) {
             let artworks = AVMetadataItem.metadataItems(from: asset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common)
 
@@ -225,12 +226,17 @@ class KZRealmLibrary: Object, RealmGenerating {
 
             let duration = Double(CMTimeGetSeconds(asset.duration))
 
-            let realm = self.realm()
+            guard let safeSelf = safeSelf.resolve() else {
+                return
+            }
+
+            let realm = safeSelf.realm()
+
             realm.beginWrite()
 
-            let item = KZPlayerItem(realm: realm, artist: artist, album: albumName, title: title, duration: duration, assetURL: newFileURL.path, isDocumentURL: true, artworkURL: artworkFileUrl ?? "", uniqueIdentifier: randomIdentifier, libraryUniqueIdentifier: self.uniqueIdentifier, trackNum: trackNumber)
+            let item = KZPlayerItem(realm: realm, artist: artist, album: albumName, title: title, duration: duration, assetURL: newFileURL.path, isDocumentURL: true, artworkURL: artworkFileUrl ?? "", uniqueIdentifier: randomIdentifier, libraryUniqueIdentifier: safeSelf.uniqueIdentifier, trackNum: trackNumber)
             item.artworkURL = mediaFileURL.path
-            self.addItemToSpotlight(item)
+            safeSelf.addItemToSpotlight(item)
             realm.add(item)
 
             try! realm.commitWrite()

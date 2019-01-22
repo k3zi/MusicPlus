@@ -1220,11 +1220,17 @@ extension KZPlayer {
 
     func addMediaItem(at fileURL: URL, update: Bool = true) {
         guard let library = currentLibrary else {
-            fatalError("No library is currently set.")
+            let alertVC = UIAlertController(title: "Import Error", message: "This operation requires a library to be set.", preferredStyle: .alert)
+            alertVC.addAction(.init(title: "Ok", style: .cancel, handler: nil))
+            AppDelegate.del().window?.rootViewController?.presentAlert(alertVC, animated: true, completion: nil)
+            return
         }
 
         guard library.libraryType == .local || library.libraryType == .localEmpty else {
-            fatalError("This operation requires a local library.")
+            let alertVC = UIAlertController(title: "Import Error", message: "This operation requires a local library.", preferredStyle: .alert)
+            alertVC.addAction(.init(title: "Ok", style: .cancel, handler: nil))
+            AppDelegate.del().window?.rootViewController?.presentAlert(alertVC, animated: true, completion: nil)
+            return
         }
 
         library.addMediaItem(at: fileURL, update: update)
