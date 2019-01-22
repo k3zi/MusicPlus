@@ -132,7 +132,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     var artworkViews = [UIImageView]()
     var artworkViewConstraints = [NSLayoutConstraint]()
     // Must be an odd number
-    let numberOfArtworkViews = 21
+    let numberOfArtworkViews = 7
     var loadArtworkNumber = 0
     var peekPop: PeekPop!
 

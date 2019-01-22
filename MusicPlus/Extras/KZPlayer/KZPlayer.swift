@@ -657,7 +657,9 @@ extension KZPlayer {
         set.stop()
         set.reset()
         for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
-            self.audioEngine.detach(unit)
+            DispatchQueue.global(qos: .background).async {
+                self.audioEngine.detach(unit)
+            }
         }
         self.auPlayerSets.removeValue(forKey: channel)
     }

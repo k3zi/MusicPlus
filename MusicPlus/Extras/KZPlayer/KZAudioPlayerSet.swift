@@ -110,7 +110,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func stop() {
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .background).async {
             self.auPlayer.stop()
         }
     }
