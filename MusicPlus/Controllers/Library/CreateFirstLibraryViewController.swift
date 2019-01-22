@@ -193,8 +193,9 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                 realm.add(library)
             }
             nextButoon.setTitle("Importing Songs...", for: .normal)
+            let safeLibrary = library.safeRefrence
             MPMediaLibrary.requestAuthorization { _ in
-                library.addAllItems { (status, complete) in
+                safeLibrary.resolve()?.addAllItems { (status, complete) in
                     DispatchQueue.main.async {
                         self.nextButoon.setTitle(status, for: .normal)
                         if complete {

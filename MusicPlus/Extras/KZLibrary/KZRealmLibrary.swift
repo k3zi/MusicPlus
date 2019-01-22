@@ -131,10 +131,6 @@ class KZRealmLibrary: Object, RealmGenerating {
                 addItemToSpotlight(newItem)
                 realm.add(newItem)
                 changed = true
-            } else if results.count > 0 {
-                results.filter { $0.libraryUniqueIdentifier.isEmpty }.forEach {
-                    $0.libraryUniqueIdentifier = uniqueIdentifier
-                }
             }
         }
 

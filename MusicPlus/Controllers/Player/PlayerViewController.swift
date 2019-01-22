@@ -23,7 +23,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     static let shared = PlayerViewController()
     lazy var minimizeButton: ExtendedButton = {
         let button = ExtendedButton()
-        button.setImage(#imageLiteral(resourceName: "backBT"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "largeArrowDown"), for: .normal)
         button.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.minimizePlayer), for: .touchUpInside)
         return button
     }()
@@ -132,7 +132,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     var artworkViews = [UIImageView]()
     var artworkViewConstraints = [NSLayoutConstraint]()
     // Must be an odd number
-    let numberOfArtworkViews = 7
+    let numberOfArtworkViews = 21
     var loadArtworkNumber = 0
     var peekPop: PeekPop!
 
@@ -270,7 +270,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         miniPlayerView.autoPinEdge(toSuperviewEdge: .top)
 
         minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView, withOffset: 30)
-        minimizeButton.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
+        minimizeButton.autoAlignAxis(toSuperviewAxis: .vertical)
 
         artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
         artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
@@ -401,13 +401,13 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         newArtwork.isHidden = true
 
         UIView.animate(withDuration: 1, delay: 0.0, options: [.beginFromCurrentState], animations: {
-            self.loadArtwork()
             self.artworkViewConstraints.forEach { $0.autoRemove() }
             self.artworkViewConstraints.removeAll()
             self.resetArtwork()
             self.view.layoutIfNeeded()
         }) { _ in
             newArtwork.isHidden = false
+            self.loadArtwork()
         }
     }
 
