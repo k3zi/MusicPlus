@@ -13,7 +13,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     var auPlayer: AVAudioPlayerNode
     var auSpeed: AVAudioUnitTimePitch
     var auEqualizer: AVAudioUnitEQ
-    var itemKey: String?
+    var itemKey: String
     var shouldUseCallback = true
 
     /// Whether the set has or will be removed from the audio engine and should thus be disregarded
@@ -36,6 +36,7 @@ class KZAudioPlayerSet: StreamingDelegate {
         }
         auSpeed = AVAudioUnitTimePitch()
         auEqualizer = AVAudioUnitEQ(numberOfBands: 10)
+        itemKey = item.systemID
 
         if let player = auPlayer as? KZRemoteAudioPlayerNode {
             player.delegate = self

@@ -10,3 +10,9 @@ script:
 branches:
   only:
     - store
+
+cache:
+  directories:
+    - Pods
+    - $HOME/.cocoapods
+    - $HOME/Library/Caches/CocoaPods

@@ -412,7 +412,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     }
 
     func loadArtwork() {
-        guard let song = KZPlayer.sharedInstance.itemForChannel() else {
+        guard let song = KZPlayer.sharedInstance.itemForChannel(allowUpNext: true) else {
             return
         }
 

@@ -486,10 +486,6 @@ extension KZPlayer {
             }
         }
 
-        if !isQueueItem {
-            setItemForChannel(item)
-        }
-
         let threadSafeItem = KZThreadSafeReference(to: item.originalItem)
         KZPlayer.executeOn(queue: KZPlayer.analysisQueue) {
             threadSafeItem.resolve()?.analyzeAudio()
@@ -718,7 +714,9 @@ extension KZPlayer {
 
     func checkTime() {
         var item: KZPlayerHistoryItem?
-        guard let currentKey = primaryKeyForChannel() else {
+
+        // Cache this value on the KZPlayer object for better performance
+        guard let currentKey = primaryKeyForChannel(allowUpNext: true) else {
             return
         }
 
@@ -932,11 +930,7 @@ extension KZPlayer {
             return nil
         }
 
-        guard let primaryKey = (allowUpNext ? set.itemKey : itemBeforeUpNextKey) ?? itemBeforeUpNextKey ?? set.itemKey else {
-            return nil
-        }
-
-        return primaryKey
+        return (allowUpNext ? set.itemKey : itemBeforeUpNextKey) ?? itemBeforeUpNextKey ?? set.itemKey
     }
 
     func itemForChannel(_ channel: Int = -1, allowUpNext: Bool = false) -> KZPlayerItem? {
@@ -945,14 +939,6 @@ extension KZPlayer {
         }
 
         return itemForPrimaryKey(primaryKey)
-    }
-
-    func setItemForChannel(_ item: KZPlayerItemBase, channel: Int = -1) {
-        guard let set = setForChannel(channel) else {
-            return
-        }
-
-        set.itemKey = item.systemID
     }
 
     func itemForPrimaryKey(_ primaryKey: String) -> KZPlayerItem? {
