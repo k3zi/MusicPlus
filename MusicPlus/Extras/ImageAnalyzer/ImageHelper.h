@@ -32,7 +32,9 @@
 
 enum ColorPalete {
     ColorPalete64,
-    ColorPalete512
+    ColorPalete512,
+    ColorPalete1024,
+    ColorPalete2048
 };
 typedef enum ColorPalete ColorPalete;
 

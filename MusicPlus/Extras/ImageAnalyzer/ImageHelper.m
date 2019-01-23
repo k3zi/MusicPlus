@@ -296,7 +296,15 @@ static NSInteger __white = 0;
             switchSize = 5;
             [self _initColorMatrixWithMatrixSize:8];
             break;
-            
+        case ColorPalete1024:
+            switchSize = 4;
+            [self _initColorMatrixWithMatrixSize:16];
+            break;
+        case ColorPalete2048:
+            switchSize = 3;
+            [self _initColorMatrixWithMatrixSize:32];
+            break;
+
         default:
             return nil;
             break;

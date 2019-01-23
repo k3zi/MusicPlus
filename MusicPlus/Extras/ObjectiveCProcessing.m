@@ -19,12 +19,6 @@ struct Address3D {
 
 typedef struct Address3D Address3D;
 
-enum ColorPalete {
-    ColorPalete64,
-    ColorPalete512
-};
-typedef enum ColorPalete ColorPalete;
-
 @interface TintColorOperation ()
 
 @property (nonatomic, retain) UIImage *image;
@@ -39,14 +33,14 @@ typedef enum ColorPalete ColorPalete;
 
 @implementation TintColorOperation
 
-- (instancetype)initWithImage:(UIImage *)image {
+- (instancetype)initWithImage:(UIImage *)image andColorPallete:(ColorPalete)palete {
     self = [super init];
     if (self) {
         __colorMatrixSize = 0;
         __colorMatrix = nil;
         __black = 0;
         __white = 0;
-        self.image = image;
+        _image = image;
     }
     return self;
 }
@@ -54,7 +48,7 @@ typedef enum ColorPalete ColorPalete;
 - (void)start {
     float maxDominatingFactor = 0;
     UIColor *returnColor;
-    NSArray *colors = [self mostFrequentColors:30 of:_image withColorPallete:ColorPalete512];
+    NSArray *colors = [self mostFrequentColors:30 of:_image withColorPallete:ColorPalete1024];
     for (UIColor *color in colors) {
         if (self.isCancelled) {
             break;
@@ -83,6 +77,14 @@ typedef enum ColorPalete ColorPalete;
         case ColorPalete512:
             switchSize = 5;
             [self _initColorMatrixWithMatrixSize:8];
+            break;
+        case ColorPalete1024:
+            switchSize = 4;
+            [self _initColorMatrixWithMatrixSize:16];
+            break;
+        case ColorPalete2048:
+            switchSize = 3;
+            [self _initColorMatrixWithMatrixSize:32];
             break;
 
         default:

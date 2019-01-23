@@ -218,6 +218,7 @@ extension KZPlayer {
         audioEngine.connect(set.auPlayer, to: set.auSpeed, format: format)
         audioEngine.connect(set.auSpeed, to: set.auEqualizer, format: format)
         audioEngine.connect(set.auEqualizer, to: auMixer, fromBus: 0, toBus: bus, format: format)
+        print("audioEngine connected to mixer bus: \(bus)")
 
         set.volume = 0.0
 
@@ -336,7 +337,7 @@ extension KZPlayer {
                     }
 
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
-                        let operation = TintColorOperation(image: image)!
+                        let operation = TintColorOperation(image: image, andColorPallete: ColorPalete2048)!
                         operation.completionBlock = {
                             session.tintColor = operation.result
                         }
@@ -355,7 +356,7 @@ extension KZPlayer {
                 DispatchQueue.global(qos: .background).async {
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
                         self.colorChangeQueue.cancelAllOperations()
-                        let operation = TintColorOperation(image: image)!
+                        let operation = TintColorOperation(image: image, andColorPallete: ColorPalete2048)!
                         operation.completionBlock = {
                             session.tintColor = operation.result
                         }
@@ -654,14 +655,11 @@ extension KZPlayer {
         }
 
         set.isRemoved = true
-        set.stop()
-        set.reset()
         for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
-            DispatchQueue.global(qos: .background).async {
-                self.audioEngine.detach(unit)
-            }
+            unit.reset()
+            audioEngine.detach(unit)
         }
-        self.auPlayerSets.removeValue(forKey: channel)
+        auPlayerSets.removeValue(forKey: channel)
     }
 
     func playerCompleted(_ channel: Int, force: Bool = false, shouldCrossfadeOnSkip: Bool = true) {
