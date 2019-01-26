@@ -35,7 +35,6 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
     var lastBeatPosition: Double { get set }
     var firstBeatPosition: Double { get set }
 
-    var liked: Bool { get set }
     var isDocumentURL: Bool { get set }
 
     var tags: List<KZPlayerTag> { get }
@@ -122,10 +121,6 @@ extension KZPlayerItemBase {
         set { orig!.lastBeatPosition = newValue }
     }
 
-    var liked: Bool {
-        get { return orig!.liked }
-        set { orig!.liked = newValue }
-    }
     var isDocumentURL: Bool {
         get { return orig!.isDocumentURL }
         set { orig!.isDocumentURL = newValue }

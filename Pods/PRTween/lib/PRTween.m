@@ -519,15 +519,8 @@ static NSArray *animationSelectorsForUIView        = nil;
 
 + (PRTween *)sharedInstance {
     if (instance == nil) {
-        if ([NSThread isMainThread]) {
-            instance = [[PRTween alloc] init];
-            instance.useBuiltInAnimationsWhenPossible = YES;
-        } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                instance = [[PRTween alloc] init];
-                instance.useBuiltInAnimationsWhenPossible = YES;
-            });
-        }
+        instance = [[PRTween alloc] init];
+        instance.useBuiltInAnimationsWhenPossible = YES;
     }
     return instance;
 }

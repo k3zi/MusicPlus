@@ -76,7 +76,8 @@ class MPMenuViewController: KZViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        automaticallyAdjustsScrollViewInsets = false
+        menuTableView.contentInsetAdjustmentBehavior = .always
+        libraryTableView.contentInsetAdjustmentBehavior = .always
         view.translatesAutoresizingMaskIntoConstraints = false
         fetchAUtomatically = false
 

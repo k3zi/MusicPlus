@@ -3,6 +3,7 @@ update_fastlane
 default_platform :ios
 
 repository_name = "k3zi/MusicPlus"
+xcodeproj_name = "MusicPlus.xcodeproj"
 
 def get_badge_version_string
   "#{get_version_number}-#{get_build_number}-blue"
@@ -84,7 +85,7 @@ lane :beta do |options|
   reset_git_repo(force: true)
   increment_build_number
 
-  commit_version_bump(message: "Bump version to: #{get_build_number} [skip ci]")
+  commit_version_bump(xcodeproj: xcodeproj_name, message: "Bump version to: #{get_build_number} [skip ci]")
   add_git_tag(tag: tag_name)
 
   if ENV['GITHUB_USERNAME']
@@ -150,7 +151,7 @@ lane :store do
   reset_git_repo(force: true)
   increment_build_number
 
-  commit_version_bump(message: "Bump version to: #{get_build_number} [skip ci]")
+  commit_version_bump(xcodeproj: xcodeproj_name, message: "Bump version to: #{get_build_number} [skip ci]")
   add_git_tag(tag: tag_name)
 
   if ENV['GITHUB_USERNAME']

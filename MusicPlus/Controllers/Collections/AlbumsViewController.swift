@@ -100,7 +100,6 @@ class AlbumsViewController: KZViewController {
 
         title = "Albums"
         view.backgroundColor = UIColor.clear
-        automaticallyAdjustsScrollViewInsets = false
         setupMenuToggle()
 
         collectionView.delegate = self
@@ -108,6 +107,7 @@ class AlbumsViewController: KZViewController {
         collectionView.prefetchDataSource = self
         collectionView.isPrefetchingEnabled = true
         collectionView.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "UICollectionReusableView")
+        collectionView.contentInsetAdjustmentBehavior = .always
         view.addSubview(collectionView)
 
         shadowView.backgroundColor = UIColor.clear
@@ -146,7 +146,7 @@ class AlbumsViewController: KZViewController {
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
 
         topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = collectionView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
+        topLayoutGuideConstraint = collectionView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
     }
 
     override func setupConstraints() {

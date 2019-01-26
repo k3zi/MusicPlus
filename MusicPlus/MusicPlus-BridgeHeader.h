@@ -11,6 +11,7 @@
 
 @import KZ;
 @import RealmSwift;
+@import os;
 
 #import <CommonCrypto/CommonCrypto.h>
 

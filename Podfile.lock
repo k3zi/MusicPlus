@@ -2,34 +2,29 @@ PODS:
   - Alamofire (4.8.1)
   - AlamofireImage (3.5.0):
     - Alamofire (~> 4.8)
-  - AwaitKit (5.0.1):
+  - AwaitKit (5.1.0):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
-  - Connectivity (2.0.4)
-  - Crashlytics (3.12.0):
-    - Fabric (~> 1.9.0)
+  - Connectivity (2.1.0)
   - Differentiator (3.1.0)
-  - Fabric (1.9.0)
   - Flix (2.0.0):
     - RxCocoa (~> 4.3)
     - RxDataSources (~> 3.1)
     - RxSwift (~> 4.3)
-  - Keynode (4.0.0)
   - KZ (3.0.0):
     - PureLayout
     - Reusable
-  - M13ProgressSuite (1.2.9)
-  - PromiseKit (6.7.1):
-    - PromiseKit/CorePromise (= 6.7.1)
-    - PromiseKit/Foundation (= 6.7.1)
-    - PromiseKit/UIKit (= 6.7.1)
-  - PromiseKit/Alamofire (6.7.1):
+  - PromiseKit (6.8.0):
+    - PromiseKit/CorePromise (= 6.8.0)
+    - PromiseKit/Foundation (= 6.8.0)
+    - PromiseKit/UIKit (= 6.8.0)
+  - PromiseKit/Alamofire (6.8.0):
     - Alamofire (~> 4.0)
     - PromiseKit/CorePromise
-  - PromiseKit/CorePromise (6.7.1)
-  - PromiseKit/Foundation (6.7.1):
+  - PromiseKit/CorePromise (6.8.0)
+  - PromiseKit/Foundation (6.8.0):
     - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.7.1):
+  - PromiseKit/UIKit (6.8.0):
     - PromiseKit/CorePromise
   - PRTween (0.1.0)
   - PureLayout (3.1.4)
@@ -54,7 +49,6 @@ PODS:
     - RxAtomic (~> 4.4)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
-  - SpinKit (1.2.0)
   - XMLMapper (1.5.2):
     - XMLMapper/Core (= 1.5.2)
   - XMLMapper/Core (1.5.2)
@@ -65,19 +59,14 @@ DEPENDENCIES:
   - AlamofireImage
   - AwaitKit
   - Connectivity
-  - Crashlytics
-  - Fabric
   - Flix
-  - Keynode
   - KZ
-  - M13ProgressSuite
   - PromiseKit/Alamofire
   - PRTween
   - PureLayout
   - RealmSwift
   - Reusable
   - SecureNSUserDefaults
-  - SpinKit
   - XMLMapper
   - Zip
 
@@ -88,13 +77,9 @@ SPEC REPOS:
     - AwaitKit
     - CocoaSecurity
     - Connectivity
-    - Crashlytics
     - Differentiator
-    - Fabric
     - Flix
-    - Keynode
     - KZ
-    - M13ProgressSuite
     - PromiseKit
     - PRTween
     - PureLayout
@@ -106,24 +91,19 @@ SPEC REPOS:
     - RxDataSources
     - RxSwift
     - SecureNSUserDefaults
-    - SpinKit
     - XMLMapper
     - Zip
 
 SPEC CHECKSUMS:
   Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
   AlamofireImage: 1aea346f4dda2f6c67622fa5a89fcbb80d79cc16
-  AwaitKit: a6d0b0b6d603cedda8ef1c1c249b8d6730359917
+  AwaitKit: a8a3d8982097ee09ac75f5c5d3952fbcc2f26f1c
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Connectivity: 78c852fda3910863483b57775522acd615a2c944
-  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Connectivity: ae16e766bf476d48e3636e6a0bd2fa8c3e6a0602
   Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
-  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   Flix: 04392305c5fa58d2c2b75b1fd1ff523d9d860bc4
-  Keynode: a8896a3d118a6b7195dd242ed58070e842903964
   KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
-  M13ProgressSuite: ea9f7263e73e9215e6849dfa54e29ee0ad6a145c
-  PromiseKit: ef376fb8b4e92edfeb66bd403b983eaa07fbde0c
+  PromiseKit: 02c93833283c37ce94ef7d25de63d48d62b0754e
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
   Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
@@ -134,10 +114,9 @@ SPEC CHECKSUMS:
   RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
   RxSwift: 5976ecd04fc2fefd648827c23de5e11157faa973
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
-  SpinKit: 65906a8b534a4e14cbfd3f8b0b6c329131faef4a
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: b21e6272fb569ef0e5d00783e21cbf25ad258c0b
+PODFILE CHECKSUM: 2b2d8622730bea04b80f1ce681a6795bc3cf2337
 
 COCOAPODS: 1.6.0.beta.2

@@ -42,7 +42,7 @@ class PeekPopView: UIView {
     }
 
     func setup() {
-        print("setup")
+        os_log("setup")
         blurViewHolder.addSubview(blurView)
         addSubview(blurViewHolder)
 
@@ -59,13 +59,13 @@ class PeekPopView: UIView {
     }
 
     func didAppear() {
-        print("didAppear")
+        os_log("didAppear")
         blurViewHolder.alpha = 0.0
         targetView?.becomeFirstResponder()
     }
 
     func animateProgress(_ progress: CGFloat) {
-        print("animateProgress: \(progress)")
+        os_log("animateProgress: %d", progress)
         UIView.animate(withDuration: 0.5, delay: 0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
             self.blurViewHolder.alpha = min(progress, 0.9)
         }, completion: nil)

@@ -33,10 +33,9 @@ extension KZPlayerItemBase {
             del_fvec(output)
             return
         }
-        print("")
-        print("analyzed sample rate: \(aubio_source_get_samplerate(source))")
-        print("analyzed channels: \(aubio_source_get_channels(source))")
-        print("analyzed duration: \(aubio_source_get_duration(source))")
+        os_log(.info, log: .player, "analyzed sample rate: %d", aubio_source_get_samplerate(source))
+        os_log(.info, log: .player, "analyzed channels: %d", aubio_source_get_channels(source))
+        os_log(.info, log: .player, "analyzed duration: %d", aubio_source_get_duration(source))
         let optionalTempo = new_aubio_tempo("default", win_size, hop_size, aubio_source_get_samplerate(source))
         guard let tempo = optionalTempo else {
             del_aubio_source(source)
@@ -63,11 +62,10 @@ extension KZPlayerItemBase {
             self.lastBeatPosition = Double(aubio_tempo_get_last_s(tempo))
         }
 
-        print("analyzed a bpm of: \(bpm)")
-        print("analyzed a first beat of: \(firstBeatPosition)")
-        print("analyzed a last beat of: \(lastBeatPosition)")
-        print("total duration: \(duration())")
-        print("")
+        os_log(.info, log: .player, "analyzed a bpm of: %f", bpm)
+        os_log(.info, log: .player, "analyzed a first beat of: %f", firstBeatPosition)
+        os_log(.info, log: .player, "analyzed a last beat of: %f", lastBeatPosition)
+        os_log(.info, log: .player, "total duration: %f", duration())
 
         del_aubio_tempo(tempo)
         del_aubio_source(source)

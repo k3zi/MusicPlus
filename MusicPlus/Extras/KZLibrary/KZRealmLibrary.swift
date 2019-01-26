@@ -174,8 +174,7 @@ class KZRealmLibrary: Object, RealmGenerating {
 
             try fileManager.moveItem(atPath: fileURL.path, toPath: absoluteNewFileURL.path)
         } catch let err as NSError {
-            print("Ooops! Something went wrong")
-            print(err)
+            os_log(.error, log: .general, "Something went wrong: %@", err)
             return
         }
 
@@ -214,7 +213,7 @@ class KZRealmLibrary: Object, RealmGenerating {
                     fileManager.createFile(atPath: absoluteMediaFileURL.path, contents: data, attributes: [:])
                     artworkFileUrl = mediaFileURL.path
                 } catch {
-                    print("Ooops! Something went wrong")
+                    os_log("Ooops! Something went wrong")
                 }
             }
 
@@ -259,7 +258,7 @@ class KZRealmLibrary: Object, RealmGenerating {
         try! realm?.write {
             isRefreshing = true
         }
-        print("Refreshing")
+        os_log("Refreshing")
         let plex = KZPlex(authToken: plexLibraryConfig!.authToken)
         let selfRefrence = KZThreadSafeReference(to: self)
         async {
@@ -399,15 +398,15 @@ class KZRealmLibrary: Object, RealmGenerating {
                             item.localAssetURL = filePath.path
                         }
                         try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
-                        print("\(i) → Synced \(item.title) to \(filePath.path)")
+                        os_log("%d → synced %@ to %@", i, item.title, filePath.path)
                     } catch {
-                        print(error)
+                        os_log(.error, log: .general, "%@", error.localizedDescription)
                     }
                 }
             }
 
             try await(when(fulfilled: syncPromises, concurrently: 1))
-            print("Finished Syncing")
+            os_log("Finished Syncing.")
             try! safeSelf.realm?.write {
                 safeSelf.isRefreshing = true
             }

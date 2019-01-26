@@ -186,7 +186,7 @@ class KZAudioPlayerSet: StreamingDelegate {
         auPlayer.stop()
         if #available(iOS 11.0, *) {
             auPlayer.scheduleSegment(audioFile, startingFrame: startingFrame, frameCount: frameLength, at: nil, completionCallbackType: .dataPlayedBack) { _ in
-                print("data finished playing back")
+                os_log("data finished playing back")
                 self.callCompletionHandler(completionHandler)
             }
         } else {
