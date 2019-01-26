@@ -27,12 +27,23 @@ extension KZPlayerItemBase {
         let hop_size: uint_t = win_size / accuracy
         let input = new_fvec(hop_size)
         let output = new_fvec(2)
-        let source = new_aubio_source(path, 0, hop_size)
+        let optionalSource = new_aubio_source(path, 0, hop_size)
+        guard let source = optionalSource else {
+            del_fvec(input)
+            del_fvec(output)
+            return
+        }
         print("")
         print("analyzed sample rate: \(aubio_source_get_samplerate(source))")
         print("analyzed channels: \(aubio_source_get_channels(source))")
         print("analyzed duration: \(aubio_source_get_duration(source))")
-        let tempo = new_aubio_tempo("default", win_size, hop_size, aubio_source_get_samplerate(source))
+        let optionalTempo = new_aubio_tempo("default", win_size, hop_size, aubio_source_get_samplerate(source))
+        guard let tempo = optionalTempo else {
+            del_aubio_source(source)
+            del_fvec(input)
+            del_fvec(output)
+            return
+        }
         var read: uint_t = 0
         var total_frames: uint_t = 0
         var firstBeatPosition = 0.0

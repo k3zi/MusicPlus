@@ -82,10 +82,11 @@
 		EA85E1E321EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E221EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift */; };
 		EA85E1E521EA3226000188F7 /* SyncItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E421EA3226000188F7 /* SyncItem.swift */; };
 		EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E621EA33B2000188F7 /* MediaSettings.swift */; };
+		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
 		EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040C61CF437FA005453F9 /* AppDelegate.swift */; };
 		EAA040CE1CF437FA005453F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CD1CF437FA005453F9 /* Assets.xcassets */; };
 		EAA040D11CF437FA005453F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CF1CF437FA005453F9 /* LaunchScreen.storyboard */; };
-		EAA040DC1CF437FA005453F9 /* Music_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040DB1CF437FA005453F9 /* Music_Tests.swift */; };
+		EAA040DC1CF437FA005453F9 /* MusicPlusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040DB1CF437FA005453F9 /* MusicPlusTests.swift */; };
 		EAA040E71CF437FA005453F9 /* Music_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040E61CF437FA005453F9 /* Music_UITests.swift */; };
 		EAAEF8BE218AA35000B2F09A /* MPLibraryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAEF8BD218AA35000B2F09A /* MPLibraryCell.swift */; };
 		EAAEF8C4218AA5D100B2F09A /* MPLibraryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAEF8C3218AA5D100B2F09A /* MPLibraryItem.swift */; };
@@ -232,13 +233,14 @@
 		EA85E1E221EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesSyncItemsGETResponse.swift; sourceTree = "<group>"; };
 		EA85E1E421EA3226000188F7 /* SyncItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncItem.swift; sourceTree = "<group>"; };
 		EA85E1E621EA33B2000188F7 /* MediaSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSettings.swift; sourceTree = "<group>"; };
+		EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntermediatePredicate.swift; path = ../../../Dependencies/IntermediatePredicate/IntermediatePredicate/IntermediatePredicate.swift; sourceTree = "<group>"; };
 		EAA040C31CF437FA005453F9 /* MusicPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAA040C61CF437FA005453F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAA040CD1CF437FA005453F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EAA040D01CF437FA005453F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EAA040D21CF437FA005453F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EAA040D71CF437FA005453F9 /* MusicPlusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicPlusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAA040DB1CF437FA005453F9 /* Music_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music_Tests.swift; sourceTree = "<group>"; };
+		EAA040DB1CF437FA005453F9 /* MusicPlusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlusTests.swift; sourceTree = "<group>"; };
 		EAA040DD1CF437FA005453F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EAA040E21CF437FA005453F9 /* MusicPlusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicPlusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAA040E61CF437FA005453F9 /* Music_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Music_UITests.swift; sourceTree = "<group>"; };
@@ -443,6 +445,7 @@
 			children = (
 				EA1CB44421EC07C700CB1F23 /* Providers */,
 				29F941DF1D1267CA001A3515 /* SettingsViewController.swift */,
+				EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -565,7 +568,7 @@
 		EAA040DA1CF437FA005453F9 /* MusicPlusTests */ = {
 			isa = PBXGroup;
 			children = (
-				EAA040DB1CF437FA005453F9 /* Music_Tests.swift */,
+				EAA040DB1CF437FA005453F9 /* MusicPlusTests.swift */,
 				EAA040DD1CF437FA005453F9 /* Info.plist */,
 			);
 			path = MusicPlusTests;
@@ -1127,6 +1130,7 @@
 				29ECD1FD1D13DEC4009A2A45 /* MPShuffleHeaderView.swift in Sources */,
 				29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */,
 				EAF6AE7F21E2E49200E1F727 /* Parser+Packets.swift in Sources */,
+				EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */,
 				EA85E1E321EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift in Sources */,
 				EAF6AE5D21E2A2BD00E1F727 /* LibrarySectionsAllGETResponse.swift in Sources */,
 				EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */,
@@ -1147,7 +1151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAA040DC1CF437FA005453F9 /* Music_Tests.swift in Sources */,
+				EAA040DC1CF437FA005453F9 /* MusicPlusTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

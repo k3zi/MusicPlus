@@ -11,9 +11,17 @@
 
 @interface TintColorOperation : NSOperation
 
+enum ColorPalete {
+    ColorPalete64,
+    ColorPalete512,
+    ColorPalete1024,
+    ColorPalete2048
+};
+typedef enum ColorPalete ColorPalete;
+
 @property (nonatomic, retain) UIColor *result;
 
-- (instancetype)initWithImage:(UIImage *)image;
+- (instancetype)initWithImage:(UIImage *)image andColorPallete:(ColorPalete)palete;
 
 
 @end

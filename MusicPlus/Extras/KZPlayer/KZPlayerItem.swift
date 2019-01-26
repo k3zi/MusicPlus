@@ -13,40 +13,16 @@ import RealmSwift
 class KZPlayerItem: Object, KZPlayerItemBase {
     @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", localArtworkURL = "", systemID = "", libraryUniqueIdentifier = ""
     @objc dynamic var localAssetURL: String?
-    @objc dynamic var trackNum = 1, playCount = 1, position = 0
+    @objc dynamic var trackNum = 1, playCount = 1, position = 0, rating = 0
     @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 1.0, bpm = 0.0, firstBeatPosition = 0.0, lastBeatPosition = 0.0
-    @objc dynamic var liked = false, isDocumentURL = false
+    @objc dynamic var isDocumentURL = false
     let tags = List<KZPlayerTag>()
 
     @objc dynamic var artist: KZPlayerArtist?
     @objc dynamic var album: KZPlayerAlbum?
     @objc dynamic var plexTrack: KZPlayerPlexTrack?
 
-    @objc dynamic var oItem: KZPlayerItem? = nil {
-        willSet {
-            guard let oItem = oItem else {
-                return
-            }
-
-            guard oItem != self else {
-                return
-            }
-
-            self.observedKeys().forEach { oItem.removeObserver(self, forKeyPath: $0) }
-        }
-
-        didSet {
-            guard let oItem = oItem else {
-                return
-            }
-
-            guard oItem != self else {
-                return
-            }
-
-            self.observedKeys().forEach { oItem.addObserver(self, forKeyPath: $0, options: .new, context: nil) }
-        }
-    }
+    @objc dynamic var oItem: KZPlayerItem?
 
     // Ignore this field
     var orig: KZPlayerItem? {
@@ -86,6 +62,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
 
         self.startTime = 0
         self.endTime = item.playbackDuration
+        self.rating = item.rating
 
         self.systemID = "KZPlayerItem-\(item.persistentID)"
         self.oItem = self
@@ -285,24 +262,6 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     override class func primaryKey() -> String? {
         return "systemID"
     }
-
-    func observedKeys() -> [String] {
-        return ["title", "artist", "album", "albumArtist", "genre", "composer", "assetURL", "trackNum", "playCount", "startTime", "endTime", "tempo"]
-    }
-
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-
-        guard let newValue = change?[NSKeyValueChangeKey.newKey], let keyPath = keyPath else {
-            return
-        }
-
-        let realm = self.realm!
-
-        try! realm.write {
-            self.setValue(newValue, forKey: keyPath)
-        }
-    }
 }
 
 class KZPlayerQueueItem: Object, KZPlayerItemBase {
@@ -363,7 +322,7 @@ extension UIImageView {
                 return
             }
             self.image = artwork.image(at: self.bounds.size)
-            }?.image(at: bounds.size)
+        }?.image(at: bounds.size)
     }
 
 }

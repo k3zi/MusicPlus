@@ -113,25 +113,24 @@ class KZPlayer: NSObject {
 
     // Library
 
-    var currentLibraryThreadSafe: KZThreadSafeReference<KZRealmLibrary>?
+    var currentLibraryUniqueIdentifier: String?
 
     var currentLibrary: KZRealmLibrary? {
         set {
-            self.currentLibraryThreadSafe = newValue?.safeRefrence
+            self.currentLibraryUniqueIdentifier = newValue?.uniqueIdentifier
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .libraryDidChange, object: nil)
             }
 
             UserDefaults.standard.set(newValue?.uniqueIdentifier, forKey: .lastOpennedLibraryUniqueIdentifier)
 
-            let safeRefrence = newValue?.safeRefrence
             DispatchQueue.global(qos: .background).async {
-                safeRefrence?.resolve()?.refresh()
+                self.currentLibrary?.refresh()
             }
         }
 
         get {
-            return currentLibraryThreadSafe?.resolve()
+            return Realm.main.objects(KZRealmLibrary.self).first { $0.uniqueIdentifier == currentLibraryUniqueIdentifier }
         }
     }
 
@@ -336,7 +335,7 @@ extension KZPlayer {
                     }
 
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
-                        let operation = TintColorOperation(image: image)!
+                        let operation = TintColorOperation(image: image, andColorPallete: ColorPalete2048)!
                         operation.completionBlock = {
                             session.tintColor = operation.result
                         }
@@ -355,7 +354,7 @@ extension KZPlayer {
                 DispatchQueue.global(qos: .background).async {
                     if let image = artwork.image(at: Constants.UI.Screen.bounds.size) {
                         self.colorChangeQueue.cancelAllOperations()
-                        let operation = TintColorOperation(image: image)!
+                        let operation = TintColorOperation(image: image, andColorPallete: ColorPalete2048)!
                         operation.completionBlock = {
                             session.tintColor = operation.result
                         }
@@ -654,14 +653,11 @@ extension KZPlayer {
         }
 
         set.isRemoved = true
-        set.stop()
-        set.reset()
-        for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
-            DispatchQueue.global(qos: .background).async {
-                self.audioEngine.detach(unit)
-            }
+        for unit in [set.auPlayer, set.auEqualizer, set.auSpeed].reversed() as [AVAudioNode] {
+            unit.reset()
+            audioEngine.detach(unit)
         }
-        self.auPlayerSets.removeValue(forKey: channel)
+        auPlayerSets.removeValue(forKey: channel)
     }
 
     func playerCompleted(_ channel: Int, force: Bool = false, shouldCrossfadeOnSkip: Bool = true) {
@@ -961,7 +957,7 @@ extension KZPlayer {
         activePlayer = -1
         auPlayerSets.forEach {
             $0.value.isRemoved = true
-            $0.value.auPlayer.stop()
+            $0.value.stop()
         }
         stopCrossfade()
         auPlayerSets.removeAll()

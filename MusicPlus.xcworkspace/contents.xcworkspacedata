@@ -4,6 +4,13 @@
    <FileRef
       location = "group:MusicPlus.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:Dependencies"
+      name = "Dependencies">
+      <FileRef
+         location = "group:IntermediatePredicate/IntermediatePredicate.xcodeproj">
+      </FileRef>
+   </Group>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
