@@ -112,7 +112,7 @@ public extension IntermediatePredicateQueryable {
         return property(keyPath)
     }
 
-    subscript<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base : NSObject {
+    subscript<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base: NSObject {
         return property(keyPath)
     }
 
@@ -120,7 +120,7 @@ public extension IntermediatePredicateQueryable {
         return IntermediatePredicateQuery<Base, Any>("\(prefixableResult)\(keyPath)")
     }
 
-    func property<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base : NSObject {
+    func property<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base: NSObject {
         return IntermediatePredicateQuery<Base, Value>("\(prefixableResult)\(NSExpression(forKeyPath: keyPath).keyPath)")
     }
 
@@ -153,7 +153,7 @@ public struct IntermediatePredicateQuery<T, Value>: IntermediatePredicateResult 
 extension NSPredicate {
 
     public class func form<T>(with type: T.Type) -> IntermediatePredicateStart<T> {
-        return IntermediatePredicateStart<T>()
+        return .init()
     }
 
 }

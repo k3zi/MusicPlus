@@ -113,25 +113,24 @@ class KZPlayer: NSObject {
 
     // Library
 
-    var currentLibraryThreadSafe: KZThreadSafeReference<KZRealmLibrary>?
+    var currentLibraryUniqueIdentifier: String?
 
     var currentLibrary: KZRealmLibrary? {
         set {
-            self.currentLibraryThreadSafe = newValue?.safeRefrence
+            self.currentLibraryUniqueIdentifier = newValue?.uniqueIdentifier
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .libraryDidChange, object: nil)
             }
 
             UserDefaults.standard.set(newValue?.uniqueIdentifier, forKey: .lastOpennedLibraryUniqueIdentifier)
 
-            let safeRefrence = newValue?.safeRefrence
             DispatchQueue.global(qos: .background).async {
-                safeRefrence?.resolve()?.refresh()
+                self.currentLibrary?.refresh()
             }
         }
 
         get {
-            return currentLibraryThreadSafe?.resolve()
+            return Realm.main.objects(KZRealmLibrary.self).first { $0.uniqueIdentifier == currentLibraryUniqueIdentifier }
         }
     }
 

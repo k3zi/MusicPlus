@@ -34,6 +34,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
                 playerViewController.viewWillAppear(true)
             }
             view.bringSubviewToFront(playerViewController.view)
+            view.bringSubviewToFront(blurView)
 
             UIView.animate(withDuration: Constants.UI.Animation.menuSlide, delay: 0.0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
                 self.playerViewTopConstraint?.autoRemove()
@@ -61,6 +62,15 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
             }, completion: nil)
         }
     }
+
+    lazy var blurView: UIView = {
+        let view = UIView()
+        view.alpha = 0
+        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+        view.addSubview(blur)
+        blur.autoPinEdgesToSuperviewEdges()
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +110,13 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         playerViewController.view.autoMatch(.width, to: .width, of: view)
         playerViewTopConstraint = playerViewController.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
 
+        blurView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hideMenu)))
+        view.addSubview(blurView)
+        blurView.autoPinEdge(toSuperviewEdge: .top)
+        blurView.autoPinEdge(.left, to: .right, of: leftViewController.view)
+        blurView.autoMatch(.width, to: .width, of: view)
+        blurView.autoPinEdge(toSuperviewEdge: .bottom)
+
         if let first = centerNavigationControllers.first {
             currentNavigationController = first
             first.view.isHidden = false
@@ -109,6 +126,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         }
 
         view.bringSubviewToFront(playerViewController.view)
+        view.bringSubviewToFront(blurView)
         if #available(iOS 11.0, *) {
             self.centerNavigationControllers.forEach { vc in
                 vc.additionalSafeAreaInsets = .zero
@@ -182,13 +200,15 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         UIView.animate(withDuration: Constants.UI.Animation.menuSlide, delay: 0.0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
             self.xOffsetConstraint?.constant = 0
             self.view.layoutIfNeeded()
+            self.blurView.alpha = 0.5
         }, completion: nil)
     }
 
-    func hideMenu() {
+    @objc func hideMenu() {
         UIView.animate(withDuration: Constants.UI.Animation.menuSlide, delay: 0.0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
             self.xOffsetConstraint?.constant = -Constants.UI.Navigation.menuWidth
             self.view.layoutIfNeeded()
+            self.blurView.alpha = 0
         }, completion: nil)
     }
 
@@ -209,6 +229,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         prevNavigationController?.view.isHidden = true
         view.bringSubviewToFront(navigationController.view)
         view.bringSubviewToFront(playerViewController.view)
+        view.bringSubviewToFront(blurView)
         navigationController.didMove(toParent: self)
         navigationController.viewDidAppear(true)
 

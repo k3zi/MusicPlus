@@ -22,7 +22,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     @objc dynamic var album: KZPlayerAlbum?
     @objc dynamic var plexTrack: KZPlayerPlexTrack?
 
-    @objc dynamic var oItem: KZPlayerItem? = nil
+    @objc dynamic var oItem: KZPlayerItem?
 
     // Ignore this field
     var orig: KZPlayerItem? {
@@ -322,7 +322,7 @@ extension UIImageView {
                 return
             }
             self.image = artwork.image(at: self.bounds.size)
-            }?.image(at: bounds.size)
+        }?.image(at: bounds.size)
     }
 
 }
