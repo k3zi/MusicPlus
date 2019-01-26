@@ -217,7 +217,6 @@ extension KZPlayer {
         audioEngine.connect(set.auPlayer, to: set.auSpeed, format: format)
         audioEngine.connect(set.auSpeed, to: set.auEqualizer, format: format)
         audioEngine.connect(set.auEqualizer, to: auMixer, fromBus: 0, toBus: bus, format: format)
-        print("audioEngine connected to mixer bus: \(bus)")
 
         set.volume = 0.0
 
@@ -654,7 +653,7 @@ extension KZPlayer {
         }
 
         set.isRemoved = true
-        for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
+        for unit in [set.auPlayer, set.auEqualizer, set.auSpeed].reversed() as [AVAudioNode] {
             unit.reset()
             audioEngine.detach(unit)
         }
@@ -958,7 +957,7 @@ extension KZPlayer {
         activePlayer = -1
         auPlayerSets.forEach {
             $0.value.isRemoved = true
-            $0.value.auPlayer.stop()
+            $0.value.stop()
         }
         stopCrossfade()
         auPlayerSets.removeAll()
