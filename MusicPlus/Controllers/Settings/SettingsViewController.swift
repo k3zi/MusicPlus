@@ -95,11 +95,10 @@ class SettingsViewController: MPViewController {
         }.disposed(by: disposeBag)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
         topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
         view.layoutSubviews()
     }
 

@@ -48,7 +48,6 @@
 		29F941F71D129C1B001A3515 /* UIColor+UIColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F61D129C1B001A3515 /* UIColor+UIColorAdditions.m */; };
 		29F941F91D12A7FE001A3515 /* KZPlayerAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */; };
 		29F941FB1D12B179001A3515 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941FA1D12B179001A3515 /* ArtistViewController.swift */; };
-		D8EDEBB9A638767A3E483FD4 /* Pods_MusicPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */; };
 		EA02198421F6444600EE067E /* KZRealmLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA02198321F6444600EE067E /* KZRealmLibrary.swift */; };
 		EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */; };
 		EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */; };
@@ -96,6 +95,7 @@
 		EAC85DCA2184BB5C00C61B6F /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DC92184BB5C00C61B6F /* PlayerViewController.swift */; };
 		EAC85DCC2184CC8E00C61B6F /* MPViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DCB2184CC8E00C61B6F /* MPViewController.swift */; };
 		EAC85DCF2184DA0100C61B6F /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DCE2184DA0100C61B6F /* MiniPlayerView.swift */; };
+		EAF47D94D855E246A20B9D2B /* Pods_MusicPlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89E1BFBBEA6A9B0906D8B4E8 /* Pods_MusicPlus.framework */; };
 		EAF6AE3F21E17CD000E1F727 /* UserDefaults+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE3E21E17CD000E1F727 /* UserDefaults+Codable.swift */; };
 		EAF6AE4221E17E7F00E1F727 /* CreateFirstLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4121E17E7F00E1F727 /* CreateFirstLibraryViewController.swift */; };
 		EAF6AE4621E237A600E1F727 /* PMSServersGETResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE4521E237A600E1F727 /* PMSServersGETResponse.swift */; };
@@ -198,8 +198,9 @@
 		29F941F61D129C1B001A3515 /* UIColor+UIColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColorAdditions.m"; sourceTree = "<group>"; };
 		29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerAlbum.swift; sourceTree = "<group>"; };
 		29F941FA1D12B179001A3515 /* ArtistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistViewController.swift; sourceTree = "<group>"; };
-		38D130D20C0A026B911BD341 /* Pods-MusicPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPlus/Pods-MusicPlus.release.xcconfig"; sourceTree = "<group>"; };
-		5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89E1BFBBEA6A9B0906D8B4E8 /* Pods_MusicPlus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicPlus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		93261BC08EFBBD1583311284 /* Pods-MusicPlus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.release.xcconfig"; path = "Target Support Files/Pods-MusicPlus/Pods-MusicPlus.release.xcconfig"; sourceTree = "<group>"; };
+		DE86CF51F5AFCEB83000CCD4 /* Pods-MusicPlus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.debug.xcconfig"; path = "Target Support Files/Pods-MusicPlus/Pods-MusicPlus.debug.xcconfig"; sourceTree = "<group>"; };
 		EA02198321F6444600EE067E /* KZRealmLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZRealmLibrary.swift; sourceTree = "<group>"; };
 		EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundWorker.swift; sourceTree = "<group>"; };
 		EA1CB43C21EBF08700CB1F23 /* UIViewController+Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Menu.swift"; sourceTree = "<group>"; };
@@ -288,7 +289,6 @@
 		EAF6AE7921E2E49200E1F727 /* Streaming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Streaming.swift; sourceTree = "<group>"; };
 		EAF6AE7A21E2E49200E1F727 /* Streamer+DownloadableDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Streamer+DownloadableDelegate.swift"; sourceTree = "<group>"; };
 		EAF6AE7B21E2E49200E1F727 /* StreamingState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamingState.swift; sourceTree = "<group>"; };
-		FC55261999025233AEFA2CB0 /* Pods-MusicPlus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicPlus.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicPlus/Pods-MusicPlus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,7 +299,7 @@
 				EA4D565D21F391EF00CD3930 /* aubio.framework in Frameworks */,
 				EA4D565C21F3918000CD3930 /* Accelerate.framework in Frameworks */,
 				EA4D565A21F3917C00CD3930 /* AudioToolbox.framework in Frameworks */,
-				D8EDEBB9A638767A3E483FD4 /* Pods_MusicPlus.framework in Frameworks */,
+				EAF47D94D855E246A20B9D2B /* Pods_MusicPlus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,18 +466,19 @@
 				EA4D565B21F3918000CD3930 /* Accelerate.framework */,
 				EA4D565921F3917C00CD3930 /* AudioToolbox.framework */,
 				EA4D565721F390F100CD3930 /* aubio.framework */,
-				5A4865063BFF5033C1AC25CE /* Pods_MusicPlus.framework */,
+				89E1BFBBEA6A9B0906D8B4E8 /* Pods_MusicPlus.framework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";
 		};
-		678980850EB46A070111C8AB /* Pods */ = {
+		A666DCC3C0625FF1772D5B81 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FC55261999025233AEFA2CB0 /* Pods-MusicPlus.debug.xcconfig */,
-				38D130D20C0A026B911BD341 /* Pods-MusicPlus.release.xcconfig */,
+				DE86CF51F5AFCEB83000CCD4 /* Pods-MusicPlus.debug.xcconfig */,
+				93261BC08EFBBD1583311284 /* Pods-MusicPlus.release.xcconfig */,
 			);
 			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		EA1CB44421EC07C700CB1F23 /* Providers */ = {
@@ -531,8 +532,8 @@
 				EAA040DA1CF437FA005453F9 /* MusicPlusTests */,
 				EAA040E51CF437FA005453F9 /* MusicPlusUITests */,
 				EAA040C41CF437FA005453F9 /* Products */,
-				678980850EB46A070111C8AB /* Pods */,
 				49B4BCED328A4555950A4FD0 /* Frameworks */,
+				A666DCC3C0625FF1772D5B81 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -791,12 +792,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EAA040EB1CF437FA005453F9 /* Build configuration list for PBXNativeTarget "MusicPlus" */;
 			buildPhases = (
-				8082099F97D9A3B81BB5C41B /* [CP] Check Pods Manifest.lock */,
+				E846F56DB123FEE40F7FBF5B /* [CP] Check Pods Manifest.lock */,
 				EAA040BF1CF437FA005453F9 /* Sources */,
 				EAA040C01CF437FA005453F9 /* Frameworks */,
 				EAA040C11CF437FA005453F9 /* Resources */,
 				EAA040F41CF440A1005453F9 /* ShellScript */,
-				048F1CFAEF83715B7F5E120B /* [CP] Embed Pods Frameworks */,
+				B44F25769394088F65E7E487 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -926,10 +927,12 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		048F1CFAEF83715B7F5E120B /* [CP] Embed Pods Frameworks */ = {
+		B44F25769394088F65E7E487 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MusicPlus/Pods-MusicPlus-frameworks.sh",
@@ -941,8 +944,6 @@
 				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
 				"${BUILT_PRODUCTS_DIR}/Flix/Flix.framework",
 				"${BUILT_PRODUCTS_DIR}/KZ/KZ.framework",
-				"${BUILT_PRODUCTS_DIR}/Keynode/Keynode.framework",
-				"${BUILT_PRODUCTS_DIR}/M13ProgressSuite/M13ProgressSuite.framework",
 				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
 				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
@@ -954,11 +955,12 @@
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SecureNSUserDefaults/SecureNSUserDefaults.framework",
-				"${BUILT_PRODUCTS_DIR}/SpinKit/SpinKit.framework",
 				"${BUILT_PRODUCTS_DIR}/XMLMapper/XMLMapper.framework",
 				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
@@ -968,8 +970,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flix.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KZ.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Keynode.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/M13ProgressSuite.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
@@ -981,7 +981,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureNSUserDefaults.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SpinKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XMLMapper.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
 			);
@@ -990,16 +989,20 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MusicPlus/Pods-MusicPlus-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8082099F97D9A3B81BB5C41B /* [CP] Check Pods Manifest.lock */ = {
+		E846F56DB123FEE40F7FBF5B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-MusicPlus-checkManifestLockResult.txt",
 			);
@@ -1240,7 +1243,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1295,7 +1298,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 2.3;
@@ -1307,7 +1310,7 @@
 		};
 		EAA040EC1CF437FA005453F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC55261999025233AEFA2CB0 /* Pods-MusicPlus.debug.xcconfig */;
+			baseConfigurationReference = DE86CF51F5AFCEB83000CCD4 /* Pods-MusicPlus.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1325,9 +1328,59 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = MusicPlus/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES_THIN;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"AlamofireImage\"",
+					"-framework",
+					"\"AwaitKit\"",
+					"-framework",
+					"\"CocoaSecurity\"",
+					"-framework",
+					"\"Connectivity\"",
+					"-framework",
+					"\"Differentiator\"",
+					"-framework",
+					"\"Flix\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"KZ\"",
+					"-framework",
+					"\"PRTween\"",
+					"-framework",
+					"\"PromiseKit\"",
+					"-framework",
+					"\"PureLayout\"",
+					"-framework",
+					"\"Reusable\"",
+					"-framework",
+					"\"RxAtomic\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxDataSources\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"SecureNSUserDefaults\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"XMLMapper\"",
+					"-framework",
+					"\"Zip\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.kez.musicplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -1343,7 +1396,7 @@
 		};
 		EAA040ED1CF437FA005453F9 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 38D130D20C0A026B911BD341 /* Pods-MusicPlus.release.xcconfig */;
+			baseConfigurationReference = 93261BC08EFBBD1583311284 /* Pods-MusicPlus.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1359,9 +1412,59 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = MusicPlus/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LLVM_LTO = YES_THIN;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"AlamofireImage\"",
+					"-framework",
+					"\"AwaitKit\"",
+					"-framework",
+					"\"CocoaSecurity\"",
+					"-framework",
+					"\"Connectivity\"",
+					"-framework",
+					"\"Differentiator\"",
+					"-framework",
+					"\"Flix\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"KZ\"",
+					"-framework",
+					"\"PRTween\"",
+					"-framework",
+					"\"PromiseKit\"",
+					"-framework",
+					"\"PureLayout\"",
+					"-framework",
+					"\"Reusable\"",
+					"-framework",
+					"\"RxAtomic\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxDataSources\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"SecureNSUserDefaults\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"XMLMapper\"",
+					"-framework",
+					"\"Zip\"",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.kez.musicplus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

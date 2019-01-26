@@ -221,7 +221,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
                                         safeSelf.localArtworkURL = filePath.path
                                     }
                                 } catch {
-                                    print(error)
+                                    os_log(.error, log: .general, "%@", error.localizedDescription)
                                 }
                             }
                         }

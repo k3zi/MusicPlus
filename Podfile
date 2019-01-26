@@ -1,14 +1,11 @@
-platform :ios, '10.0'
+platform :ios, '12.0'
 use_frameworks!
 
 target 'MusicPlus' do
     pod 'KZ'
-    pod 'M13ProgressSuite'
     pod 'PureLayout'
     pod 'Reusable'
     pod 'SecureNSUserDefaults'
-    pod 'SpinKit'
-    pod 'Keynode'
     pod 'Flix'
 
     pod 'Zip'
@@ -16,13 +13,18 @@ target 'MusicPlus' do
     pod 'RealmSwift'
     pod 'PRTween'
 
-    pod 'Fabric'
-    pod 'Crashlytics'
-
     pod 'Alamofire'
     pod 'PromiseKit/Alamofire'
     pod 'AlamofireImage'
     pod 'XMLMapper'
     pod 'AwaitKit'
     pod 'Connectivity'
+end
+
+post_install do |lib|
+  lib.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings.delete 'IPHONEOS_DEPLOYMENT_TARGET'
+    end
+  end
 end

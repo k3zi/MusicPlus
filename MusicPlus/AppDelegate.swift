@@ -43,8 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
 
         func exceptionHandler(_ exception: NSException) {
-            print(exception)
-            print(exception.callStackSymbols)
+            os_log(.error, log: .general, "%@", exception)
+            os_log(.error, log: .general, "%@", exception.callStackSymbols)
         }
 
         NSSetUncaughtExceptionHandler(exceptionHandler)
@@ -109,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     return false
                 }
 
-                print("Search: \(searchString)")
+                os_log(.default, log: .general, "Search: %@", "\(searchString)")
             }
         }
 
@@ -128,8 +128,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 DispatchQueue.global(qos: .background).async {
                     do {
                         let directory = NSTemporaryDirectory() + "/" + String.random(length: 5) + "/"
-                        try Zip.unzipFile(url, destination: URL.init(fileURLWithPath: directory), overwrite: true, password: "", progress: { (progress) -> Void in
-                            print(progress)
+                        try Zip.unzipFile(url, destination: URL(fileURLWithPath: directory), overwrite: true, password: "", progress: { (progress) -> Void in
+                            os_log("Progress: %f", progress)
                         })
 
                         if let enumerator = FileManager.default.enumerator(atPath: directory) {
@@ -149,7 +149,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
                         })
                     } catch {
-                        print("Something went wrong")
+                        os_log("Something went wrong.")
                     }
                 }
             }

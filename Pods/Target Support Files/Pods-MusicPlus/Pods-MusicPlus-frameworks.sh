@@ -161,8 +161,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Flix/Flix.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/KZ/KZ.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Keynode/Keynode.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/M13ProgressSuite/M13ProgressSuite.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework"
@@ -174,7 +172,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SecureNSUserDefaults/SecureNSUserDefaults.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SpinKit/SpinKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/XMLMapper/XMLMapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Zip/Zip.framework"
 fi
@@ -187,8 +184,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Flix/Flix.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/KZ/KZ.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Keynode/Keynode.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/M13ProgressSuite/M13ProgressSuite.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework"
@@ -200,7 +195,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/SecureNSUserDefaults/SecureNSUserDefaults.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SpinKit/SpinKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/XMLMapper/XMLMapper.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Zip/Zip.framework"
 fi

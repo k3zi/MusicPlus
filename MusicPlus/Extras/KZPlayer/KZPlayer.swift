@@ -201,7 +201,7 @@ extension KZPlayer {
         do {
             try audioEngine.start()
         } catch {
-            print("Error starting audio engine")
+            os_log(.error, log: .player, "Error starting audio engine")
         }
         #endif
     }
@@ -230,7 +230,7 @@ extension KZPlayer {
             try audioSession.setPreferredIOBufferDuration(ioBufferDuration)
             try audioSession.setActive(true)
         } catch {
-            print("Error starting audio sesssion")
+            os_log(.error, log: .player, "Error starting audio sesssion")
         }
 
         audioSessionNotifications.forEach(NotificationCenter.default.removeObserver)
@@ -376,12 +376,6 @@ extension KZPlayer {
             return
         }
 
-        if item.liked {
-            unLikeItem(item)
-        } else {
-            likeItem(item)
-        }
-
         // MPRemoteCommandCenter.sharedCommandCenter().likeCommand.active = item.liked
     }
 }
@@ -458,7 +452,7 @@ extension KZPlayer {
         let channel = rotateChannelInt()
         let playerSet = addPlayerSet(bus: channel, item: item)
         auPlayerSets[channel] = playerSet
-        print("will attempt to play \(item.title) on channel \(channel)")
+        os_log(.default, log: .player, "will attempt to play %@ on channel %d", item.title, channel)
 
         let tempo = customTempo ?? item.tempo
 
@@ -468,7 +462,7 @@ extension KZPlayer {
             #endif
         }
 
-        print("activePlayer = \(channel)")
+        os_log(.default, log: .player, "activePlayer = %d", channel)
         activePlayer = channel
 
         if silent {
@@ -491,7 +485,7 @@ extension KZPlayer {
         }
 
         playerSet.play()
-        print("started playing \"\(item.title)\" on channel: \(channel)")
+        os_log(.default, log: .player, "started playing \"%@\" on channel: %d", item.title, channel)
         DispatchQueue.main.async {
             self.updateNowPlayingInfo()
         }
@@ -506,21 +500,21 @@ extension KZPlayer {
 
             updateNowPlayingInfo()
         } catch {
-            print("Error starting audio engine")
+            os_log(.default, log: .player, "Error starting audio engine")
         }
-        print("player did resume")
+        os_log(.default, log: .player, "player did resume")
         shouldBeRunning = true
     }
 
     @objc func pause() {
-        print("player pause called")
+        os_log(.default, log: .player, "player pause called")
         guard audioEngine.isRunning else {
             return
         }
 
         auPlayerSets.forEach { $0.value.pause() }
         audioEngine.pause()
-        print("player paused")
+        os_log(.default, log: .player, "player paused")
         shouldBeRunning = false
     }
 
@@ -549,7 +543,7 @@ extension KZPlayer {
         }
         let currentItem = itemForChannel(allowUpNext: true)
 
-        print("previous = \(prevItem.title)")
+        os_log(.default, log: .player, "previous = %@", prevItem.title)
 
         var result = false
 
@@ -754,8 +748,8 @@ extension KZPlayer {
 
     func crossfadeTo(_ item: KZPlayerItemBase) -> Bool {
         stopCrossfade()
-        print("crossfadeCount = \(crossfadeCount)")
-        print("pre crossfading = \(crossfading)")
+        os_log(.default, log: .player, "crossfadeCount = %d", crossfadeCount)
+        os_log(.default, log: .player, "pre crossfading = %@", crossfading.description)
         let currentCFCount = crossfadeCount
         crossfading = true
 
@@ -773,21 +767,21 @@ extension KZPlayer {
             let firstBeat = item.firstUnplayedBeat(currentTime: 0)
             fadeInDelay = firstBeat
 
-            print("will delay crossfade in by: \(firstBeat)")
+            os_log(.default, log: .player, "will delay crossfade in by: %f", firstBeat)
 
             let currentTime = previousPlayer.currentTime()
             let firstUnplayedBeat = oldItem.firstUnplayedBeat(currentTime: currentTime)
             fadeOutDelay = max(firstUnplayedBeat - currentTime, 0)
 
-            print("first unplayed beat: \(firstUnplayedBeat)")
-            print("will delay crossfade out by: \(fadeOutDelay)")
+            os_log(.default, log: .player, "first unplayed beat: %f", firstUnplayedBeat)
+            os_log(.default, log: .player, "will delay crossfade out by: %f", fadeOutDelay)
             startBPM = oldItem.bpm
             endBPM = item.bpm
             overrideTempo = startBPM / endBPM
         }
 
-        print("start bpm = \(startBPM)")
-        print("end bpm = \(endBPM)")
+        os_log(.default, log: .player, "start bpm = %f", startBPM)
+        os_log(.default, log: .player, "end bpm = %f", endBPM)
 
         guard play(item, silent: true, isQueueItem: item is KZPlayerHistoryItem, tempo: overrideTempo) else {
             crossfading = false
@@ -1196,19 +1190,11 @@ extension KZPlayer {
         guard let realm = currentLibrary?.realm() else {
             fatalError("No library is currently set.")
         }
-
-        try! realm.write {
-            item.originalItem().liked = true
-        }
     }
 
     func unLikeItem(_ item: KZPlayerItem) {
         guard let realm = currentLibrary?.realm() else {
             fatalError("No library is currently set.")
-        }
-
-        try! realm.write {
-            item.originalItem().liked = false
         }
     }
 

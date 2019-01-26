@@ -26,7 +26,6 @@ class MPSectionedTableViewController: KZViewController {
 
         title = "Collection"
         view.backgroundColor = .clear
-        automaticallyAdjustsScrollViewInsets = false
 
         setupMenuToggle()
 
@@ -38,6 +37,7 @@ class MPSectionedTableViewController: KZViewController {
         tableView.sectionIndexBackgroundColor = .clear
         tableView.sectionIndexColor = .white
         tableView.tableHeaderView = UIView.init(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
+        tableView.contentInsetAdjustmentBehavior = .always
         view.addSubview(tableView)
 
         shadowView.backgroundColor = .clear
@@ -57,7 +57,7 @@ class MPSectionedTableViewController: KZViewController {
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
 
         topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: topLayoutGuide.length)
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
     }
 
     override func setupConstraints() {

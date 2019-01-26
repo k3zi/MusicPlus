@@ -54,7 +54,7 @@ class Connection: XMLMappable {
                 }
                 return response
             } catch {
-                print(error)
+                os_log(.error, log: .plex, "Failed to get sections for library: %@", error.localizedDescription)
             }
 
             return nil
