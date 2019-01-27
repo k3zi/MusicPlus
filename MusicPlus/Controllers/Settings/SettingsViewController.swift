@@ -29,7 +29,7 @@ class SettingsViewController: MPViewController {
         shadowView.backgroundColor = .clear
         shadowLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         shadowLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        shadowLayer.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
+        shadowLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
         shadowView.layer.insertSublayer(shadowLayer, at: 0)
         shadowView.alpha = 0.0
         view.addSubview(shadowView)

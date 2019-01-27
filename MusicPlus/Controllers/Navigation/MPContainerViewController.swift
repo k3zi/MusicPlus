@@ -19,7 +19,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
     static let sharedInstance = MPContainerViewController()
 
     var centerNavigationControllers = [MPNavigationController]()
-    var centerViewControllers = [SongsViewController.shared, AlbumsViewController.shared, ArtistsViewController.shared, SettingsViewController.shared]
+    var centerViewControllers = [SongsViewController.shared, AlbumsViewController.shared, ArtistsViewController.shared, SettingsViewController.shared, SearchViewController.shared]
     let leftViewController = MPMenuViewController()
     let playerViewController = PlayerViewController.shared
 
@@ -84,7 +84,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
             let vc = MPNavigationController(rootViewController: $0)
             vc.view.layer.shadowOpacity = 0.17
             vc.view.layer.shadowOffset = CGSize(width: -14, height: 0)
-            vc.view.layer.shadowColor = RGB(0).cgColor
+            vc.view.layer.shadowColor = UIColor.black.cgColor
             vc.view.layer.shadowRadius = 13
             vc.delegate = self
 
@@ -172,7 +172,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         let vc = MPNavigationController(rootViewController: itemController)
         vc.view.layer.shadowOpacity = 0.17
         vc.view.layer.shadowOffset = CGSize(width: -14, height: 0)
-        vc.view.layer.shadowColor = RGB(0).cgColor
+        vc.view.layer.shadowColor = UIColor.black.cgColor
         vc.view.layer.shadowRadius = 13
 
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))

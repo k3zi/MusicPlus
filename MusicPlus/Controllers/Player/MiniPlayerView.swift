@@ -74,7 +74,7 @@ class MiniPlayerView: UIView {
         updateTint()
         addSubview(tintOverlayView)
 
-        darkOverlayView.colors = [RGB(0).withAlphaComponent(0.3).cgColor, RGB(0).withAlphaComponent(0.6).cgColor]
+        darkOverlayView.colors = [UIColor.black.withAlphaComponent(0.3).cgColor, UIColor.black.withAlphaComponent(0.6).cgColor]
         addSubview(darkOverlayView)
 
         sendSubviewToBack(darkOverlayView)

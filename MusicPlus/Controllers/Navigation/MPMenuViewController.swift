@@ -85,7 +85,7 @@ class MPMenuViewController: KZViewController {
         backgroundImageView.clipsToBounds = true
         view.addSubview(backgroundImageView)
 
-        darkOverlayView.colors = [RGB(0).withAlphaComponent(0.6).cgColor, RGB(0).withAlphaComponent(0.8).cgColor]
+        darkOverlayView.colors = [UIColor.black.withAlphaComponent(0.6).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
         view.addSubview(darkOverlayView)
 
         view.addSubview(menuView)
@@ -101,7 +101,7 @@ class MPMenuViewController: KZViewController {
         shadowView.backgroundColor = UIColor.clear
         shadowView.startPoint = CGPoint(x: 0.5, y: 0.0)
         shadowView.endPoint = CGPoint(x: 0.5, y: 1.0)
-        shadowView.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
+        shadowView.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
         shadowView.alpha = 0.0
         menuView.addSubview(shadowView)
 
@@ -112,6 +112,7 @@ class MPMenuViewController: KZViewController {
         menuItems.append(MPMenuItem(name: "SONGS", imageName: "sidebarSongIcon", controller: SongsViewController.shared, selected: true))
         menuItems.append(MPMenuItem(name: "ALBUMS", imageName: "sidebarAlbumIcon", controller: AlbumsViewController.shared))
         menuItems.append(MPMenuItem(name: "ARTISTS", imageName: "sidebarArtistIcon", controller: ArtistsViewController.shared))
+        menuItems.append(MPMenuItem(name: "SEARCH", imageName: "sidebarSearchIcon", controller: SearchViewController.shared))
         // menuItems.append(MPMenuItem(name: "PARTY PLAYLIST", imageName: "sidebarPartyPlaylistIcon", controller: SongsViewController.shared))
         // menuItems.append(MPMenuItem(name: "SLEEP TIMER", imageName: "sidebarSleepTimerIcon", controller: SongsViewController.shared))
         // menuItems.append(MPMenuItem(name: "COLOR", imageName: "sidebarColorIcon", controller: SongsViewController.shared))

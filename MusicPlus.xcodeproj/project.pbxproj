@@ -82,6 +82,7 @@
 		EA85E1E521EA3226000188F7 /* SyncItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E421EA3226000188F7 /* SyncItem.swift */; };
 		EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E621EA33B2000188F7 /* MediaSettings.swift */; };
 		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
+		EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */; };
 		EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040C61CF437FA005453F9 /* AppDelegate.swift */; };
 		EAA040CE1CF437FA005453F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CD1CF437FA005453F9 /* Assets.xcassets */; };
 		EAA040D11CF437FA005453F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CF1CF437FA005453F9 /* LaunchScreen.storyboard */; };
@@ -235,6 +236,7 @@
 		EA85E1E421EA3226000188F7 /* SyncItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncItem.swift; sourceTree = "<group>"; };
 		EA85E1E621EA33B2000188F7 /* MediaSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSettings.swift; sourceTree = "<group>"; };
 		EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntermediatePredicate.swift; path = ../../../Dependencies/IntermediatePredicate/IntermediatePredicate/IntermediatePredicate.swift; sourceTree = "<group>"; };
+		EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EAA040C31CF437FA005453F9 /* MusicPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAA040C61CF437FA005453F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAA040CD1CF437FA005453F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -411,6 +413,7 @@
 				29E640AB1D0EADEF005BA3D7 /* ArtistsViewController.swift */,
 				29F941FA1D12B179001A3515 /* ArtistViewController.swift */,
 				295DACC91D13683D002E6C47 /* AlbumViewController.swift */,
+				EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */,
 			);
 			path = Collections;
 			sourceTree = "<group>";
@@ -1052,6 +1055,7 @@
 				EAF6AE8721E2E49200E1F727 /* Reader.swift in Sources */,
 				EA1CB45E21EDAAFD00CB1F23 /* PopupMenuItemView.swift in Sources */,
 				29C25DDA1D0CF0E200309122 /* SongsViewController.swift in Sources */,
+				EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */,
 				EA1CB44D21ECC47000CB1F23 /* PeekPopGestureRecognizer.swift in Sources */,
 				29F941E81D128600001A3515 /* KZPlayerArtist.swift in Sources */,
 				EAF6AE5321E2527000E1F727 /* Device.swift in Sources */,
@@ -1248,7 +1252,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1301,7 +1305,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
