@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/15/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -95,17 +95,14 @@ class SettingsViewController: MPViewController {
         }.disposed(by: disposeBag)
     }
 
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
-        view.layoutSubviews()
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
+        view.layoutSubviews()
     }
 
     override func setupConstraints() {

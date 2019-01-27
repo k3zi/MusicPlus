@@ -3,7 +3,7 @@
 //  MusicPlus
 //
 //  Created by kezi on 2019/01/13.
-//  Copyright © 2019 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2019 Kesi Maduka. All rights reserved.
 //
 
 import Foundation
@@ -24,6 +24,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     var itemReference: KZThreadSafeReference<KZPlayerItem>
     var libraryIdentifier: String?
     var lastSeekTime: TimeInterval?
+    var startTime: TimeInterval = 0
 
     init(item: KZPlayerItem) {
         self.item = item
@@ -58,6 +59,14 @@ class KZAudioPlayerSet: StreamingDelegate {
             return
         }
 
+        if let item = itemReference.resolve() {
+            let currentTime = self.currentTime()
+            let duration = self.duration()
+            try? item.realm?.write {
+                item.playCount += (currentTime - startTime) / duration
+            }
+        }
+
         handler()
     }
 
@@ -71,7 +80,7 @@ class KZAudioPlayerSet: StreamingDelegate {
                     KZPlayer.sharedInstance.updateNowPlayingInfo(item)
                 }
             }
-            auPlayer.schedule(url: item.fileURL(), durationHint: item.duration()) {
+            auPlayer.schedule(url: item.fileURL(), durationHint: item.duration) {
                 self.callCompletionHandler(completionHandler)
             }
         } else {
@@ -80,14 +89,8 @@ class KZAudioPlayerSet: StreamingDelegate {
                 return
             }
 
-            if #available(iOS 11.0, *) {
-                auPlayer.scheduleFile(file, at: nil, completionCallbackType: .dataPlayedBack) { _ in
-                    self.callCompletionHandler(completionHandler)
-                }
-            } else {
-                auPlayer.scheduleFile(file, at: nil) {
-                    self.callCompletionHandler(completionHandler)
-                }
+            auPlayer.scheduleFile(file, at: nil, completionCallbackType: .dataPlayedBack) { _ in
+                self.callCompletionHandler(completionHandler)
             }
         }
     }
@@ -146,15 +149,16 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func seek(to time: TimeInterval, completionHandler: @escaping AVAudioNodeCompletionHandler) throws {
-        guard DispatchQueue.getSpecific(key: KZPlayer.libraryQueueKey) != nil else {
-            return try KZPlayer.libraryQueue.sync {
-                return try self.seek(to: time, completionHandler: completionHandler)
-            }
-        }
-
         guard let item = itemReference.resolve() else {
             return
         }
+
+        let currentTime = self.currentTime()
+        let duration = self.duration()
+        try? item.realm?.write {
+            item.playCount += (currentTime - startTime) / duration
+        }
+        startTime = time
 
         isSeeking = true
         lastSeekTime = time

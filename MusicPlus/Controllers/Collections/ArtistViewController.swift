@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/16/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -12,7 +12,7 @@ class ArtistViewController: MPSectionedTableViewController {
 
     let artist: KZPlayerArtist
     var expandedSections = [Bool]()
-    let shuffleButton = MPShuffleHeaderView(frame: CGRect.zero)
+    let shuffleButton = MPTitleHeaderView(frame: CGRect.zero)
 
     init(artist: KZPlayerArtist) {
         self.artist = artist
@@ -124,7 +124,7 @@ class ArtistViewController: MPSectionedTableViewController {
         _ = self.navigationController?.popViewController(animated: true)
     }
 
-    @objc func shuffle(_ button: MPShuffleHeaderView) {
+    @objc func shuffle(_ button: MPTitleHeaderView) {
         let wrappedArtist = KZThreadSafeReference(to: artist)
         KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
             guard let safeArtist = wrappedArtist.resolve() else {

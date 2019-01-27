@@ -32,7 +32,7 @@
 		29E844891D1425070067CE56 /* MPShuffleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E844881D1425070067CE56 /* MPShuffleTableViewCell.swift */; };
 		29ECD1F91D13BE2B009A2A45 /* MPAlbumSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1F81D13BE2B009A2A45 /* MPAlbumSectionHeaderView.swift */; };
 		29ECD1FB1D13D3B4009A2A45 /* MPAlbumSongTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FA1D13D3B4009A2A45 /* MPAlbumSongTableViewCell.swift */; };
-		29ECD1FD1D13DEC4009A2A45 /* MPShuffleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FC1D13DEC4009A2A45 /* MPShuffleHeaderView.swift */; };
+		29ECD1FD1D13DEC4009A2A45 /* MPTitleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FC1D13DEC4009A2A45 /* MPTitleHeaderView.swift */; };
 		29ECD2001D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */; };
 		29F0B8501D0F40A80094EEA2 /* UIButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */; };
 		29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */; };
@@ -83,6 +83,7 @@
 		EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E621EA33B2000188F7 /* MediaSettings.swift */; };
 		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
 		EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */; };
+		EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */; };
 		EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040C61CF437FA005453F9 /* AppDelegate.swift */; };
 		EAA040CE1CF437FA005453F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CD1CF437FA005453F9 /* Assets.xcassets */; };
 		EAA040D11CF437FA005453F9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAA040CF1CF437FA005453F9 /* LaunchScreen.storyboard */; };
@@ -179,7 +180,7 @@
 		29E844881D1425070067CE56 /* MPShuffleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPShuffleTableViewCell.swift; sourceTree = "<group>"; };
 		29ECD1F81D13BE2B009A2A45 /* MPAlbumSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPAlbumSectionHeaderView.swift; sourceTree = "<group>"; };
 		29ECD1FA1D13D3B4009A2A45 /* MPAlbumSongTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPAlbumSongTableViewCell.swift; sourceTree = "<group>"; };
-		29ECD1FC1D13DEC4009A2A45 /* MPShuffleHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPShuffleHeaderView.swift; sourceTree = "<group>"; };
+		29ECD1FC1D13DEC4009A2A45 /* MPTitleHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPTitleHeaderView.swift; sourceTree = "<group>"; };
 		29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonStyles.swift; sourceTree = "<group>"; };
 		29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPOptionsButton.swift; sourceTree = "<group>"; };
@@ -237,6 +238,7 @@
 		EA85E1E621EA33B2000188F7 /* MediaSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSettings.swift; sourceTree = "<group>"; };
 		EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntermediatePredicate.swift; path = ../../../Dependencies/IntermediatePredicate/IntermediatePredicate/IntermediatePredicate.swift; sourceTree = "<group>"; };
 		EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewCell.swift; sourceTree = "<group>"; };
 		EAA040C31CF437FA005453F9 /* MusicPlus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicPlus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAA040C61CF437FA005453F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAA040CD1CF437FA005453F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -480,7 +482,6 @@
 				DE86CF51F5AFCEB83000CCD4 /* Pods-MusicPlus.debug.xcconfig */,
 				93261BC08EFBBD1583311284 /* Pods-MusicPlus.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -628,7 +629,7 @@
 				29ECD1F81D13BE2B009A2A45 /* MPAlbumSectionHeaderView.swift */,
 				29DE1EDC1D12B933005C9E42 /* MPArtistSectionHeaderView.swift */,
 				295DACCB1D136C6A002E6C47 /* MPSectionHeaderView.swift */,
-				29ECD1FC1D13DEC4009A2A45 /* MPShuffleHeaderView.swift */,
+				29ECD1FC1D13DEC4009A2A45 /* MPTitleHeaderView.swift */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -650,6 +651,7 @@
 				EAAEF8BD218AA35000B2F09A /* MPLibraryCell.swift */,
 				29E844881D1425070067CE56 /* MPShuffleTableViewCell.swift */,
 				29E640AD1D0EB9CC005BA3D7 /* MPSongTableViewCell.swift */,
+				EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */,
 			);
 			path = Tables;
 			sourceTree = "<group>";
@@ -1134,9 +1136,10 @@
 				EA4D565F21F394C200CD3930 /* KZPlayerItemBase+Analyze.swift in Sources */,
 				EAF6AE5721E26D5100E1F727 /* LibrarySectionsGETResponse.swift in Sources */,
 				29F941F41D129B7F001A3515 /* ObjectiveCProcessing.m in Sources */,
-				29ECD1FD1D13DEC4009A2A45 /* MPShuffleHeaderView.swift in Sources */,
+				29ECD1FD1D13DEC4009A2A45 /* MPTitleHeaderView.swift in Sources */,
 				29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */,
 				EAF6AE7F21E2E49200E1F727 /* Parser+Packets.swift in Sources */,
+				EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */,
 				EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */,
 				EA85E1E321EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift in Sources */,
 				EAF6AE5D21E2A2BD00E1F727 /* LibrarySectionsAllGETResponse.swift in Sources */,
