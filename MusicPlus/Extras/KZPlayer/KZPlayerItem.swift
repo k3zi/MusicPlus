@@ -3,7 +3,7 @@
 //  KZPlayer
 // 
 //  Created by Kesi Maduka on 10/24/15.
-//  Copyright © 2015 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2015 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -13,8 +13,8 @@ import RealmSwift
 class KZPlayerItem: Object, KZPlayerItemBase {
     @objc dynamic var title = "", albumArtist = "", genre = "", composer = "", assetURL = "", artworkURL = "", localArtworkURL = "", systemID = "", libraryUniqueIdentifier = ""
     @objc dynamic var localAssetURL: String?
-    @objc dynamic var trackNum = 1, playCount = 1, position = 0, rating = 0
-    @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 1.0, bpm = 0.0, firstBeatPosition = 0.0, lastBeatPosition = 0.0
+    @objc dynamic var trackNum = 1, position = 0, rating = 0
+    @objc dynamic var startTime = 0.0, endTime = -1.0, tempo = 1.0, bpm = 0.0, firstBeatPosition = 0.0, lastBeatPosition = 0.0, playCount = 0.0
     @objc dynamic var isDocumentURL = false
     let tags = List<KZPlayerTag>()
 
@@ -58,7 +58,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         self.assetURL = item.assetURL?.absoluteString ?? ""
 
         self.trackNum = item.albumTrackNumber
-        self.playCount = item.playCount
+        self.playCount = Double(item.playCount)
 
         self.startTime = 0
         self.endTime = item.playbackDuration

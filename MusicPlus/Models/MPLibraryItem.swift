@@ -3,7 +3,7 @@
 //  Music+
 //
 //  Created by kezi on 2018/10/31.
-//  Copyright © 2018 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2018 Kesi Maduka. All rights reserved.
 //
 
 import Foundation

@@ -1,17 +1,17 @@
 // 
-//  MPShuffleHeaderView.swift
+//  MPTitleHeaderView.swift
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/16/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
 
-class MPShuffleHeaderView: UIControl {
+class MPTitleHeaderView: UIControl {
 
     let label = UILabel()
-    let shuffleImage = UIImageView(image: #imageLiteral(resourceName: "shuffleBT"))
+    let imageView = UIImageView(image: #imageLiteral(resourceName: "shuffleBT"))
 
     override init(frame: CGRect) {
         var frame = frame
@@ -49,8 +49,8 @@ class MPShuffleHeaderView: UIControl {
         label.text = "Shuffle All"
         addSubview(label)
 
-        shuffleImage.alpha = 0.4
-        addSubview(shuffleImage)
+        imageView.alpha = 0.4
+        addSubview(imageView)
 
         setupConstraints()
     }
@@ -59,8 +59,8 @@ class MPShuffleHeaderView: UIControl {
         label.autoPinEdge(toSuperviewEdge: .left, withInset: 17)
         label.autoAlignAxis(toSuperviewAxis: .horizontal)
 
-        shuffleImage.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
-        shuffleImage.autoAlignAxis(toSuperviewAxis: .horizontal)
+        imageView.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
+        imageView.autoAlignAxis(toSuperviewAxis: .horizontal)
     }
 
     func setHighlighted(_ highlighted: Bool, animated: Bool) {

@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/16/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -28,7 +28,7 @@ class MPBackgroundView: UIView {
         updateTint()
         addSubview(tintOverlayView)
 
-        darkOverlayView.colors = [RGB(0).withAlphaComponent(0.3).cgColor, RGB(0).withAlphaComponent(0.8).cgColor]
+        darkOverlayView.colors = [UIColor.black.withAlphaComponent(0.3).cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
         addSubview(darkOverlayView)
 
         sendSubviewToBack(darkOverlayView)

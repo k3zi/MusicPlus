@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/15/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -29,7 +29,7 @@ class SettingsViewController: MPViewController {
         shadowView.backgroundColor = .clear
         shadowLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         shadowLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        shadowLayer.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
+        shadowLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
         shadowView.layer.insertSublayer(shadowLayer, at: 0)
         shadowView.alpha = 0.0
         view.addSubview(shadowView)
@@ -95,17 +95,14 @@ class SettingsViewController: MPViewController {
         }.disposed(by: disposeBag)
     }
 
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        topLayoutGuideConstraint?.autoRemove()
-        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
-        view.layoutSubviews()
-    }
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         shadowLayer.frame = CGRect(x: 0, y: 0, width: shadowView.frame.size.width, height: 10)
+
+        topLayoutGuideConstraint?.autoRemove()
+        topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
+        view.layoutSubviews()
     }
 
     override func setupConstraints() {

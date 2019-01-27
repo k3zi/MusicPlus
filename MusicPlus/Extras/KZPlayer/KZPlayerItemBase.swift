@@ -3,7 +3,7 @@
 //  MusicPlus
 //
 //  Created by kezi on 2019/01/19.
-//  Copyright © 2019 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2019 Kesi Maduka. All rights reserved.
 //
 
 import Foundation
@@ -25,13 +25,13 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
     var localAssetURL: String? { get set }
 
     var trackNum: Int { get set }
-    var playCount: Int { get set }
     var position: Int { get set }
 
     var startTime: Double { get set }
     var endTime: Double { get set }
     var tempo: Double { get set }
     var bpm: Double { get set }
+    var playCount: Double { get set }
     var lastBeatPosition: Double { get set }
     var firstBeatPosition: Double { get set }
 
@@ -91,11 +91,11 @@ extension KZPlayerItemBase {
         get { return orig!.trackNum }
         set { orig!.trackNum = newValue }
     }
-    var playCount: Int {
+
+    var playCount: Double {
         get { return orig!.playCount }
         set { orig!.playCount = newValue }
     }
-
     var startTime: Double {
         get { return orig!.startTime }
         set { orig!.startTime = newValue }
@@ -171,7 +171,7 @@ extension KZPlayerItemBase {
         return orig?.fetchArtwork(completionHandler: completionHandler)
     }
 
-    func duration() -> Double {
+    var duration: Double {
         return endTime - startTime
     }
 

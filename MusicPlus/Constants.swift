@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 7/25/15.
-//  Copyright (c) 2015 Storm Edge Apps LLC. All rights reserved.
+//  Copyright (c) 2015 Kesi Maduka. All rights reserved.
 // 
 
 import Foundation
@@ -57,7 +57,7 @@ extension String {
 
 extension Realm {
 
-    static let currentSchemaVersion: UInt64 = 9
+    static let currentSchemaVersion: UInt64 = 10
 
     static var main: Realm {
         var config = Realm.Configuration()

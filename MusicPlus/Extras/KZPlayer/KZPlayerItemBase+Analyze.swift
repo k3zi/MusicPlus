@@ -3,7 +3,7 @@
 //  MusicPlus
 //
 //  Created by kezi on 2019/01/19.
-//  Copyright © 2019 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2019 Kesi Maduka. All rights reserved.
 //
 
 import Foundation
@@ -65,7 +65,7 @@ extension KZPlayerItemBase {
         os_log(.info, log: .player, "analyzed a bpm of: %f", bpm)
         os_log(.info, log: .player, "analyzed a first beat of: %f", firstBeatPosition)
         os_log(.info, log: .player, "analyzed a last beat of: %f", lastBeatPosition)
-        os_log(.info, log: .player, "total duration: %f", duration())
+        os_log(.info, log: .player, "total duration: %f", duration)
 
         del_aubio_tempo(tempo)
         del_aubio_source(source)

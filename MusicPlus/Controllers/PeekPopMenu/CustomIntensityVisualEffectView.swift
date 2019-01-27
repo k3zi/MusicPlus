@@ -3,7 +3,7 @@
 //  MusicPlus
 //
 //  Created by kezi on 2019/01/16.
-//  Copyright © 2019 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2019 Kesi Maduka. All rights reserved.
 //
 //  From: https://stackoverflow.com/a/47475656/1484378
 //

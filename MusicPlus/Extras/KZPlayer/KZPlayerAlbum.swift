@@ -3,7 +3,7 @@
 //  KZPlayer
 // 
 //  Created by Kesi Maduka on 10/24/15.
-//  Copyright © 2015 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2015 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -45,7 +45,7 @@ class KZPlayerAlbum: Object, RealmGenerating {
     func totalDuration() -> Double {
         var sum = 0.0
         songs.forEach {
-            sum = sum + $0.duration()
+            sum = sum + $0.duration
         }
         return sum
     }

@@ -3,7 +3,7 @@
 //  Music+
 //
 //  Created by kezi on 2018/10/27.
-//  Copyright © 2018 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2018 Kesi Maduka. All rights reserved.
 //
 
 import Foundation
@@ -74,7 +74,7 @@ class MiniPlayerView: UIView {
         updateTint()
         addSubview(tintOverlayView)
 
-        darkOverlayView.colors = [RGB(0).withAlphaComponent(0.3).cgColor, RGB(0).withAlphaComponent(0.6).cgColor]
+        darkOverlayView.colors = [UIColor.black.withAlphaComponent(0.3).cgColor, UIColor.black.withAlphaComponent(0.6).cgColor]
         addSubview(darkOverlayView)
 
         sendSubviewToBack(darkOverlayView)

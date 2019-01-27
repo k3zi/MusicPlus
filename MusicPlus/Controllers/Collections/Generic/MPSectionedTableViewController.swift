@@ -3,7 +3,7 @@
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/11/16.
-//  Copyright © 2016 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
@@ -43,7 +43,7 @@ class MPSectionedTableViewController: KZViewController {
         shadowView.backgroundColor = .clear
         shadowLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         shadowLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        shadowLayer.colors = [RGB(0).cgColor, UIColor.clear.cgColor]
+        shadowLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
         shadowView.layer.insertSublayer(shadowLayer, at: 0)
         shadowView.alpha = 0.0
         view.addSubview(shadowView)
@@ -58,6 +58,7 @@ class MPSectionedTableViewController: KZViewController {
 
         topLayoutGuideConstraint?.autoRemove()
         topLayoutGuideConstraint = tableView.autoPinEdge(toSuperviewEdge: .top, withInset: view.safeAreaInsets.top)
+        view.layoutSubviews()
     }
 
     override func setupConstraints() {
@@ -71,6 +72,10 @@ class MPSectionedTableViewController: KZViewController {
         shadowView.autoPinEdge(toSuperviewEdge: .left)
         shadowView.autoPinEdge(toSuperviewEdge: .right)
         shadowView.autoSetDimension(.height, toSize: 21)
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        shadowView.alpha = min(scrollView.contentOffset.y / 300.0, 0.3)
     }
 
     // MARK: Table View Delegate
@@ -117,10 +122,6 @@ class MPSectionedTableViewController: KZViewController {
 
     override func tableViewCellClass(_ tableView: UITableView, indexPath: IndexPath?) -> KZTableViewCell.Type {
         return MPSongTableViewCell.self
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        shadowView.alpha = min(scrollView.contentOffset.y / 300.0, 0.3)
     }
 
     override func tableViewShowsSectionHeader(_ tableView: UITableView) -> Bool {

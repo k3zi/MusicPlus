@@ -3,7 +3,7 @@
 //  KZPlayer
 // 
 //  Created by Kesi Maduka on 10/24/15.
-//  Copyright © 2015 Storm Edge Apps LLC. All rights reserved.
+//  Copyright © 2015 Kesi Maduka. All rights reserved.
 // 
 
 import UIKit
