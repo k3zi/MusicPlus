@@ -75,7 +75,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         nextButoon.layer.masksToBounds = true
         view.addSubview(nextButoon)
 
-        if KZRealmLibrary.libraries.count == 0 {
+        if KZRealmLibrary.libraries.isEmpty {
             welcomeLabel.text =  "Add A Library"
             welcomeLabel.textAlignment = .center
 
@@ -166,7 +166,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
     }
 
     @objc func didTapNext() {
-        guard let name = nameTextField.text, name.count > 0 else {
+        guard let name = nameTextField.text, name.isNotEmpty else {
             return self.present(UIAlertController(title: "Add A Library", message: "Please give a name to the library you wish to add.", preferredStyle: .alert), animated: true, completion: nil)
         }
 
@@ -195,7 +195,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
             nextButoon.setTitle("Importing Songs...", for: .normal)
             let safeLibrary = library.safeRefrence
             MPMediaLibrary.requestAuthorization { _ in
-                safeLibrary.resolve()?.addAllItems { (status, complete) in
+                safeLibrary.resolve()?.addAllItems { status, complete in
                     DispatchQueue.main.async {
                         self.nextButoon.setTitle(status, for: .normal)
                         if complete {

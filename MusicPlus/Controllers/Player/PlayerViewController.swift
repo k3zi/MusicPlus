@@ -193,7 +193,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             self.playPauseButton.tintColor = color
             self.previousButton.tintColor = color
             self.nextButton.tintColor = color
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .songDidChange, object: nil, queue: .main) { [weak self] _ in
             guard let self = self, let song = KZPlayer.sharedInstance.itemForChannel(allowUpNext: true)  else {
@@ -201,17 +201,18 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             }
 
             self.songTitleLabel.text = song.title
-            self.albumTitleLabel.text = song.albumName()
-            self.artistTitleLabel.text = song.artistName()
+            self.albumTitleLabel.text = song.albumName
+            self.artistTitleLabel.text = song.artistName
 
             UIView.performWithoutAnimation {
                 self.miniPlayerView.songTitleLabel.text = song.title
                 self.miniPlayerView.subTitleLabel.text = song.subtitleText()
             }
+
             if self.currentArtworkView.image == nil {
                 self.loadArtwork()
             }
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
             guard let self = self, self.currentArtworkView.image != nil else {
@@ -219,7 +220,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             }
 
             self.loadArtwork()
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .didAddUpNext, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {
@@ -227,7 +228,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             }
 
             self.loadArtwork()
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .nextSongDidPlay, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {
@@ -235,7 +236,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             }
 
             self.goToNextArtwork()
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .previousSongDidPlay, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {
@@ -243,18 +244,30 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             }
 
             self.goToPreviousArtwork()
-        }
+        }.dispose(with: self)
 
         NotificationCenter.default.addObserver(forName: .playStateDidChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
-            self?.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
-            self?.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
-        }
+            guard let self = self else {
+                return
+            }
+
+            self.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
+            self.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
+        }.dispose(with: self)
 
         KZPlayer.sharedInstance.currentTimeObservationHandler = { [weak self] currentTime, duration in
             DispatchQueue.main.async {
-                self?.timeSlider.progress = CGFloat(currentTime / duration)
+                guard let self = self else {
+                    return
+                }
+
+                self.timeSlider.progress = CGFloat(currentTime / duration)
             }
         }
+    }
+
+    deinit {
+        disposeAll()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -378,12 +391,17 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     }
 
     func goToNextArtwork() {
+        guard UIView.isVisible(view: view) else {
+            self.loadArtwork()
+            return
+        }
+
         let firstArtwork = artworkViews.removeFirst()
         firstArtwork.removeFromSuperview()
         let newArtwork = self.appendArtwork()
         newArtwork.isHidden = true
 
-        UIView.animate(withDuration: 1, delay: 0.0, options: [.beginFromCurrentState], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.beginFromCurrentState], animations: {
             self.artworkViewConstraints.forEach { $0.autoRemove() }
             self.artworkViewConstraints.removeAll()
             self.resetArtwork()
@@ -395,12 +413,17 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     }
 
     func goToPreviousArtwork() {
+        guard UIView.isVisible(view: view) else {
+            self.loadArtwork()
+            return
+        }
+
         let lastArtwork = artworkViews.removeLast()
         lastArtwork.removeFromSuperview()
         let newArtwork = self.addArtwork(at: 0)
         newArtwork.isHidden = true
 
-        UIView.animate(withDuration: 1, delay: 0.0, options: [.beginFromCurrentState], animations: {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.beginFromCurrentState], animations: {
             self.artworkViewConstraints.forEach { $0.autoRemove() }
             self.artworkViewConstraints.removeAll()
             self.resetArtwork()

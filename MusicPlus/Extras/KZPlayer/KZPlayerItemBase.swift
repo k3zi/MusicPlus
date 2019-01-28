@@ -127,7 +127,7 @@ extension KZPlayerItemBase {
     }
 
     var tags: List<KZPlayerTag> {
-        get { return orig!.tags }
+        return orig!.tags
     }
 
     var artist: KZPlayerArtist? {
@@ -175,17 +175,17 @@ extension KZPlayerItemBase {
         return endTime - startTime
     }
 
-    func artistName() -> String {
+    var artistName: String {
         let result = artist?.name ?? albumArtist
-        return result.count > 0 ? result : "Unknown Artist"
+        return result.isNotEmpty ? result : "Unknown Artist"
     }
 
-    func albumName() -> String {
-        return album?.name ?? ""
+    var albumName: String {
+        return album?.name ?? "Unknown Album"
     }
 
     func titleText() -> String {
-        guard title.count > 0 else {
+        guard title.isNotEmpty else {
             return "Unknown Title"
         }
 
@@ -193,10 +193,10 @@ extension KZPlayerItemBase {
     }
 
     func subtitleText() -> String {
-        let artist = albumArtist.count > 0 ? albumArtist : artistName()
+        let artist = albumArtist.isNotEmpty ? albumArtist : artistName
 
-        let text = [albumName(), artist].filter({ $0.count > 0 }).joined(separator: " - ")
-        if text.count > 0 {
+        let text = [albumName, artist].filter { $0.isNotEmpty }.joined(separator: " - ")
+        if text.isNotEmpty {
             return text
         }
 

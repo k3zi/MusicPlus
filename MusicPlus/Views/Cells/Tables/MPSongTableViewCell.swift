@@ -62,11 +62,11 @@ class MPSongTableViewCell: KZTableViewCell {
         let width = Constants.UI.Navigation.menuWidth
 
         var height = CGFloat(0)
-        height = height + CGFloat.verticalPadding
-        height = height + titleLabel.estimatedHeight(width)
-        height = height + CGFloat.verticalSpacing
-        height = height + subtitleLabel.estimatedHeight(width)
-        height = height + CGFloat.verticalPadding
+        height += CGFloat.verticalPadding
+        height += titleLabel.estimatedHeight(width)
+        height += CGFloat.verticalSpacing
+        height += subtitleLabel.estimatedHeight(width)
+        height += CGFloat.verticalPadding
         return height
     }
 

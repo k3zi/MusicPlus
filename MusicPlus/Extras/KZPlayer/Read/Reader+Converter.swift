@@ -72,7 +72,7 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
         outPacketDescriptions?.pointee?.pointee.mVariableFramesInPacket = 0
     }
     packetCount.pointee = 1
-    reader.currentPacket = reader.currentPacket + 1
+    reader.currentPacket += 1
 
     return noErr
 }

@@ -51,9 +51,9 @@ class MPShuffleTableViewCell: KZTableViewCell {
         let width = Constants.UI.Screen.width
 
         var height = CGFloat(0)
-        height = height + 15
-        height = height + label.estimatedHeight(width)
-        height = height + 15
+        height += 15
+        height += label.estimatedHeight(width)
+        height += 15
         return height
     }
 

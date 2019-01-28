@@ -41,7 +41,7 @@ class FilterTableViewCell: KZTableViewCell {
 
         valueField.textColor = .white
         valueField.backgroundColor = .clear
-        valueField.textAlignment = .center
+        valueField.textAlignment = .right
         valueField.placeholder = "Value"
         valueFieldHolderView.addSubview(valueField)
     }
@@ -65,16 +65,16 @@ class FilterTableViewCell: KZTableViewCell {
         valueFieldHolderView.autoPinEdge(.left, to: .right, of: label, withOffset: 16, relation: .greaterThanOrEqual)
         valueFieldHolderView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 8), excludingEdge: .left)
 
-        valueField.autoPinEdgesToSuperviewEdges(with: .init(top: 0, left: 5, bottom: 0, right: 0))
+        valueField.autoPinEdgesToSuperviewEdges(with: .init(top: 0, left: 5, bottom: 0, right: 5))
     }
 
     override func estimatedHeight() -> CGFloat {
         let width = UIScreen.main.bounds.width - Constants.UI.Navigation.menuWidth
 
         var height = CGFloat(0)
-        height = height + 16
-        height = height + removeButton.estimatedHeight(width)
-        height = height + 16
+        height += 16
+        height += removeButton.estimatedHeight(width)
+        height += 16
         return height
     }
 

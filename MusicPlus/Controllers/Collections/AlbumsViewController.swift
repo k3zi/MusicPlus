@@ -81,12 +81,10 @@ class AlbumsViewController: KZViewController {
             case .initial(let collection):
                 self.displayedCollection = collection
                 self.collectionView.reloadData()
-                break
             case .update(_, let deletions, let insertions, _):
-                if deletions.count > 0 || insertions.count > 0 {
+                if deletions.isNotEmpty || insertions.isNotEmpty {
                     self.collectionView.reloadData()
                 }
-                break
             case .error:
                 break
             }
@@ -125,10 +123,14 @@ class AlbumsViewController: KZViewController {
 
         self.setUpLibraryBarItem()
 
-        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.setGenerator()
             self.setUpLibraryBarItem()
-        }
+        }.dispose(with: self)
     }
 
     func setGenerator() {

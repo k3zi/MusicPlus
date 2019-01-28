@@ -128,7 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 DispatchQueue.global(qos: .background).async {
                     do {
                         let directory = NSTemporaryDirectory() + "/" + String.random(length: 5) + "/"
-                        try Zip.unzipFile(url, destination: URL(fileURLWithPath: directory), overwrite: true, password: "", progress: { (progress) -> Void in
+                        try Zip.unzipFile(url, destination: URL(fileURLWithPath: directory), overwrite: true, password: "", progress: { progress -> Void in
                             os_log("Progress: %f", progress)
                         })
 

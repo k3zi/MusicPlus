@@ -45,7 +45,7 @@ class KZPlayerAlbum: Object, RealmGenerating {
     func totalDuration() -> Double {
         var sum = 0.0
         songs.forEach {
-            sum = sum + $0.duration
+            sum += $0.duration
         }
         return sum
     }

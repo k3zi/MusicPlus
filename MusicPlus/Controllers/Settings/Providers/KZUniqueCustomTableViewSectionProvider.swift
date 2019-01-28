@@ -11,7 +11,7 @@ import Flix
 
 class KZUniqueCustomTableViewSectionProvider: UniqueCustomTableViewSectionProvider {
 
-    open override func configureSection(_ tableView: UITableView, view: UITableViewHeaderFooterView, viewInSection section: Int, value: UniqueCustomTableViewSectionProvider) {
+    override open func configureSection(_ tableView: UITableView, view: UITableViewHeaderFooterView, viewInSection section: Int, value: UniqueCustomTableViewSectionProvider) {
         super.configureSection(tableView, view: view, viewInSection: section, value: value)
     }
 

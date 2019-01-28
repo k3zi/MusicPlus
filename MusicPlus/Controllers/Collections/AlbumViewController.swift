@@ -161,7 +161,7 @@ class AlbumViewController: MPSectionedTableViewController, PeekPopPreviewingDele
 
         let songs = tableViewCellData(tableView, section: indexPath.section)
 
-        guard songs.count > 0 else {
+        guard songs.isNotEmpty else {
             return
         }
 

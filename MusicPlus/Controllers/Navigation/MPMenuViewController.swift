@@ -120,9 +120,13 @@ class MPMenuViewController: KZViewController {
         menuItems.append(MPMenuItem(name: "SETTINGS", imageName: "sidebarSettingsIcon", controller: SettingsViewController.shared))
         menuTableView.reloadData()
 
-        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.libraryTableView.reloadData()
-        }
+        }.dispose(with: self)
     }
 
     override func setupConstraints() {

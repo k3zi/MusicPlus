@@ -66,7 +66,7 @@ class MPOptionsButton: UIView {
         for i in 0 ..< items.count {
             let item = items[i]
             let button = UIButton()
-            if item.icon.count > 0 {
+            if item.icon.isNotEmpty {
                 button.setImage(UIImage(named: item.icon), for: .normal)
             }
             button.setBackgroundColor(.black, forState: .normal)
@@ -115,7 +115,7 @@ class MPOptionsButton: UIView {
         if toggleButton.isSelected {
             UIView.animate(withDuration: 0.4, animations: {
                 self.buttonHolder.alpha = 0.0
-                }, completion: { (_) in
+                }, completion: { _ in
                     UIView.animate(withDuration: 0.2, animations: {
                         self.close()
                     })
@@ -124,7 +124,7 @@ class MPOptionsButton: UIView {
             self.delegate?.optionsButtonWillExpand(self)
             UIView.animate(withDuration: 0.2, animations: {
                 self.expand()
-                }, completion: { (_) in
+                }, completion: { _ in
                     UIView.animate(withDuration: 0.4, animations: {
                         self.buttonHolder.alpha = 1.0
                     })

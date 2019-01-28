@@ -50,11 +50,11 @@ class MPMenuItemTableViewCell: KZTableViewCell {
         let width = Constants.UI.Navigation.menuWidth
 
         var height = CGFloat(0)
-        height = height + 16
-        height = height + iconView.estimatedHeight(width)
-        height = height + 16
-        height = height + label.estimatedHeight(width)
-        height = height + 16
+        height += 16
+        height += iconView.estimatedHeight(width)
+        height += 16
+        height += label.estimatedHeight(width)
+        height += 16
         return height
     }
 
