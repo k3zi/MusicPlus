@@ -907,7 +907,7 @@ extension KZPlayer {
     func setForChannel(_ channel: Int = -1) -> KZAudioPlayerSet? {
         let channel = channel == -1 ? activePlayer : channel
 
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = auPlayerSets.first(where: { $0.key == channel })?.value else {
             return nil
         }
 
@@ -921,7 +921,7 @@ extension KZPlayer {
     func speedNodeForChannel(_ channel: Int = -1) -> AVAudioUnitTimePitch? {
         let channel = channel == -1 ? activePlayer : channel
 
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = auPlayerSets.first(where: { $0.key == channel })?.value else {
             return nil
         }
 

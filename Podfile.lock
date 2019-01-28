@@ -14,17 +14,17 @@ PODS:
   - KZ (3.0.0):
     - PureLayout
     - Reusable
-  - PromiseKit (6.8.0):
-    - PromiseKit/CorePromise (= 6.8.0)
-    - PromiseKit/Foundation (= 6.8.0)
-    - PromiseKit/UIKit (= 6.8.0)
-  - PromiseKit/Alamofire (6.8.0):
+  - PromiseKit (6.8.1):
+    - PromiseKit/CorePromise (= 6.8.1)
+    - PromiseKit/Foundation (= 6.8.1)
+    - PromiseKit/UIKit (= 6.8.1)
+  - PromiseKit/Alamofire (6.8.1):
     - Alamofire (~> 4.0)
     - PromiseKit/CorePromise
-  - PromiseKit/CorePromise (6.8.0)
-  - PromiseKit/Foundation (6.8.0):
+  - PromiseKit/CorePromise (6.8.1)
+  - PromiseKit/Foundation (6.8.1):
     - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.8.0):
+  - PromiseKit/UIKit (6.8.1):
     - PromiseKit/CorePromise
   - PRTween (0.1.0)
   - PureLayout (3.1.4)
@@ -103,7 +103,7 @@ SPEC CHECKSUMS:
   Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   Flix: 04392305c5fa58d2c2b75b1fd1ff523d9d860bc4
   KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
-  PromiseKit: 02c93833283c37ce94ef7d25de63d48d62b0754e
+  PromiseKit: cd5df8e6553887c93cc009d1260cdf6f7efbcbbd
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
   Realm: 50071da38fe079e0735e47c9f2eae738c68c5996
@@ -117,6 +117,6 @@ SPEC CHECKSUMS:
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 2b2d8622730bea04b80f1ce681a6795bc3cf2337
+PODFILE CHECKSUM: 1475a1cf0b4b90feac9ae118fc0bb6da8668dec6
 
 COCOAPODS: 1.6.0.beta.2
