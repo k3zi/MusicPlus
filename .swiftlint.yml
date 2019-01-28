@@ -4,11 +4,26 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
 disabled_rules:
   - file_length
   - type_body_length
-  - variable_name_min_length
-  - variable_name
-  - cyclomatic_complexity
-  - valid_docs
+  - identifier_name
   - line_length
+  - force_try
+  - type_name
+  - force_cast
+  - discarded_notification_center_observer
+
+opt_in_rules:
+  - collection_alignment
+  - contains_over_first_not_nil
+  - empty_count
+  - empty_string
+  - first_where
+  - last_where
+  - missing_docs
+  - modifier_order
+  - multiline_literal_brackets
+  - unneeded_parentheses_in_closure_argument
+  - unused_import
+  - vertical_parameter_alignment_on_call
 
 function_body_length:
   - 200

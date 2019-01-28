@@ -74,6 +74,14 @@ extension Realm {
 
 }
 
+extension Array {
+
+    var isNotEmpty: Bool {
+        return !isEmpty
+    }
+
+}
+
 struct Constants {
 
 	struct Config {
@@ -178,7 +186,7 @@ func delay(_ delay: Double, closure: @escaping () -> Void) {
 
 extension UIButton {
 
-    open override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
 		let intrinsicContentSize = super.intrinsicContentSize
 		let adjustedWidth = intrinsicContentSize.width + titleEdgeInsets.left + titleEdgeInsets.right
 		let adjustedHeight = intrinsicContentSize.height + titleEdgeInsets.top + titleEdgeInsets.bottom
@@ -239,10 +247,12 @@ extension Int {
         let numFormatter = NumberFormatter()
 
         typealias Abbrevation = (threshold: Double, divisor: Double, suffix: String)
-        let abbreviations: [Abbrevation] = [(0, 1, ""),
-                                           (1000.0, 1000.0, "K"),
-                                           (100_000.0, 1_000_000.0, "M"),
-                                           (100_000_000.0, 1_000_000_000.0, "B")]
+        let abbreviations: [Abbrevation] = [
+            (0, 1, ""),
+            (1000.0, 1000.0, "K"),
+            (100_000.0, 1_000_000.0, "M"),
+            (100_000_000.0, 1_000_000_000.0, "B")
+        ]
 
         let startValue = Double(abs(self))
         let abbreviation: Abbrevation = {
@@ -265,6 +275,28 @@ extension Int {
         numFormatter.maximumFractionDigits = 1
 
         return numFormatter.string(from: NSNumber (value: value as Double)) ?? ""
+    }
+
+}
+
+extension NSObject {
+
+    static var notificationDisposer = [NSObject: [NSObjectProtocol]]()
+
+    func disposeAll() {
+        NSObject.notificationDisposer[self]?.forEach {
+            NotificationCenter.default.removeObserver($0)
+        }
+
+        NSObject.notificationDisposer[self]?.removeAll()
+    }
+
+}
+
+extension NSObjectProtocol {
+
+    func dispose(with object: NSObject) {
+        NSObject.notificationDisposer[object, default: []].append(self)
     }
 
 }
@@ -416,6 +448,10 @@ extension UIViewController {
 
 extension UIView {
     static func isVisible(view: UIView) -> Bool {
+        guard UIApplication.shared.applicationState == .active else {
+            return false
+        }
+
         guard view.window != nil else {
             return false
         }

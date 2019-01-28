@@ -145,7 +145,7 @@ class KZAudioPlayerSet: StreamingDelegate {
             return 0
         }
 
-        return item.endTime - item.startTime
+        return item.duration
     }
 
     func seek(to time: TimeInterval, completionHandler: @escaping AVAudioNodeCompletionHandler) throws {

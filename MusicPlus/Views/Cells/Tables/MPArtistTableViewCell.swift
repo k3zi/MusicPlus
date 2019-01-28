@@ -42,9 +42,9 @@ class MPArtistTableViewCell: KZTableViewCell {
         let width = Constants.UI.Navigation.menuWidth
 
         var height = CGFloat(0)
-        height = height + 10
-        height = height + titleLabel.estimatedHeight(width)
-        height = height + 10
+        height += 10
+        height += titleLabel.estimatedHeight(width)
+        height += 10
         return height
     }
 

@@ -136,10 +136,14 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         self.view.layoutIfNeeded()
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
-            if self?.playerViewStyle == .hidden {
-                self?.playerViewStyle = .full
+            guard let self = self else {
+                return
             }
-        }
+
+            if self.playerViewStyle == .hidden {
+                self.playerViewStyle = .full
+            }
+        }.dispose(with: self)
     }
 
     override func viewDidAppear(_ animated: Bool) {

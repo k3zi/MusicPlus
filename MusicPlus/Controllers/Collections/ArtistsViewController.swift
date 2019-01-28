@@ -34,10 +34,14 @@ class ArtistsViewController: MPSectionedTableViewController {
 
         self.setUpLibraryBarItem()
 
-        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.fetchData()
             self.setUpLibraryBarItem()
-        }
+        }.dispose(with: self)
     }
 
     // MARK: Setup View
@@ -47,7 +51,7 @@ class ArtistsViewController: MPSectionedTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+        guard tableViewCellData(tableView, section: indexPath.section).isNotEmpty else {
             return
         }
 

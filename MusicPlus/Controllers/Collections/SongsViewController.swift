@@ -26,13 +26,17 @@ class SongsViewController: MPSongCollectionViewController {
 
         setUpLibraryBarItem()
 
-        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.collectionGenerator = {
                 return KZPlayer.sharedInstance.currentLibrary?.allSongs
             }
 
            self.setUpLibraryBarItem()
-        }
+        }.dispose(with: self)
     }
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {

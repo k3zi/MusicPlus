@@ -32,7 +32,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     convenience init(item: MPMediaItem, realm: Realm, libraryUniqueIdentifier: String) {
         self.init()
 
-        let artist = [item.albumArtist, item.artist].filter({ $0?.isNotEmpty ?? false }).first ?? "Unknown Artist"
+        let artist = [item.albumArtist, item.artist].first { $0?.isNotEmpty ?? false } ?? "Unknown Artist"
         if let artist = realm.object(ofType: KZPlayerArtist.self, forPrimaryKey: artist! as AnyObject) {
             self.artist = artist
         } else {
@@ -255,8 +255,8 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         return .default
     }
 
-    func searchText() -> String {
-        return [title, albumName(), albumArtist, artistName()].filter({ $0.count > 0 }).joined(separator: " ")
+    var searchText: String {
+        return [title, albumName, albumArtist, artistName].filter { $0.isNotEmpty }.joined(separator: " ")
     }
 
     override class func primaryKey() -> String? {

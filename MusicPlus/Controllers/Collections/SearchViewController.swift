@@ -67,8 +67,7 @@ struct FilterableProperty {
     var possibleComparisons: [FilterComparison] {
         var result = [FilterComparison]()
         switch keyPath {
-        case is KeyPath<KZPlayerItem, Int>: fallthrough
-        case is KeyPath<KZPlayerItem, Double>:
+        case is KeyPath<KZPlayerItem, Int>, is KeyPath<KZPlayerItem, Double>:
             result.append(contentsOf: [.equal, .notEqual, .greaterThan, .greaterThanOrEqual, .lessThan, .lessThanOrEqual])
         default:
             break

@@ -39,9 +39,13 @@ class ArtistViewController: MPSectionedTableViewController {
         shuffleButton.label.text = "Shuffle Artist"
         shuffleButton.addTarget(self, action: #selector(shuffle), for: .touchUpInside)
 
-        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { _ in
+        NotificationCenter.default.addObserver(forName: .libraryDidChange, object: nil, queue: nil) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.fetchData()
-        }
+        }.dispose(with: self)
     }
 
     override func viewDidLayoutSubviews() {
@@ -137,7 +141,7 @@ class ArtistViewController: MPSectionedTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+        guard tableViewCellData(tableView, section: indexPath.section).isNotEmpty else {
             return
         }
 

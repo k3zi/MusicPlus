@@ -66,12 +66,10 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
             switch changes {
             case .initial(let collection):
                 self.updateSections(collection: AnyRealmCollection(collection))
-                break
             case .update(_, let deletions, let insertions, _):
-                if deletions.count > 0 || insertions.count > 0 {
+                if deletions.isNotEmpty || insertions.isNotEmpty {
                     self.updateSections(collection: AnyRealmCollection(collection))
                 }
-                break
             case .error:
                 break
             }
@@ -202,7 +200,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard tableViewCellData(tableView, section: indexPath.section).count > 0 else {
+        guard tableViewCellData(tableView, section: indexPath.section).isNotEmpty else {
             return
         }
 
@@ -221,7 +219,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        if let _ = displayedFilteredCollection {
+        if displayedFilteredCollection != nil {
             return 1
         }
 
@@ -237,7 +235,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let _ = displayedFilteredCollection {
+        if displayedFilteredCollection != nil {
             return nil
         }
 
@@ -245,7 +243,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
     }
 
     override func tableViewShowsSectionHeader(_ tableView: UITableView) -> Bool {
-        if let _ = displayedFilteredCollection {
+        if displayedFilteredCollection != nil {
             return false
         }
 
@@ -257,7 +255,7 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
 extension MPSongCollectionViewController: UISearchResultsUpdating {
 
     func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchViewController.searchBar.text, text.count > 0 else {
+        guard let text = searchViewController.searchBar.text, text.isNotEmpty else {
             filteredCollectionnGenerator = { return nil }
             tableView.reloadData()
             return

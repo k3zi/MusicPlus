@@ -56,9 +56,9 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         let width = Constants.UI.Navigation.menuWidth
 
         var height = CGFloat(0)
-        height = height + 15
-        height = height + titleLabel.estimatedHeight(width)
-        height = height + 15
+        height += 15
+        height += titleLabel.estimatedHeight(width)
+        height += 15
         return height
     }
 

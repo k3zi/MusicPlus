@@ -83,7 +83,7 @@ class KZRealmLibrary: Object, RealmGenerating {
         case .local:
             let safeSelf = self.safeRefrence
             MPMediaLibrary.requestAuthorization { _ in
-                safeSelf.resolve()?.addAllItems { (_, _) in
+                safeSelf.resolve()?.addAllItems { _, _ in
                 }
             }
         case .plex:
@@ -125,8 +125,8 @@ class KZRealmLibrary: Object, RealmGenerating {
         for item in items {
             i += 0
             progressCallback("Saving \(i) of \(items.count) Items...", false)
-            let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.persistentID)'")
-            if results.isEmpty && (item.assetURL?.absoluteString.isNotEmpty ?? false) {
+            let result = realm.object(ofType: KZPlayerItem.self, forPrimaryKey: "KZPlayerItem-\(item.persistentID)")
+            if result == nil && (item.assetURL?.absoluteString.isNotEmpty ?? false) {
                 let newItem = KZPlayerItem(item: item, realm: realm, libraryUniqueIdentifier: uniqueIdentifier)
                 addItemToSpotlight(newItem)
                 realm.add(newItem)
@@ -135,12 +135,12 @@ class KZRealmLibrary: Object, RealmGenerating {
         }
 
         progressCallback("Saving \(items.count) Items...", false)
-        try! realm.commitWrite()
+        try? realm.commitWrite()
 
         if changed {
-            DispatchQueue.main.async(execute: {
+            DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
-            })
+            }
         }
 
         progressCallback("Saved.", true)
@@ -295,20 +295,20 @@ class KZRealmLibrary: Object, RealmGenerating {
                     i = 0
 
                     if changed {
-                        DispatchQueue.main.async(execute: {
+                        DispatchQueue.main.async {
                             NotificationCenter.default.post(name: .libraryDataDidChange, object: nil)
-                        })
+                        }
                     }
                 }
                 autoreleasepool {
-                    let results = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(item.ratingKey!)'")
-                    if results.count == 0 {
+                    let result = realm.object(ofType: KZPlayerItem.self, forPrimaryKey: "KZPlayerItem-\(item.ratingKey!)")
+                    if result == nil {
                         // Add new item
                         let newItem = item.asPlayerItem(realm: realm, libraryUniqueIdentifier: safeSelf.uniqueIdentifier)
                         safeSelf.addItemToSpotlight(newItem)
                         realm.add(newItem)
                         changed = true
-                    } else if let oldItem = results.filter({ $0.plexTrack?.updatedAt != item.updatedAt }).first {
+                    } else if let result = result, result.plexTrack?.updatedAt != item.updatedAt {
                         // Update old item
                     }
                 }
@@ -340,7 +340,7 @@ class KZRealmLibrary: Object, RealmGenerating {
 
             i = 0
             let syncPromises = AnyIterator<Promise<Void>> {
-                guard allSyncTracks.count > 0 else {
+                guard allSyncTracks.isNotEmpty else {
                     return nil
                 }
 
@@ -352,7 +352,7 @@ class KZRealmLibrary: Object, RealmGenerating {
                     }
 
                     i += 1
-                    guard let item = realm.objects(KZPlayerItem.self).filter("systemID = 'KZPlayerItem-\(track.ratingKey!)'").first else {
+                    guard let item = realm.object(ofType: KZPlayerItem.self, forPrimaryKey: "KZPlayerItem-\(track.ratingKey!)") else {
                         return
                     }
 
@@ -423,7 +423,7 @@ class KZRealmLibrary: Object, RealmGenerating {
         let attr = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
         attr.title = item.titleText()
         attr.contentDescription = item.subtitleText()
-        attr.keywords = item.searchText().components(separatedBy: " ")
+        attr.keywords = item.searchText.components(separatedBy: " ")
         /*if let image = item.artwork().image(at: CGSize(width: 50, height: 50)) {
          attr.thumbnailData = image.pngData()
          }*/

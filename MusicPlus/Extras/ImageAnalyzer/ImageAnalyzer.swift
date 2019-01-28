@@ -34,7 +34,7 @@ private func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
 open class ImageAnalyzer {
 
     public let image: UIImage
-    public let colors: Array<UIColor>
+    public let colors: [UIColor]
     public let backgroundColor: UIColor
 
     public init(image: UIImage) {
@@ -116,7 +116,7 @@ open class ImageAnalyzer {
         }
 
         for color in sortedColors {
-            if textColors.count == 0 {
+            if textColors.isEmpty {
                 if color.isContrasting(on: backgroundColor) {
                     textColors.append(color)
                 }

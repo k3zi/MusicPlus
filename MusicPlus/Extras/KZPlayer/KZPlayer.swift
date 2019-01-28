@@ -183,7 +183,7 @@ extension KZPlayer {
     func setupEngine() {
         let format = auMixer.inputFormat(forBus: 0)
 
-        auMixer.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, _) -> Void in
+        auMixer.installTap(onBus: 0, bufferSize: 1024, format: format) { buffer, _ -> Void in
             buffer.frameLength = AVAudioFrameCount(1024)
             let inNumberFrames = UInt(buffer.frameLength)
             if let samples = buffer.floatChannelData?[0] {
@@ -235,11 +235,19 @@ extension KZPlayer {
 
         audioSessionNotifications.forEach(NotificationCenter.default.removeObserver)
 
-        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: OperationQueue.main) { _ in
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
             self.pause()
         })
 
-        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: OperationQueue.main) { notification in
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: AVAudioSession.routeChangeNotification, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            guard let self = self else {
+                return
+            }
+
             guard let reasonInt = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt, let reason = AVAudioSession.RouteChangeReason(rawValue: reasonInt) else {
                 return
             }
@@ -249,14 +257,17 @@ extension KZPlayer {
                 switch reason {
                 case .oldDeviceUnavailable:
                     self.shouldBeRunning = false
-                    break
                 default:
                     self.resume()
                 }
             }
         })
 
-        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: OperationQueue.main) { notification in
+        audioSessionNotifications.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: OperationQueue.main) { [weak self] notification in
+            guard let self = self else {
+                return
+            }
+
             guard let notifyingEngine = notification.object as? AVAudioEngine, notifyingEngine == self.audioEngine else {
                 return
             }
@@ -310,7 +321,7 @@ extension KZPlayer {
         autoreleasepool {
             var dict = [String: Any]()
             dict[MPMediaItemPropertyTitle] = item.title
-            dict[MPMediaItemPropertyArtist] = item.artistName()
+            dict[MPMediaItemPropertyArtist] = item.artistName
             dict[MPMediaItemPropertyAlbumTitle] = item.album?.name ?? ""
             dict[MPMediaItemPropertyPlaybackDuration] = item.endTime - item.startTime
             dict[MPNowPlayingInfoPropertyPlaybackRate] = audioEngine.isRunning ? 1.0 : 0.0
@@ -439,7 +450,7 @@ extension KZPlayer {
 
         let collection: [KZPlayerItemBase] = shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
 
-        guard collection.count > 0 else {
+        guard collection.isNotEmpty else {
             return
         }
 
@@ -575,7 +586,7 @@ extension KZPlayer {
             }
             volumeView.superview?.bringSubviewToFront(volumeView)
 
-            guard let view = volumeView.subviews.filter({ $0 is UISlider }).first as? UISlider else {
+            guard let view = volumeView.subviews.first(where: { $0 is UISlider }) as? UISlider else {
                 return
             }
 
@@ -896,7 +907,7 @@ extension KZPlayer {
     func setForChannel(_ channel: Int = -1) -> KZAudioPlayerSet? {
         let channel = channel == -1 ? activePlayer : channel
 
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = auPlayerSets.first(where: { $0.key == channel })?.value else {
             return nil
         }
 
@@ -910,7 +921,7 @@ extension KZPlayer {
     func speedNodeForChannel(_ channel: Int = -1) -> AVAudioUnitTimePitch? {
         let channel = channel == -1 ? activePlayer : channel
 
-        guard let set = auPlayerSets.filter({ $0.key == channel }).first?.value else {
+        guard let set = auPlayerSets.first(where: { $0.key == channel })?.value else {
             return nil
         }
 
@@ -1054,7 +1065,7 @@ extension KZPlayer {
         return x
     }
 
-    func currentCollection() -> Array<KZPlayerItemBase> {
+    func currentCollection() -> [KZPlayerItemBase] {
         return settings.shuffleMode == .shuffle ? Array(sessionShuffledQueue()) : Array(sessionQueue())
     }
 
@@ -1133,9 +1144,6 @@ extension KZPlayer {
                     realm.add(queueItem)
                 }
                 try! realm.commitWrite()
-
-                // No need to handle modifications as the queue items report back to their original items
-                break
             case .error:
                 break
             }

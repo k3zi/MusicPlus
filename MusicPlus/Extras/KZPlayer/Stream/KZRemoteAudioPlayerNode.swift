@@ -209,7 +209,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
 
     // MARK: - Methods
 
-    open override func play() {
+    override open func play() {
         os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
 
         if let timePaused = timePaused {
@@ -226,7 +226,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         state = .playing
     }
 
-    open override func pause() {
+    override open func pause() {
         os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
 
         // Check if the player node is playing
@@ -247,7 +247,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         state = .paused
     }
 
-    open override func stop() {
+    override open func stop() {
         os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
 
         // Stop the downloader, the player node, and the engine
