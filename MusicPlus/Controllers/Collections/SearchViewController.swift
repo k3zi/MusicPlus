@@ -21,6 +21,10 @@ enum FilterComparison {
     case greaterThanOrEqual
     case lessThan
     case lessThanOrEqual
+    case containing
+    case notContaining
+    case beginsWith
+    case endsWith
 
     var displayName: String {
         switch self {
@@ -36,6 +40,14 @@ enum FilterComparison {
             return "is less than"
         case .lessThanOrEqual:
             return "is less than or equal to"
+        case .containing:
+            return "contains"
+        case .notContaining:
+            return "does not contain"
+        case .beginsWith:
+            return "begins with"
+        case .endsWith:
+            return "ends with"
         }
     }
 
@@ -53,6 +65,14 @@ enum FilterComparison {
             return "<"
         case .lessThanOrEqual:
             return "≦"
+        case .containing:
+            return "contains"
+        case .notContaining:
+            return "does not contain"
+        case .beginsWith:
+            return "begins with"
+        case .endsWith:
+            return "ends with"
         }
     }
 
@@ -69,6 +89,8 @@ struct FilterableProperty {
         switch keyPath {
         case is KeyPath<KZPlayerItem, Int>, is KeyPath<KZPlayerItem, Double>:
             result.append(contentsOf: [.equal, .notEqual, .greaterThan, .greaterThanOrEqual, .lessThan, .lessThanOrEqual])
+        case is KeyPath<KZPlayerItem, String>:
+            result.append(contentsOf: [.equal, .notEqual, .containing, .notContaining, .beginsWith, .endsWith])
         default:
             break
         }
@@ -76,15 +98,54 @@ struct FilterableProperty {
         return result
     }
 
+    func convert(value string: String) -> Any {
+        var result: Any?
+        switch keyPath {
+        case is KeyPath<KZPlayerItem, Int>:
+            result = Int(string)
+        case is KeyPath<KZPlayerItem, Double>:
+            result = Double(string)
+        default:
+            return string
+        }
+        return result ?? string
+    }
+
 }
 
 class FilterItem {
     let property: FilterableProperty
     let comparison: FilterComparison
+    var value: String = ""
 
     init(property: FilterableProperty, comparison: FilterComparison) {
         self.property = property
         self.comparison = comparison
+    }
+
+    func add(to condBuilder: IntermediatePredicateQuery<KZPlayerItem>) -> IntermediatePredicateConnector<KZPlayerItem> {
+        switch comparison {
+        case .equal:
+            return condBuilder.equal(to: property.convert(value: value))
+        case .notEqual:
+            return condBuilder.notEqual(to: property.convert(value: value))
+        case .greaterThan:
+            return condBuilder.greater(than: property.convert(value: value))
+        case .greaterThanOrEqual:
+            return condBuilder.greater(thanOrEqualTo: property.convert(value: value))
+        case .lessThan:
+            return condBuilder.less(than: property.convert(value: value))
+        case .lessThanOrEqual:
+            return condBuilder.less(thanOrEqualTo: property.convert(value: value))
+        case .containing:
+            return condBuilder.containing(property.convert(value: value), caseInsensitive: true, diacriticInsensitive: true)
+        case .notContaining:
+            return condBuilder.notContaining(property.convert(value: value), caseInsensitive: true, diacriticInsensitive: true)
+        case .beginsWith:
+            return condBuilder.begins(with: property.convert(value: value), caseInsensitive: true, diacriticInsensitive: true)
+        case .endsWith:
+            return condBuilder.ends(with: property.convert(value: value), caseInsensitive: true, diacriticInsensitive: true)
+        }
     }
 }
 
@@ -114,6 +175,7 @@ class SearchViewController: KZViewController {
         super.viewDidLoad()
 
         title = "Advanced Search"
+        showsNoText = false
         view.backgroundColor = .clear
 
         setupMenuToggle()
@@ -145,9 +207,12 @@ class SearchViewController: KZViewController {
 
         tableView.register(cellType: FilterTableViewCell.self)
 
+        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.rating as AnyKeyPath, displayName: "Rating (0 - 5)", shortDisplayName: "Rating"))
+        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.title as AnyKeyPath, displayName: "Title", shortDisplayName: "Title"))
         filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.playCount as AnyKeyPath, displayName: "Play Count", shortDisplayName: "Plays"))
         filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.bpm as AnyKeyPath, displayName: "Beats Per Minute", shortDisplayName: "BPM"))
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.duration as AnyKeyPath, displayName: "Duration (Minutes)", shortDisplayName: "Duration"))
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "shuffleBT"), style: .plain, target: self, action: #selector(shuffle))
     }
 
     override func viewDidLayoutSubviews() {
@@ -260,6 +325,65 @@ class SearchViewController: KZViewController {
 
     override func tableViewCellData(_ tableView: UITableView, section: Int) -> [Any] {
         return filterItems as [Any]
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        if let cell = cell as? FilterTableViewCell {
+            cell.removeButton.tag = indexPath.row
+            cell.removeButton.removeTarget(self, action: #selector(removeItem), for: .touchUpInside)
+            cell.removeButton.addTarget(self, action: #selector(removeItem), for: .touchUpInside)
+        }
+
+        return cell
+    }
+
+    @objc func removeItem(sender: UIView) {
+        filterItems.remove(at: sender.tag)
+        tableView.deleteRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
+    }
+
+    func apply<X: IntermediatePredicateQueryable>(builder: X, keyPath: AnyKeyPath) -> IntermediatePredicateQuery<X.Base>? where X.Base: KZPlayerItem {
+        switch keyPath {
+        case is KeyPath<X.Base, Int>:
+            return builder[keyPath as! KeyPath<X.Base, Double>]
+        case is KeyPath<X.Base, Double>:
+            return builder[keyPath as! KeyPath<X.Base, Double>]
+        case is KeyPath<X.Base, String>:
+            return builder[keyPath as! KeyPath<X.Base, String>]
+        default:
+            return nil
+        }
+    }
+
+    @objc func shuffle() {
+        let builder = NSPredicate.form(with: KZPlayerItem.self)
+        var connector: IntermediatePredicateConnector<KZPlayerItem>?
+        var ender: IntermediatePredicateEnd<KZPlayerItem>?
+        for filterItem in filterItems {
+            var condBuilder: IntermediatePredicateQuery<KZPlayerItem>?
+            ender = connector?.and
+            let keyPath = filterItem.property.keyPath
+            if let ender = ender {
+                condBuilder = self.apply(builder: ender, keyPath: keyPath)
+            } else {
+                condBuilder = self.apply(builder: builder, keyPath: keyPath)
+            }
+
+            if let condBuilder = condBuilder {
+                connector = filterItem.add(to: condBuilder)
+            }
+        }
+
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            guard let result = connector?.predicateResult, let allSongs = KZPlayer.sharedInstance.currentLibrary?.allSongs else {
+                return
+            }
+
+            let matches = allSongs.filter(result)
+            let player = KZPlayer.sharedInstance
+            player.play(AnyRealmCollection(matches), shuffle: true)
+        }
     }
 
 }

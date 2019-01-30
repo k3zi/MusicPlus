@@ -44,7 +44,7 @@ public struct IntermediatePredicateEnd<T>: IntermediatePredicateQueryable {
     }
 
     fileprivate init(_ intermediateResult: String, connector: IntermediatePredicateConnectorType) {
-        result = "\(intermediateResult)  \(connector.rawValue)"
+        result = [intermediateResult, connector.rawValue].joined(separator: " ")
     }
 
 }
@@ -108,25 +108,25 @@ fileprivate extension IntermediatePredicateQueryable {
 
 public extension IntermediatePredicateQueryable {
 
-    subscript(_ keyPath: String) -> IntermediatePredicateQuery<Base, Any> {
+    subscript(_ keyPath: String) -> IntermediatePredicateQuery<Base> {
         return property(keyPath)
     }
 
-    subscript<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base: NSObject {
+    subscript<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base> where Base: NSObject {
         return property(keyPath)
     }
 
-    func property(_ keyPath: String) -> IntermediatePredicateQuery<Base, Any> {
-        return IntermediatePredicateQuery<Base, Any>("\(prefixableResult)\(keyPath)")
+    func property(_ keyPath: String) -> IntermediatePredicateQuery<Base> {
+        return IntermediatePredicateQuery<Base>("\(prefixableResult)\(keyPath)")
     }
 
-    func property<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base, Value> where Base: NSObject {
-        return IntermediatePredicateQuery<Base, Value>("\(prefixableResult)\(NSExpression(forKeyPath: keyPath).keyPath)")
+    func property<Value>(_ keyPath: KeyPath<Base, Value>) -> IntermediatePredicateQuery<Base> where Base: NSObject {
+        return IntermediatePredicateQuery<Base>("\(prefixableResult)\(NSExpression(forKeyPath: keyPath).keyPath)")
     }
 
 }
 
-public struct IntermediatePredicateQuery<T, Value>: IntermediatePredicateResult {
+public struct IntermediatePredicateQuery<T>: IntermediatePredicateResult {
 
     typealias Connector = IntermediatePredicateConnector<T>
 
@@ -136,15 +136,71 @@ public struct IntermediatePredicateQuery<T, Value>: IntermediatePredicateResult 
         result = intermediateResult
     }
 
-    internal func escaped(value: Value) -> String {
-        if let value = value as? String {
+    internal func escaped(value: Any) -> String {
+        switch value {
+        case is String:
             return "\"\(value)\""
+        default:
+            return "\(value)"
         }
-
-        return "\(value)"
     }
 
-    func matches(_ value: Value) -> Connector {
+    internal func generateFlags(caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> String {
+        var flags = [String]()
+        if caseInsensitive {
+            flags.append("c")
+        }
+        if diacriticInsensitive {
+            flags.append("d")
+        }
+        return flags.isNotEmpty ? "[\(flags.joined())]" : ""
+    }
+
+    func equal(to value: Any) -> Connector {
+        return Connector("\(result) == \(escaped(value: value))")
+    }
+
+    func notEqual(to value: Any) -> Connector {
+        return Connector("\(result) != \(escaped(value: value))")
+    }
+
+    func greater(than value: Any) -> Connector {
+        return Connector("\(result) > \(escaped(value: value))")
+    }
+
+    func greater(thanOrEqualTo value: Any) -> Connector {
+        return Connector("\(result) >= \(escaped(value: value))")
+    }
+
+    func less(than value: Any) -> Connector {
+        return Connector("\(result) < \(escaped(value: value))")
+    }
+
+    func less(thanOrEqualTo value: Any) -> Connector {
+        return Connector("\(result) <= \(escaped(value: value))")
+    }
+
+    func containing(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+        return Connector("\(result) CONTAINS\(flagString) \(escaped(value: value))")
+    }
+
+    func notContaining(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+        return Connector("\(result) NOT CONTAINS\(flagString) \(escaped(value: value))")
+    }
+
+    func begins(with value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+        return Connector("\(result) BEGINSWITH\(flagString) \(escaped(value: value))")
+    }
+
+    func ends(with value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+        return Connector("\(result) ENDSWITH\(flagString) \(escaped(value: value))")
+    }
+
+    func matches(_ value: Any) -> Connector {
         return Connector("\(result) MATCHES \(escaped(value: value))")
     }
 

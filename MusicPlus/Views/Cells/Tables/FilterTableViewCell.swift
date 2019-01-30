@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import RxSwift
 
-class FilterTableViewCell: KZTableViewCell {
+class FilterTableViewCell: KZTableViewCell, UITextFieldDelegate {
 
     let removeButton = UIButton()
     let label = UILabel()
 
     let valueField = UITextField(frame: .zero)
     let valueFieldHolderView = UIView()
+
+    let disposeBag = DisposeBag()
 
     required init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -43,7 +46,12 @@ class FilterTableViewCell: KZTableViewCell {
         valueField.backgroundColor = .clear
         valueField.textAlignment = .right
         valueField.placeholder = "Value"
+        valueField.delegate = self
         valueFieldHolderView.addSubview(valueField)
+
+        valueField.rx.controlEvent([.editingChanged]).asObservable().subscribe { [weak self] _ in
+            (self?.model as? FilterItem)?.value = self?.valueField.text ?? ""
+        }.disposed(by: disposeBag)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -93,6 +101,11 @@ class FilterTableViewCell: KZTableViewCell {
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         topSeperator.alpha = 0.14
         bottomSeperator.alpha = 0.14
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 
 }
