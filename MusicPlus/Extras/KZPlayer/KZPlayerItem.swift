@@ -121,7 +121,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     }
 
     var isStoredLocally: Bool {
-        if isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || !["http://", "ftp://", "https://"].contains(where: { assetURL.contains($0) }) {
+        if isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || ["ipod-library://", "file://"].contains(where: { assetURL.contains($0) }) {
             return true
         }
 
