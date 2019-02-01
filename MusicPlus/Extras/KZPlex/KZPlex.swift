@@ -96,7 +96,15 @@ class KZPlex: NSObject {
         case put = "PUT"
     }
 
-    static let clientIdentifier = UIDevice.current.identifierForVendor?.uuidString ?? ""
+    static var clientIdentifier: String = {
+        if let storedIdentifier = UserDefaults.standard.string(forKey: "clientIdentifier") {
+            return storedIdentifier
+        }
+
+        let identifier = UIDevice.current.identifierForVendor?.uuidString ?? ""
+        UserDefaults.standard.set(identifier, forKey: "clientIdentifier")
+        return identifier
+    }()
 
     static let requestHeaders: [String: String] = [
         "X-Plex-Platform": "iOS",

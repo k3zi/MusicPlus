@@ -347,9 +347,11 @@ class KZRealmLibrary: Object, RealmGenerating {
                 let track = allSyncTracks.removeFirst()
 
                 return async {
-                    guard let realm = selfRefrence.realm() else {
+                    guard let self = selfRefrence.resolve(), let plexLibraryConfig = self.plexLibraryConfig else {
                         return
                     }
+
+                    let realm = self.realm()
 
                     i += 1
                     guard let item = realm.object(ofType: KZPlayerItem.self, forPrimaryKey: "KZPlayerItem-\(track.ratingKey!)") else {
@@ -362,8 +364,8 @@ class KZRealmLibrary: Object, RealmGenerating {
                     }
 
                     let key = "\(chosenMedia.part.duration!)-\(chosenMedia.part.size!)-\(chosenMedia.audioChannels!)-\(chosenMedia.audioCodec!)"
-                    let downloadURL = "\(safeSelf.plexLibraryConfig!.connectionURI)\(chosenMedia.part.key!)"
-                    let downloadedURL = "\(safeSelf.plexLibraryConfig!.connectionURI)/sync/\(KZPlex.clientIdentifier)/item/\(track.ratingKey!)/downloaded"
+                    let downloadURL = "\(plexLibraryConfig.connectionURI)\(chosenMedia.part.key!)"
+                    let downloadedURL = "\(plexLibraryConfig.connectionURI)/sync/\(KZPlex.clientIdentifier)/item/\(track.ratingKey!)/downloaded"
 
                     let ext = chosenMedia.part.key.components(separatedBy: ".").last ?? "mp3"
 
@@ -393,11 +395,13 @@ class KZRealmLibrary: Object, RealmGenerating {
                     }
 
                     do {
-                        try await(plex.download(downloadURL, to: absoluteFilePath, token: safeSelf.plexLibraryConfig!.authToken))
-                        try realm.write {
+                        try await(plex.download(downloadURL, to: absoluteFilePath, token: plexLibraryConfig.authToken))
+                        try selfRefrence.resolve()?.realm().write {
                             item.localAssetURL = filePath.path
                         }
-                        try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
+                        if let safeSelf = selfRefrence.resolve() {
+                            try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
+                        }
                         os_log("%d → synced %@ to %@", i, item.title, filePath.path)
                     } catch {
                         os_log(.error, log: .general, "%@", error.localizedDescription)

@@ -417,7 +417,6 @@ extension KZPlayer {
             let timer = BackgroundWorker()
             timer.start {
                 event()
-                self.activeWorkers.remove(object: timer)
                 timer.stop()
             }
             self.activeWorkers.append(timer)
