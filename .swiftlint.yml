@@ -9,6 +9,7 @@ disabled_rules:
   - force_try
   - type_name
   - force_cast
+  - cyclomatic_complexity
   - discarded_notification_center_observer
 
 opt_in_rules:

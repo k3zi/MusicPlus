@@ -91,6 +91,8 @@ struct FilterableProperty {
             result.append(contentsOf: [.equal, .notEqual, .greaterThan, .greaterThanOrEqual, .lessThan, .lessThanOrEqual])
         case is KeyPath<KZPlayerItem, String>:
             result.append(contentsOf: [.equal, .notEqual, .containing, .notContaining, .beginsWith, .endsWith])
+        case is KeyPath<KZPlayerItem, Bool>:
+            result.append(contentsOf: [.equal])
         default:
             break
         }
@@ -105,6 +107,8 @@ struct FilterableProperty {
             result = Int(string)
         case is KeyPath<KZPlayerItem, Double>:
             result = Double(string)
+        case is KeyPath<KZPlayerItem, Bool>:
+            result = string.hasPrefix("t") || string.hasPrefix("1")
         default:
             return string
         }
@@ -211,6 +215,7 @@ class SearchViewController: KZViewController {
         filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.title as AnyKeyPath, displayName: "Title", shortDisplayName: "Title"))
         filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.playCount as AnyKeyPath, displayName: "Play Count", shortDisplayName: "Plays"))
         filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.bpm as AnyKeyPath, displayName: "Beats Per Minute", shortDisplayName: "BPM"))
+        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.isStoredLocally as AnyKeyPath, displayName: "Synced", shortDisplayName: "Synced"))
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "shuffleBT"), style: .plain, target: self, action: #selector(shuffle))
     }
@@ -351,6 +356,8 @@ class SearchViewController: KZViewController {
             return builder[keyPath as! KeyPath<X.Base, Double>]
         case is KeyPath<X.Base, String>:
             return builder[keyPath as! KeyPath<X.Base, String>]
+        case is KeyPath<X.Base, Bool>:
+            return builder[keyPath as! KeyPath<X.Base, Bool>]
         default:
             return nil
         }

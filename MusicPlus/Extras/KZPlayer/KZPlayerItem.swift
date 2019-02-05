@@ -121,11 +121,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
     }
 
     var isStoredLocally: Bool {
-        if isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || ["ipod-library://", "file://"].contains(where: { assetURL.contains($0) }) {
-            return true
-        }
-
-        return false
+        return isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || ["ipod-library://", "file://"].contains(where: { assetURL.contains($0) })
     }
 
     func fileURL() -> URL {
@@ -248,11 +244,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         let p = MPMediaPropertyPredicate(value: systemID, forProperty: MPMediaItemPropertyPersistentID)
         let q = MPMediaQuery(filterPredicates: [p])
 
-        if let artwork = q.items?.first?.artwork {
-            return artwork
-        }
-
-        return .default
+        return q.items?.first?.artwork ?? .default
     }
 
     var searchText: String {
@@ -305,7 +297,7 @@ class KZPlayerHistoryItem: Object, KZPlayerItemBase {
 }
 
 extension Array where Element: KZPlayerItemBase {
-    func withShuffledPosition() -> Array<Element> {
+    func withShuffledPosition() -> [Element] {
         for result in self {
             result.position = Int(arc4random_uniform(UInt32(count)))
         }
@@ -330,27 +322,19 @@ extension UIImageView {
 extension AnyRealmCollection where Element: KZPlayerItemBase {
     func withShuffledPosition() -> Results<Element> {
         for result in self {
-            result.position = Int(arc4random_uniform(UInt32(self.count)))
+            result.position = Int(arc4random_uniform(UInt32(count)))
         }
 
-        return self.sorted(byKeyPath: "position", ascending: true)
+        return sorted(byKeyPath: "position", ascending: true)
     }
 
     func toArray() -> [Element] {
-        var arr = [Element]()
-        for result in self {
-            arr.append(result)
-        }
-        return arr
+        return Array(self)
     }
 }
 
 extension Results {
     func toArray() -> [Element] {
-        var arr = [Element]()
-        for result in self {
-            arr.append(result)
-        }
-        return arr
+        return Array(self)
     }
 }

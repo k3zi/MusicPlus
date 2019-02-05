@@ -210,7 +210,7 @@ class KZPlex: NSObject {
         }
     }
 
-    // MARK: - API
+    // MARK: - API -
 
     // MARK: Sign In
 
@@ -270,20 +270,22 @@ class KZPlex: NSObject {
 
     func syncItems() -> Promise<DevicesSyncItemsGETResponse?> {
         return async {
-            guard let result = try? await(self.get(Path.syncItems)) else {
+            do {
+                let result = try await(self.get(Path.syncItems, timeoutInterval: 1000))
+
+                guard let data = String(bytes: result.data, encoding: .utf8) else {
+                    throw Error.dataParsingError
+                }
+
+                guard let response = DevicesSyncItemsGETResponse(XMLString: data) else {
+                    throw Error.dataParsingError
+                }
+
+                response.plex = self
+                return response
+            } catch {
                 return nil
             }
-
-            guard let data = String(bytes: result.data, encoding: .utf8) else {
-                throw Error.dataParsingError
-            }
-
-            guard let response = DevicesSyncItemsGETResponse(XMLString: data) else {
-                throw Error.dataParsingError
-            }
-
-            response.plex = self
-            return response
         }
     }
 }

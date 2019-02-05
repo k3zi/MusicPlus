@@ -20,12 +20,18 @@ public class Parser: Parsing {
 
     public internal(set) var dataFormat: AVAudioFormat?
     public internal(set) var packets = [(Data, AudioStreamPacketDescription?)]()
+    public var durationHint: TimeInterval?
     public var totalPacketCount: AVAudioPacketCount? {
-        guard let _ = dataFormat else {
+        guard let durationHint = durationHint, let sampleRate = dataFormat?.sampleRate, let framesPerPacket = dataFormat?.streamDescription.pointee.mFramesPerPacket else {
+            if dataFormat != nil {
+                return max(AVAudioPacketCount(packetCount), AVAudioPacketCount(packets.count))
+            }
+
             return nil
         }
 
-        return max(AVAudioPacketCount(packetCount), AVAudioPacketCount(packets.count))
+        let totalFrameCount = UInt32(durationHint * sampleRate)
+        return totalFrameCount / framesPerPacket
     }
 
     // MARK: - Properties
@@ -44,7 +50,8 @@ public class Parser: Parsing {
     /// Initializes an instance of the `Parser`
     ///
     /// - Throws: A `ParserError.streamCouldNotOpen` meaning a file stream instance could not be opened
-    public init(extensionHint: String? = nil) throws {
+    public init(extensionHint: String? = nil, durationHint: TimeInterval? = nil) throws {
+        self.durationHint = durationHint
         let context = unsafeBitCast(self, to: UnsafeMutableRawPointer.self)
         var type = kAudioFileMP3Type
         if let extensionHint = extensionHint {

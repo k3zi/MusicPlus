@@ -843,6 +843,7 @@ extension KZPlayer {
             guard let set = setForChannel(previousChannel) else {
                 continue
             }
+
             let startValue = CGFloat(set.volume)
             guard let period2 = PRTweenPeriod.period(withStartValue: startValue, endValue: 0.0, duration: duration * startValue) as? PRTweenPeriod else {
                 continue

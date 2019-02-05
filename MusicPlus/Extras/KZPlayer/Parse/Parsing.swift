@@ -20,6 +20,8 @@ public protocol Parsing: class {
     /// The total duration of the audio. For certain formats such as AAC or live streams this may be a guess or only equal to as many packets as have been processed.
     var duration: TimeInterval? { get }
 
+    var durationHint: TimeInterval? { get set }
+
     /// A `Bool` indicating whether all the audio packets have been parsed relative to the total packet count. This is optional where the default implementation will check if the total packets parsed (i.e. the count of `packets` property) is equal to the `totalPacketCount` property
     var isParsingComplete: Bool { get }
 

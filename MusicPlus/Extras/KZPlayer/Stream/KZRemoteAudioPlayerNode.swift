@@ -30,7 +30,11 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         }
     }
 
-    public var durationHint: TimeInterval?
+    public var durationHint: TimeInterval? {
+        didSet {
+            parser?.durationHint = durationHint
+        }
+    }
 
     var completionHandler: AVAudioNodeCompletionHandler?
     var firstPacketPushedHandler: (() -> Void)?
@@ -308,7 +312,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
     }
 
     func notifyDurationUpdate(_ duration: TimeInterval) {
-        guard let _ = url else {
+        guard url != nil else {
             return
         }
 

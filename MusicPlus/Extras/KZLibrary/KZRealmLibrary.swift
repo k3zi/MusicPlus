@@ -336,7 +336,6 @@ class KZRealmLibrary: Object, RealmGenerating {
             let documentURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
             var allSyncTracks: [Track] = syncItems.flatMap { $0.tracks }
-            allSyncTracks = allSyncTracks.filter { $0.media.part.syncState == "processed" }
 
             i = 0
             let syncPromises = AnyIterator<Promise<Void>> {
@@ -358,13 +357,17 @@ class KZRealmLibrary: Object, RealmGenerating {
                         return
                     }
 
+                    guard  track.media.part.syncState == "processed" || (item.plexTrack?.shouldSyncRaw == true && track.media.part.syncState != "completed") else {
+                        return
+                    }
+
                     var chosenMedia = track.media!
                     if item.plexTrack?.shouldSyncRaw ?? false, let originalTrack = items.first(where: { $0.ratingKey == track.ratingKey }) {
                         chosenMedia = originalTrack.media!
                     }
 
                     let key = "\(chosenMedia.part.duration!)-\(chosenMedia.part.size!)-\(chosenMedia.audioChannels!)-\(chosenMedia.audioCodec!)"
-                    let downloadURL = "\(plexLibraryConfig.connectionURI)\(chosenMedia.part.key!)"
+                    let downloadURL = "\(plexLibraryConfig.connectionURI)\(chosenMedia.part.key!)?X-Plex-Token=\(plexLibraryConfig.authToken)"
                     let downloadedURL = "\(plexLibraryConfig.connectionURI)/sync/\(KZPlex.clientIdentifier)/item/\(track.ratingKey!)/downloaded"
 
                     let ext = chosenMedia.part.key.components(separatedBy: ".").last ?? "mp3"
@@ -381,6 +384,9 @@ class KZRealmLibrary: Object, RealmGenerating {
                     absoluteFilePath.appendPathComponent(fileName)
 
                     if item.localAssetURL == filePath.path {
+                        if let safeSelf = selfRefrence.resolve() {
+                            try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
+                        }
                         return
                     } else if let oldAsset = item.localAssetURL {
                         // TODO: We can't just delete it we need to see if it has any other reliances
@@ -391,18 +397,21 @@ class KZRealmLibrary: Object, RealmGenerating {
                         try realm.write {
                             item.localAssetURL = filePath.path
                         }
+                        if let safeSelf = selfRefrence.resolve() {
+                            try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
+                        }
                         return
                     }
 
                     do {
-                        try await(plex.download(downloadURL, to: absoluteFilePath, token: plexLibraryConfig.authToken))
+                        try await(plex.download(downloadURL, to: absoluteFilePath, token: plexLibraryConfig.authToken, timeoutInterval: 200))
                         try selfRefrence.resolve()?.realm().write {
                             item.localAssetURL = filePath.path
                         }
+                        os_log(.info, log: .general, "%d → synced %@ to %@", i, item.title, filePath.path)
                         if let safeSelf = selfRefrence.resolve() {
                             try await(plex.put(downloadedURL, token: safeSelf.plexLibraryConfig!.authToken))
                         }
-                        os_log("%d → synced %@ to %@", i, item.title, filePath.path)
                     } catch {
                         os_log(.error, log: .general, "%@", error.localizedDescription)
                     }
