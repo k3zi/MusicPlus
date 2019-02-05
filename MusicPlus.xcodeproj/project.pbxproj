@@ -1324,7 +1324,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Kesi Maduka (2MH6MN57HP)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Kesi Maduka (2MH6MN57HP)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 75Y6FH939X;
@@ -1410,7 +1410,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Kesi Maduka (75Y6FH939X)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Kesi Maduka (75Y6FH939X)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 31;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 75Y6FH939X;
 				FRAMEWORK_SEARCH_PATHS = (
