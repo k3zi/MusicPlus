@@ -37,9 +37,9 @@ extension Notification.Name {
 
 extension OSLog {
 
-    static let general = OSLog(subsystem: "io.kez.musicplus.plist", category: "general")
-    static let player = OSLog(subsystem: "io.kez.musicplus.plist", category: "player")
-    static let plex = OSLog(subsystem: "io.kez.musicplus.plist", category: "plex")
+    static let general = OSLog(subsystem: "io.kez.musicplus.plist", category: "General")
+    static let player = OSLog(subsystem: "io.kez.musicplus.plist", category: "Player")
+    static let plex = OSLog(subsystem: "io.kez.musicplus.plist", category: "Plex")
 
 }
 

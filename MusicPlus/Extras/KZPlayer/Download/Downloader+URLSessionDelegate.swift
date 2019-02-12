@@ -18,18 +18,32 @@ extension Downloader: URLSessionDataDelegate {
     }
 
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        if totalBytesReceived == 0 {
-            os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line, data.count)
+        os_log("function: %@ - line number: %d data count: %d", log: Downloader.logger, type: .debug, #function, #line, data.count)
+
+        var resultingData = data
+        if bytesToSkip >= data.count {
+            bytesToSkip -= Int64(data.count)
+            return
+        } else if bytesToSkip > 0 {
+            resultingData = data.advanced(by: Int(bytesToSkip))
+            bytesToSkip = 0
         }
 
-        totalBytesReceived += Int64(data.count)
+        totalBytesReceived += Int64(resultingData.count)
         progress = Float(totalBytesReceived) / Float(totalBytesCount)
-        delegate?.download(self, didReceiveData: data, progress: progress)
-        progressHandler?(data, progress)
+        delegate?.download(self, didReceiveData: resultingData, progress: progress)
+        progressHandler?(resultingData, progress)
     }
 
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line)
+
+        if let error = error, !error.isCancelled, let url = url {
+            bytesToSkip = totalBytesReceived
+            self.task = session.dataTask(with: url)
+            self.task?.resume()
+            return
+        }
 
         state = .completed
         delegate?.download(self, completedWithError: error)

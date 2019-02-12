@@ -10,6 +10,7 @@ import UIKit
 import CoreSpotlight
 import Zip
 import Connectivity
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let session = MPSession()
     let player = KZPlayer.sharedInstance
     private var connectivity: Connectivity?
+    private var hourTimer: Timer?
 
     class func del() -> AppDelegate {
         if let del = UIApplication.shared.delegate as? AppDelegate {
@@ -46,7 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             os_log(.error, log: .general, "%@", exception)
             os_log(.error, log: .general, "%@", exception.callStackSymbols)
         }
-
         NSSetUncaughtExceptionHandler(exceptionHandler)
 
         let libraries = KZRealmLibrary.libraries
@@ -79,7 +80,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectivity?.whenDisconnected = connectivityChanged
         connectivity?.startNotifier()
 
+        var nextHour = Calendar.current.dateComponents(in: .current, from: Date())
+        nextHour.second = 0
+        nextHour.minute = 0
+        nextHour.hour = (nextHour.hour ?? 0) + 1
+        if let date = Calendar.current.date(from: nextHour) {
+            let timer = Timer(fire: date, interval: Calendar.current.timeIntervalOf(.hour), repeats: true) { _ in
+                self.sayTime()
+            }
+            RunLoop.main.add(timer, forMode: .common)
+            self.hourTimer = timer
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.sayTime()
+        }
+
         return true
+    }
+
+    func sayTime() {
+        DispatchQueue.main.async {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .none
+            formatter.timeStyle = .short
+            let timeString = formatter.string(from: Date())
+
+            let speech = AVSpeechUtterance(string: "It's \(timeString).")
+            let synth = AVSpeechSynthesizer()
+            synth.speak(speech)
+        }
     }
 
     // MARK: System Search

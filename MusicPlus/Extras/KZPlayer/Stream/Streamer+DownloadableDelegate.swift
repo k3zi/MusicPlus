@@ -14,21 +14,23 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
     public func download(_ download: Downloading, completedWithError error: Error?) {
         os_log("%@ - %d [error: %@]", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line, String(describing: error?.localizedDescription))
 
-        if let error = error, let url = download.url {
-            if timesFailed > 2 {
-                if let newUrl = delegate?.streamer(self, alternativeURLForFailedDownload: download) {
-                    timesFailed = 0
-                    download.url = newUrl
-                    download.start()
-                } else {
-                    delegate?.streamer(self, failedDownloadWithError: error, forURL: url)
-                    callCompletionHandler()
-                }
-            } else {
-                timesFailed += 1
-                download.url = url
+        guard let error = error, let url = download.url else {
+            return
+        }
+
+        if timesFailed > 2 {
+            if let newUrl = delegate?.streamer(self, alternativeURLForFailedDownload: download) {
+                timesFailed = 0
+                download.url = newUrl
                 download.start()
+            } else {
+                delegate?.streamer(self, failedDownloadWithError: error, forURL: url)
+                callCompletionHandler()
             }
+        } else {
+            timesFailed += 1
+            download.url = delegate?.streamer(self, urlForFailedDownload: download) ?? url
+            download.start()
         }
     }
 
@@ -37,7 +39,7 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
     }
 
     public func download(_ download: Downloading, didReceiveData data: Data, progress: Float) {
-        // os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
+        os_log("%@ - %d", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line)
 
         guard let parser = parser else {
             os_log("Expected parser, bail...", log: KZRemoteAudioPlayerNode.logger, type: .error)
@@ -52,7 +54,7 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
         }
 
         /// Once there's enough data to start producing packets we can use the data format
-        if reader == nil, let _ = parser.dataFormat {
+        if reader == nil && parser.dataFormat != nil {
             do {
                 reader = try Reader(parser: parser, readFormat: readFormat)
             } catch {

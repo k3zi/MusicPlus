@@ -36,6 +36,7 @@ protocol KZPlayerItemBase: class, RealmGenerating, ThreadConfined {
     var firstBeatPosition: Double { get set }
 
     var isDocumentURL: Bool { get set }
+    var isStoredLocally: Bool { get }
 
     var tags: List<KZPlayerTag> { get }
 
@@ -124,6 +125,9 @@ extension KZPlayerItemBase {
     var isDocumentURL: Bool {
         get { return orig!.isDocumentURL }
         set { orig!.isDocumentURL = newValue }
+    }
+    var isStoredLocally: Bool {
+        return orig!.isStoredLocally
     }
 
     var tags: List<KZPlayerTag> {

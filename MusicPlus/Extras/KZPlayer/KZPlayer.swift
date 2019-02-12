@@ -19,6 +19,7 @@ import MobileCoreServices
 import RealmSwift
 import PRTween
 import SceneKit
+import Connectivity
 
 // MARK: Settings
 
@@ -105,6 +106,8 @@ class KZPlayer: NSObject {
     var crossfading = false
     var crossfadeCount = 0
 
+    let connectivity = Connectivity()
+
     // Volume
     var averagePower: Float = 0.0
     var volumeView = MPVolumeView()
@@ -142,6 +145,9 @@ class KZPlayer: NSObject {
         KZPlayer.libraryQueue.setSpecific(key: KZPlayer.libraryQueueKey, value: ())
 
         super.init()
+
+        connectivity.framework = .network
+        connectivity.startNotifier()
 
         DispatchQueue.main.async {
             self.setUpAudioSession()
@@ -192,7 +198,7 @@ extension KZPlayer {
                 self.averagePower = Float(avgValue / 1.0)
             }
 
-            DispatchQueue.mainSyncSafe {
+            DispatchQueue.main.async {
                 self.checkTime()
             }
         }
@@ -252,13 +258,14 @@ extension KZPlayer {
                 return
             }
 
+            self.shouldBeRunning = true
             if self.audioEngine.isRunning {
                 self.pause()
                 switch reason {
                 case .oldDeviceUnavailable:
                     self.shouldBeRunning = false
                 default:
-                    self.resume()
+                    break
                 }
             }
         })
@@ -273,9 +280,8 @@ extension KZPlayer {
             }
 
             if self.shouldBeRunning {
-                self.setUpAudioSession()
                 self.pause()
-                self.resume()
+                // TODO: How should we resume playback...
             }
         })
 
@@ -514,6 +520,7 @@ extension KZPlayer {
         }
         os_log(.default, log: .player, "player did resume")
         shouldBeRunning = true
+        NotificationCenter.default.post(name: .playStateDidChange, object: nil)
     }
 
     @objc func pause() {
@@ -526,6 +533,7 @@ extension KZPlayer {
         audioEngine.pause()
         os_log(.default, log: .player, "player paused")
         shouldBeRunning = false
+        NotificationCenter.default.post(name: .playStateDidChange, object: nil)
     }
 
     @objc func togglePlay() {
@@ -534,11 +542,12 @@ extension KZPlayer {
         } else {
             resume()
         }
-        NotificationCenter.default.post(name: .playStateDidChange, object: nil)
     }
 
     @objc func next() {
-        playerCompleted(activePlayer, force: true, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            self.playerCompleted(self.activePlayer, force: true, shouldCrossfadeOnSkip: self.settings.crossfadeOnNext)
+        }
     }
 
     func backgroundNext() {
@@ -548,25 +557,21 @@ extension KZPlayer {
     }
 
     @objc func prev() -> Bool {
+        KZPlayer.executeOn(queue: KZPlayer.libraryQueue) {
+            self.internalPrev()
+        }
+
+        return true
+    }
+
+    func internalPrev() -> Bool {
         guard let prevItem = songForPreviousSelection() else {
             return false
         }
         let currentItem = itemForChannel(allowUpNext: true)
 
         os_log(.default, log: .player, "previous = %@", prevItem.title)
-
-        var result = false
-
-        if settings.crossfade && settings.crossfadeOnPrevious {
-            result = crossfadeTo(prevItem)
-        } else {
-            stopCrossfade()
-            result = play(prevItem)
-
-            for channel in auPlayerSets.keys where channel != activePlayer {
-                removeChannel(channel: channel)
-            }
-        }
+        let result = playNextSong(prevItem, shouldCrossfadeOnSkip: settings.crossfadeOnPrevious)
 
         if prevItem.originalItem != currentItem {
             NotificationCenter.default.post(name: .previousSongDidPlay, object: nil)
@@ -686,8 +691,17 @@ extension KZPlayer {
     }
 
     func playNextSong(_ item: KZPlayerItemBase? = nil, shouldCrossfadeOnSkip: Bool = true) -> Bool {
-        guard let nextItem = item ?? nextSong() else {
+        guard var nextItem = item ?? nextSong() else {
             return true
+        }
+
+        var i = 1
+        while !connectivity.isConnected && !nextItem.isStoredLocally && !(nextItem is KZPlayerHistoryItem) {
+            guard let localSong = nextSong(index: i) else {
+                return true
+            }
+            nextItem = localSong
+            i += 1
         }
 
         let isQueueItem = nextItem is KZPlayerHistoryItem
@@ -702,11 +716,11 @@ extension KZPlayer {
             return crossfadeTo(nextItem)
         }
 
+        stopCrossfade()
         for channel in auPlayerSets.keys {
             removeChannel(channel: channel)
         }
 
-        stopCrossfade()
         return play(nextItem, isQueueItem: nextItem is KZPlayerHistoryItem)
     }
 }

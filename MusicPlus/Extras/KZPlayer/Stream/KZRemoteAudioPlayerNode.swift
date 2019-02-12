@@ -96,7 +96,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
     // MARK: - Scheduling Buffers
     func scheduleNextBuffer() {
         guard let reader = reader else {
-            // os_log("No reader yet...", log: KZRemoteAudioPlayerNode.logger, type: .debug)
+            os_log("No reader yet...", log: KZRemoteAudioPlayerNode.logger, type: .debug)
             return
         }
 
@@ -265,7 +265,9 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
 
     public func seek(to time: TimeInterval, completionHandler: AVAudioNodeCompletionHandler? = nil) throws {
         os_log("%@ - %d [%.1f]", log: KZRemoteAudioPlayerNode.logger, type: .debug, #function, #line, time)
-        self.completionHandler = completionHandler
+        if let completionHandler = completionHandler {
+            self.completionHandler = completionHandler
+        }
         // Make sure we have a valid parser and reader
         guard let parser = parser, let reader = reader else {
             return

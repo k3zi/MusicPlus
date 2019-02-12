@@ -38,13 +38,15 @@ public class Downloader: NSObject, Downloading {
     }()
 
     /// A `URLSessionDataTask` representing the data operation for the current `URL`.
-    fileprivate var task: URLSessionDataTask?
+    var task: URLSessionDataTask?
 
     /// A `Int64` representing the total amount of bytes received
     var totalBytesReceived: Int64 = 0
 
     /// A `Int64` representing the total amount of bytes for the entire file
     var totalBytesCount: Int64 = 0
+
+    var bytesToSkip: Int64 = 0
 
     // MARK: - Properties (Downloading)
 

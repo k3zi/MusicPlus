@@ -104,6 +104,14 @@ class KZAudioPlayerSet: StreamingDelegate {
         return download.url != newUrl ? newUrl : nil
     }
 
+    func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading) -> URL? {
+        guard let item = itemReference.resolve() else {
+            return nil
+        }
+
+        return item.fileURL(from: currentTime(item: item))
+    }
+
     func pause() {
         auPlayer.pause()
     }

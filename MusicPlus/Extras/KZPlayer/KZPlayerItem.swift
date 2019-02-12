@@ -124,7 +124,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         return isDocumentURL || localAssetURL != nil || libraryUniqueIdentifier.isEmpty || ["ipod-library://", "file://"].contains(where: { assetURL.contains($0) })
     }
 
-    func fileURL() -> URL {
+    func fileURL(from offset: TimeInterval = 0) -> URL {
         if let localAssetURL = localAssetURL {
             let fileManager = FileManager.default
             let documentURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -134,7 +134,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
 
         if let config = plexLibraryConfig {
             let headers = KZPlex.requestHeadersQuery
-            return URL(string: "\(config.connectionURI)/music/:/transcode/universal/start?path=\(assetURL)&X-Plex-Token=\(config.authToken)&\(headers)")!
+            return URL(string: "\(config.connectionURI)/music/:/transcode/universal/start?path=\(assetURL)&X-Plex-Token=\(config.authToken)&\(headers)&offset=\(offset)")!
         }
 
         if assetURL.hasPrefix("http") {
@@ -174,7 +174,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         let localArtworkAbsoluteURL = documentURL.appendingPathComponent(localArtworkURL)
 
         if let image = UIImage(contentsOfFile: localArtworkAbsoluteURL.path) {
-            return MPMediaItemArtwork.init(boundsSize: .zero, requestHandler: { _ in return image })
+            return MPMediaItemArtwork(boundsSize: .zero, requestHandler: { _ in return image })
         } else if self.localArtworkURL.isNotEmpty {
             DispatchQueue.global().async {
                 guard let safeSelf = threadSafeSelf.resolve() else {
@@ -309,6 +309,13 @@ extension Array where Element: KZPlayerItemBase {
 extension UIImageView {
 
     func setImage(with item: KZPlayerItemBase, isStillValid: (() -> Bool)? = nil) {
+        // Collisions should be bearable.
+        let newTag = item.systemID.MD5().hashValue
+        guard tag != newTag else {
+            return
+        }
+        tag = newTag
+
         image = item.fetchArtwork { artwork in
             if let isStillValid = isStillValid, !isStillValid() {
                 return
