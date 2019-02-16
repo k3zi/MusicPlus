@@ -94,7 +94,7 @@ public class Parser: Parsing {
     // MARK: - Methods
 
     public func parse(data: Data) throws {
-        // os_log("%@ - %d", log: Parser.logger, type: .debug, #function, #line)
+        os_log("%@ - %d", log: Parser.logger, type: .debug, #function, #line)
 
         let streamID = self.streamID!
         let count = data.count

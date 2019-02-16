@@ -50,7 +50,7 @@ public protocol StreamingDelegate: class {
 
     func streamer(_ streamer: Streaming, alternativeURLForFailedDownload download: Downloading) -> URL?
 
-    func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading) -> URL?
+    func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading, percentDownloaded: Double) -> URL?
 
 }
 
@@ -80,7 +80,7 @@ extension StreamingDelegate {
         return nil
     }
 
-    func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading) -> URL? {
+    func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading, percentDownloaded: Double) -> URL? {
         return nil
     }
 

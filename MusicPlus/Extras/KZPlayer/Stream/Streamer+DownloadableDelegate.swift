@@ -29,7 +29,7 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
             }
         } else {
             timesFailed += 1
-            download.url = delegate?.streamer(self, urlForFailedDownload: download) ?? url
+            download.url = delegate?.streamer(self, urlForFailedDownload: download, percentDownloaded: Double(download.progress)) ?? url
             download.start()
         }
     }

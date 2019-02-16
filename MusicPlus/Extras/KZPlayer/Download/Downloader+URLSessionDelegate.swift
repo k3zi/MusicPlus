@@ -18,10 +18,11 @@ extension Downloader: URLSessionDataDelegate {
     }
 
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        os_log("function: %@ - line number: %d data count: %d", log: Downloader.logger, type: .debug, #function, #line, data.count)
+        os_log("%@ - line number: %d data count: %d", log: Downloader.logger, type: .debug, #function, #line, data.count)
 
         var resultingData = data
         if bytesToSkip >= data.count {
+            os_log("%@ - line number: %d skipping: %d", log: Downloader.logger, type: .debug, #function, #line, bytesToSkip)
             bytesToSkip -= Int64(data.count)
             return
         } else if bytesToSkip > 0 {
@@ -38,12 +39,12 @@ extension Downloader: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         os_log("%@ - %d", log: Downloader.logger, type: .debug, #function, #line)
 
-        if let error = error, !error.isCancelled, let url = url {
-            bytesToSkip = totalBytesReceived
-            self.task = session.dataTask(with: url)
-            self.task?.resume()
-            return
-        }
+//        if let error = error, !error.isCancelled, let url = url {
+//            bytesToSkip = totalBytesReceived
+//            self.task = session.dataTask(with: url)
+//            self.task?.resume()
+//            return
+//        }
 
         state = .completed
         delegate?.download(self, completedWithError: error)

@@ -12,9 +12,11 @@ class KZPlayerPlexTrack: Object {
     @objc dynamic var updatedAt = Date()
     // This should actually be dependent on settings for the default value
     @objc dynamic var shouldSyncRaw = true
+    @objc dynamic var partKey = ""
 
     convenience init(track: Track) {
         self.init()
         updatedAt = track.updatedAt
+        partKey = track.media.part.key
     }
 }

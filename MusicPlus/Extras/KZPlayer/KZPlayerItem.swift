@@ -132,8 +132,11 @@ class KZPlayerItem: Object, KZPlayerItemBase {
             return documentURL.appendingPathComponent(localAssetURL)
         }
 
-        if let config = plexLibraryConfig {
+        if let config = plexLibraryConfig, let track = plexTrack {
             let headers = KZPlex.requestHeadersQuery
+            if track.shouldSyncRaw, !["m4a", "mp3"].contains(where: { track.partKey.contains($0) }) {
+                return URL(string: "\(config.connectionURI)\(track.partKey)?X-Plex-Token=\(config.authToken)")!
+            }
             return URL(string: "\(config.connectionURI)/music/:/transcode/universal/start?path=\(assetURL)&X-Plex-Token=\(config.authToken)&\(headers)&offset=\(offset)")!
         }
 
