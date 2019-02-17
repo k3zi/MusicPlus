@@ -57,7 +57,7 @@ extension String {
 
 extension Realm {
 
-    static let currentSchemaVersion: UInt64 = 11
+    static let currentSchemaVersion: UInt64 = 12
 
     static var main: Realm {
         var config = Realm.Configuration()

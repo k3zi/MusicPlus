@@ -147,6 +147,7 @@ class KZPlayer: NSObject {
         super.init()
 
         connectivity.framework = .network
+        connectivity.isPollingEnabled = true
         connectivity.startNotifier()
 
         DispatchQueue.main.async {
@@ -696,7 +697,8 @@ extension KZPlayer {
         }
 
         var i = 1
-        while !connectivity.isConnected && !nextItem.isStoredLocally && !(nextItem is KZPlayerHistoryItem) {
+        connectivity.checkConnectivity()
+        while connectivity.status == .notConnected && !nextItem.isStoredLocally && !(nextItem is KZPlayerHistoryItem) {
             guard let localSong = nextSong(index: i) else {
                 return true
             }
@@ -1025,7 +1027,7 @@ extension KZPlayer {
             x = collection[position - plusOne]
         } else if settings.repeatMode == .repeatAll {
             // Go to end of collection
-            x = collection[collection.count - 1]
+            x = collection[collection.count - plusOne]
         } else {
             x = item
         }
@@ -1054,13 +1056,15 @@ extension KZPlayer {
             return item
         }
 
-        let plusOne = index + 1 - realm.objects(KZPlayerUpNextItem.self).count
+        // This should subtract 0 if `forPlay` is true and there are no up next
+        let indexPastPopUpNext = index - realm.objects(KZPlayerUpNextItem.self).count
+        let plusOne = indexPastPopUpNext + 1
 
         var x: KZPlayerItemBase?
         let collection = currentCollection()
 
-        if collection.count > index {
-            x = collection[index]
+        if collection.count > indexPastPopUpNext {
+            x = collection[indexPastPopUpNext]
         }
 
         guard let item = itemForChannel(), let position = collection.firstIndex(where: { $0.originalItem == item }) else {
@@ -1120,13 +1124,17 @@ extension KZPlayer {
         }
 
         if shuffle {
-            let shuffled = itemsAsArray.withShuffledPosition()
+            let shuffled = itemsAsArray.shuffled()
+            var i = 1
             for item in shuffled {
                 let queueItem = KZPlayerShuffleQueueItem(orig: item)
                 if item.originalItem().systemID == initialSong?.originalItem().systemID {
-                    queueItem.position = -1
+                    queueItem.position = 0
+                } else {
+                    queueItem.position = i
                 }
                 realm.add(queueItem)
+                i += 1
             }
         }
 
@@ -1175,7 +1183,7 @@ extension KZPlayer {
             fatalError("No library is currently set.")
         }
 
-        try! realm.write {
+        try? realm.write {
             for originalItem in originalItems {
                 realm.add(KZPlayerUpNextItem(orig: originalItem))
             }
@@ -1189,7 +1197,7 @@ extension KZPlayer {
             fatalError("No library is currently set.")
         }
 
-        let upNextItems = realm.objects(KZPlayerUpNextItem.self)
+        let upNextItems = realm.objects(KZPlayerUpNextItem.self).sorted(byKeyPath: "date", ascending: true)
 
         guard upNextItems.count > index else {
             return nil

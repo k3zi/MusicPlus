@@ -282,6 +282,7 @@ class KZPlayerShuffleQueueItem: Object, KZPlayerItemBase {
 class KZPlayerUpNextItem: Object, KZPlayerItemBase {
     @objc dynamic var orig: KZPlayerItem?
     @objc dynamic var position = 0
+    @objc dynamic var date = Date()
 
     convenience init(orig: KZPlayerItem) {
         self.init()
@@ -319,6 +320,7 @@ extension UIImageView {
         }
         tag = newTag
 
+        print("Setting artwork for item:\(item.title)")
         image = item.fetchArtwork { artwork in
             if let isStillValid = isStillValid, !isStillValid() {
                 return
