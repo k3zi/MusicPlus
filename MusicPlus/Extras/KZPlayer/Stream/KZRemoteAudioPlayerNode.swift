@@ -19,10 +19,8 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         }
     }
 
-    public var url: URL? {
+    private var url: URL? {
         didSet {
-            reset()
-
             if let url = url {
                 downloader.url = url
                 downloader.start()
@@ -96,7 +94,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
     // MARK: - Scheduling Buffers
     func scheduleNextBuffer() {
         guard let reader = reader else {
-            os_log("No reader yet...", log: KZRemoteAudioPlayerNode.logger, type: .debug)
+            // os_log("No reader yet...", log: KZRemoteAudioPlayerNode.logger, type: .debug)
             return
         }
 
@@ -166,8 +164,16 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
 
     func schedule(url: URL, durationHint: TimeInterval? = nil, completionHandler: @escaping AVAudioNodeCompletionHandler) {
         self.completionHandler = completionHandler
+        reset()
         self.url = url
         self.durationHint = durationHint
+
+        // Create a new parser
+        do {
+            parser = try Parser(extensionHint: url.pathExtension)
+        } catch {
+            os_log("Failed to create parser: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
+        }
     }
 
     func addTimer() {
@@ -199,16 +205,12 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
         durationHint = nil
         timesFailed = 0
         reader = nil
+        parser?.reset()
+        parser = nil
+        url = nil
         isFileSchedulingComplete = false
         hasPushedAPacket = false
         self.timer?.invalidate()
-
-        // Create a new parser
-        do {
-            parser = try Parser(extensionHint: url?.pathExtension)
-        } catch {
-            os_log("Failed to create parser: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
-        }
     }
 
     // MARK: - Methods

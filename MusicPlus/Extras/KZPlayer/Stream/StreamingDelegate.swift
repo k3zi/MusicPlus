@@ -52,6 +52,8 @@ public protocol StreamingDelegate: class {
 
     func streamer(_ streamer: Streaming, urlForFailedDownload download: Downloading, percentDownloaded: Double) -> URL?
 
+    func streamer(_ streamer: Streaming, didResolveDownloadTo location: URL)
+
 }
 
 extension StreamingDelegate {

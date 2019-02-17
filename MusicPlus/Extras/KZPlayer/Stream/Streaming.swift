@@ -41,9 +41,6 @@ public protocol Streaming: class {
     /// A `StreamingState` indicating the current status of a streamer.
     var state: StreamingState { get }
 
-    /// A `URL` representing the current remote resource being streamed.
-    var url: URL? { get }
-
     /// A `Float` representing the volume of the main mixer on the `engine`
     var volume: Float { get set }
 

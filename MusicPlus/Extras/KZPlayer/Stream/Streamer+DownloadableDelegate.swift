@@ -48,7 +48,11 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
 
         /// Parse the incoming audio into packets
         do {
-            try parser.parse(data: data)
+            let chunkSize = 8192
+            try stride(from: 0, to: data.count, by: chunkSize).forEach {
+                let end = min($0 + chunkSize, data.count)
+                try parser.parse(data: data[$0..<end])
+            }
         } catch {
             os_log("Failed to parse: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
         }
@@ -72,6 +76,14 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
             // Check if we have the duration
             self?.handleDurationUpdate()
         }
+    }
+
+    public func download(_ download: Downloading, shouldHoldDataForURL url: URL) -> Bool {
+        return ["m4a", "mp3"].contains(url.pathExtension)
+    }
+
+    public func download(_ download: Downloading, didSaveDataToURL url: URL) {
+        delegate?.streamer(self, didResolveDownloadTo: url)
     }
 
 }

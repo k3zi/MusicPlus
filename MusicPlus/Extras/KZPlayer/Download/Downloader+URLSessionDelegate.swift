@@ -31,8 +31,12 @@ extension Downloader: URLSessionDataDelegate {
         }
 
         totalBytesReceived += Int64(resultingData.count)
-        progress = Float(totalBytesReceived) / Float(totalBytesCount)
-        delegate?.download(self, didReceiveData: resultingData, progress: progress)
+        progress = max(-1, Float(totalBytesReceived) / Float(totalBytesCount))
+        if isHoldingData {
+            heldDataFileHandle?.write(resultingData)
+        } else {
+            delegate?.download(self, didReceiveData: resultingData, progress: progress)
+        }
         progressHandler?(resultingData, progress)
     }
 
@@ -46,6 +50,10 @@ extension Downloader: URLSessionDataDelegate {
 //            return
 //        }
 
+        heldDataFileHandle?.closeFile()
+        if isHoldingData && error == nil, let heldDataFileURL = heldDataFileURL {
+            delegate?.download(self, didSaveDataToURL: heldDataFileURL)
+        }
         state = .completed
         delegate?.download(self, completedWithError: error)
         completionHandler?(error)

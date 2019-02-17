@@ -17,7 +17,7 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
     os_log("%@ - %d [bytes: %i, packets: %i, compressed: %@]", log: Parser.loggerPacketCallback, type: .debug, #function, #line, byteCount, packetCount, "\(isCompressed)")
 
     /// At this point we should definitely have a data format
-    guard let dataFormat = parser.dataFormat else {
+    guard let dataFormat = parser.dataFormat, parser.status == .running else {
         return
     }
 
@@ -28,7 +28,12 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
             let packetStart = Int(packetDescription.mStartOffset)
             let packetSize = Int(packetDescription.mDataByteSize)
             let packetData = Data(bytes: data.advanced(by: packetStart), count: packetSize)
+            objc_sync_enter(parser)
+            guard parser.status == .running else {
+                return
+            }
             parser.packets.append((packetData, packetDescription))
+            objc_sync_exit(parser)
         }
     } else {
         let format = dataFormat.streamDescription.pointee
@@ -37,7 +42,12 @@ func ParserPacketCallback(_ context: UnsafeMutableRawPointer, _ byteCount: UInt3
             let packetStart = i * bytesPerPacket
             let packetSize = bytesPerPacket
             let packetData = Data(bytes: data.advanced(by: packetStart), count: packetSize)
+            objc_sync_enter(parser)
+            guard parser.status == .running else {
+                return
+            }
             parser.packets.append((packetData, nil))
+            objc_sync_exit(parser)
         }
     }
 }

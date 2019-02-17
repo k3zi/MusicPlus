@@ -36,4 +36,8 @@ public protocol DownloadingDelegate: class {
     ///   - progress: A `Float` ranging from 0.0 - 1.0 representing the progress of the overall download operation.
     func download(_ download: Downloading, didReceiveData data: Data, progress: Float)
 
+    func download(_ download: Downloading, shouldHoldDataForURL url: URL) -> Bool
+
+    func download(_ download: Downloading, didSaveDataToURL url: URL)
+
 }

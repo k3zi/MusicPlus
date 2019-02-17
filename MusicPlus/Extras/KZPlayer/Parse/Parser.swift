@@ -10,6 +10,11 @@ import Foundation
 import AVFoundation
 import os.log
 
+public enum ParserStatus {
+    case running
+    case stopped
+}
+
 /// The `Parser` is a concrete implementation of the `Parsing` protocol used to convert binary data into audio packet data. This class uses the Audio File Stream Services to progressively parse the properties and packets of the incoming audio data.
 public class Parser: Parsing {
     static let logger = OSLog(subsystem: "com.fastlearner.streamer", category: "Parser")
@@ -45,6 +50,8 @@ public class Parser: Parsing {
     /// The `AudioFileStreamID` used by the Audio File Stream Services for converting the binary data into audio packets
     fileprivate var streamID: AudioFileStreamID?
 
+    public var status: ParserStatus = .running
+
     // MARK: - Lifecycle
 
     /// Initializes an instance of the `Parser`
@@ -60,6 +67,20 @@ public class Parser: Parsing {
         guard AudioFileStreamOpen(context, ParserPropertyChangeCallback, ParserPacketCallback, type, &streamID) == noErr else {
             throw ParserError.streamCouldNotOpen
         }
+    }
+
+    public func reset() {
+        objc_sync_enter(self)
+        status = .stopped
+        packets = []
+        objc_sync_exit(self)
+    }
+
+    deinit {
+        if let streamID = streamID {
+            AudioFileStreamClose(streamID)
+        }
+        reset()
     }
 
     private func hintForFileExtension(fileExtension: String) -> AudioFileTypeID {
@@ -96,13 +117,15 @@ public class Parser: Parsing {
     public func parse(data: Data) throws {
         os_log("%@ - %d", log: Parser.logger, type: .debug, #function, #line)
 
-        let streamID = self.streamID!
-        let count = data.count
-        _ = try data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
-            let result = AudioFileStreamParseBytes(streamID, UInt32(count), bytes, [])
-            guard result == noErr else {
-                os_log("Failed to parse bytes", log: Parser.logger, type: .error)
-                throw ParserError.failedToParseBytes(result)
+        try autoreleasepool {
+            let streamID = self.streamID!
+            let count = data.count
+            _ = try data.withUnsafeBytes { (bytes: UnsafePointer<UInt8>) in
+                let result = AudioFileStreamParseBytes(streamID, UInt32(count), bytes, [])
+                guard result == noErr else {
+                    os_log("Failed to parse bytes", log: Parser.logger, type: .error)
+                    throw ParserError.failedToParseBytes(result)
+                }
             }
         }
     }

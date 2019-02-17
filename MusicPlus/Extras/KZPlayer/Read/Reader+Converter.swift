@@ -22,6 +22,7 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
                              _ context: UnsafeMutableRawPointer?) -> OSStatus {
     let reader = Unmanaged<Reader>.fromOpaque(context!).takeUnretainedValue()
 
+    objc_sync_enter(reader.parser)
     //
     // Make sure we have a valid source format so we know the data format of the parser's audio packets
     //
@@ -73,6 +74,7 @@ func ReaderConverterCallback(_ converter: AudioConverterRef,
     }
     packetCount.pointee = 1
     reader.currentPacket += 1
+    objc_sync_exit(reader.parser)
 
     return noErr
 }

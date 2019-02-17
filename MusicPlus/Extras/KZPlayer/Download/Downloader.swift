@@ -48,6 +48,11 @@ public class Downloader: NSObject, Downloading {
 
     var bytesToSkip: Int64 = 0
 
+    var isHoldingData = false
+
+    var heldDataFileURL: URL?
+    var heldDataFileHandle: FileHandle?
+
     // MARK: - Properties (Downloading)
 
     public var delegate: DownloadingDelegate?
@@ -71,6 +76,13 @@ public class Downloader: NSObject, Downloading {
                 totalBytesCount = 0
                 totalBytesReceived = 0
                 task = session.dataTask(with: url)
+                isHoldingData = delegate?.download(self, shouldHoldDataForURL: url) ?? false
+                if isHoldingData {
+                    let saveURL = FileManager.default.temporaryDirectory.appendingPathComponent("\(Int.random(in: 0...Int.max)).\(url.pathExtension)")
+                    FileManager.default.createFile(atPath: saveURL.path, contents: nil, attributes: nil)
+                    heldDataFileHandle = try? FileHandle(forWritingTo: saveURL)
+                    heldDataFileURL = saveURL
+                }
             } else {
                 task = nil
             }
