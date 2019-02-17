@@ -10,10 +10,10 @@ import Foundation
 
 fileprivate extension UIImage {
 
-    static let play = #imageLiteral(resourceName: "playBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
-    static let pause = #imageLiteral(resourceName: "pauseBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
-    static let next = #imageLiteral(resourceName: "nextBT").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 120))
-    static let previous = #imageLiteral(resourceName: "Image").af_imageAspectScaled(toFit: CGSize(width: CGFloat.greatestFiniteMagnitude, height: 60))
+    static let play = #imageLiteral(resourceName: "playBT")
+    static let pause = #imageLiteral(resourceName: "pauseBT")
+    static let next = #imageLiteral(resourceName: "nextBT")
+    static let previous = #imageLiteral(resourceName: "Image")
 }
 
 class MiniPlayerView: UIView {
