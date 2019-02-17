@@ -31,6 +31,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        let fileManager = FileManager.default
+        try? fileManager.contentsOfDirectory(atPath: fileManager.temporaryDirectory.path).forEach { file in
+            let directory = fileManager.temporaryDirectory.appendingPathComponent(file)
+            try? fileManager.removeItem(at: directory)
+        }
+
         let realm = Realm.main
         try? realm.write {
             realm.objects(KZRealmLibrary.self).forEach {
