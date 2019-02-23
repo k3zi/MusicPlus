@@ -48,13 +48,10 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
 
         /// Parse the incoming audio into packets
         do {
-            let chunkSize = 8192
-            try stride(from: 0, to: data.count, by: chunkSize).forEach {
-                let end = min($0 + chunkSize, data.count)
-                try parser.parse(data: data[$0..<end])
-            }
+            try parser.parse(data: data)
         } catch {
             os_log("Failed to parse: %@", log: KZRemoteAudioPlayerNode.logger, type: .error, error.localizedDescription)
+            restartFromCrash()
         }
 
         /// Once there's enough data to start producing packets we can use the data format
@@ -79,7 +76,7 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
     }
 
     public func download(_ download: Downloading, shouldHoldDataForURL url: URL) -> Bool {
-        return ["m4a", "mp3"].contains(url.pathExtension)
+        return true
     }
 
     public func download(_ download: Downloading, didSaveDataToURL url: URL) {

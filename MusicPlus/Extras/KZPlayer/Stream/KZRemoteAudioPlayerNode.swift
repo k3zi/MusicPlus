@@ -49,6 +49,7 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
     var isFileSchedulingComplete = false
 
     var hasPushedAPacket = false
+    var isInErrorState = false
 
     var rawCurrentTime: TimeInterval? {
         guard let nodeTime = self.lastRenderTime, let playerTime = self.playerTime(forNodeTime: nodeTime) else {
@@ -121,6 +122,22 @@ open class KZRemoteAudioPlayerNode: AVAudioPlayerNode, Streaming {
             }
         } catch {
             os_log("Cannot schedule buffer: %@", log: KZRemoteAudioPlayerNode.logger, type: .debug, error.localizedDescription)
+            if !hasPushedAPacket {
+                restartFromCrash(shouldPlay: true)
+            }
+        }
+    }
+
+    func restartFromCrash(shouldPlay: Bool? = false) {
+        isInErrorState = true
+        guard let url = url, let completionHandler = completionHandler else {
+            return
+        }
+
+        let wasPlaying = shouldPlay ?? isPlaying
+        schedule(url: url, durationHint: durationHint, completionHandler: completionHandler)
+        if wasPlaying {
+            play()
         }
     }
 

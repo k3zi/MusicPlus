@@ -566,9 +566,14 @@ extension KZPlayer {
     }
 
     func internalPrev() -> Bool {
-        guard let prevItem = songForPreviousSelection() else {
+        if currentTime() > 3 {
+            return setCurrentTime(0)
+        }
+
+        guard let prevItem = previouslyPlayedItem() else {
             return false
         }
+
         let currentItem = itemForChannel(allowUpNext: true)
 
         os_log(.default, log: .player, "previous = %@", prevItem.title)
@@ -650,7 +655,9 @@ extension KZPlayer {
                     self.playerCompleted(channel)
                 }
             }
-            updateNowPlayingInfo(item)
+            DispatchQueue.main.async {
+                self.updateNowPlayingInfo()
+            }
             return true
         } catch {
             return false
@@ -698,7 +705,7 @@ extension KZPlayer {
 
         var i = 1
         connectivity.checkConnectivity()
-        while connectivity.status == .notConnected && !nextItem.isStoredLocally && !(nextItem is KZPlayerHistoryItem) {
+        while !connectivity.isConnected && !nextItem.isStoredLocally && !(nextItem is KZPlayerHistoryItem) {
             guard let localSong = nextSong(index: i) else {
                 return true
             }
@@ -1033,14 +1040,6 @@ extension KZPlayer {
         }
 
         return x
-    }
-
-    func songForPreviousSelection() -> KZPlayerItemBase? {
-        if currentTime() > 3 {
-            return itemForChannel(allowUpNext: true)
-        }
-
-        return previouslyPlayedItem(index: 0)
     }
 
     func nextSong(index: Int = 0, forPlay: Bool = true) -> KZPlayerItemBase? {

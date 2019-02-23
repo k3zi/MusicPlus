@@ -320,9 +320,8 @@ extension UIImageView {
         }
         tag = newTag
 
-        print("Setting artwork for item:\(item.title)")
         image = item.fetchArtwork { artwork in
-            if let isStillValid = isStillValid, !isStillValid() {
+            if self.tag == newTag, let isStillValid = isStillValid, !isStillValid() {
                 return
             }
             self.image = artwork.image(at: self.bounds.size)
