@@ -86,13 +86,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         connectivity?.whenDisconnected = connectivityChanged
         connectivity?.startNotifier()
 
-        var nextHour = Calendar.current.dateComponents(in: .current, from: Date())
-        nextHour.second = 0
-        nextHour.minute = 0
-        nextHour.hour = (nextHour.hour ?? 0) + 1
-        if let date = Calendar.current.date(from: nextHour) {
-            let timer = Timer(fire: date, interval: Calendar.current.timeIntervalOf(.hour), repeats: true) { _ in
-                self.sayTime()
+        var nextMinute = Calendar.current.dateComponents(in: .current, from: Date().addingTimeInterval(60))
+        nextMinute.second = 0
+        if let date = Calendar.current.date(from: nextMinute) {
+            let timer = Timer(fire: date, interval: Calendar.current.timeIntervalOf(.minute), repeats: true) { _ in
+                DispatchQueue.main.async {
+                    self.sayTime()
+                }
             }
             RunLoop.main.add(timer, forMode: .common)
             self.hourTimer = timer
@@ -106,16 +106,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func sayTime() {
-        DispatchQueue.main.async {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .none
-            formatter.timeStyle = .short
-            let timeString = formatter.string(from: Date())
-
-            let speech = AVSpeechUtterance(string: "It's \(timeString).")
-            let synth = AVSpeechSynthesizer()
-            synth.speak(speech)
+        let components = Calendar.current.dateComponents(in: .current, from: Date())
+        guard [0, 15, 30, 45].contains(components.minute) else {
+            return
         }
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        let timeString = formatter.string(from: Date())
+
+        let speech = AVSpeechUtterance(string: "It's \(timeString).")
+        let synth = AVSpeechSynthesizer()
+        synth.speak(speech)
     }
 
     // MARK: System Search
