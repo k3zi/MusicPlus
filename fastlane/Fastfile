@@ -27,6 +27,12 @@ lane :reg do |options|
 end
 
 lane :ci do |options|
+  unlock_keychain(
+    path: 'fastlane_tmp_keychain',
+    password: ENV['KEYCHAIN_PASSWORD'],
+    add_to_search_list: :replace
+  )
+
   if ENV['TRAVIS_BRANCH'] == 'beta'
     beta
   elsif ENV['TRAVIS_BRANCH'] == 'store'
@@ -57,14 +63,6 @@ lane :beta do |options|
   tag_name = "beta/#{new_version}"
 
   add_badge(shield: "#{get_version_number}-#{get_build_number}-blue")
-
-  if ENV['KEYCHAIN_PASSWORD']
-    unlock_keychain(
-      path: 'fastlane_tmp_keychain',
-      password: ENV['KEYCHAIN_PASSWORD'],
-      add_to_search_list: :replace
-    )
-  end
 
   unless options[:skip_testflight]
       match(
@@ -124,14 +122,6 @@ lane :store do
   increment_build_number
   new_version = get_version_string
   tag_name = "store/#{new_version}"
-
-  if ENV['KEYCHAIN_PASSWORD']
-    unlock_keychain(
-      path: 'fastlane_tmp_keychain',
-      password: ENV['KEYCHAIN_PASSWORD'],
-      add_to_search_list: :replace
-    )
-  end
 
   match(
     type: 'appstore',
