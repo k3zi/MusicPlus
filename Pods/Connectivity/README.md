@@ -7,6 +7,7 @@
 [![License](https://img.shields.io/cocoapods/l/Connectivity.svg?style=flat)](http://cocoapods.org/pods/Connectivity)
 [![Platform](https://img.shields.io/cocoapods/p/Connectivity.svg?style=flat)](http://cocoapods.org/pods/Connectivity)
 [![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://swift.org/)
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 Connectivity is a wrapper for Apple's [Reachability](https://developer.apple.com/library/content/samplecode/Reachability/Introduction/Intro.html) providing a reliable measure of whether Internet connectivity is available where Reachability alone can only indicate whether _an interface is available that might allow a connection_.
 
@@ -28,6 +29,7 @@ To learn more about how to use Connectivity, take a look at the [keynote present
 	- [Polling](#polling)
 	- [SSL](#ssl)
 	- [Threshold](#threshold)
+	- [Response Validation](#response-validation)
 - [Author](#author)
 - [License](#license)
 - [Additional Software](#additional-software)
@@ -259,6 +261,14 @@ To set the number of successful connections required in order to be deemed succe
 connectivity.successThreshold = Connectivity.Percentage(75.0)
 ```
 
+### Response Validation
+
+There are three different validation modes available for checking response content these being:
+
+- `.containsExpectedResponseString` - Checks that the response *contains* the expected response as defined by the `expectedResponseString` property. 
+- `.equalsExpectedResponseString` - Checks that the response *equals* the expected response as defined by the `expectedResponseString` property. 
+- `.matchesRegularExpression` - Checks that the response matches the regular expression as defined by the `expectedResponseRegEx` property.
+
 ## Author
 
 [Ross Butler](https://github.com/rwbutler)
@@ -268,6 +278,14 @@ connectivity.successThreshold = Connectivity.Percentage(75.0)
 Connectivity is available under the MIT license. See the [LICENSE file](./LICENSE) for more info.
 
 ## Additional Software
+
+### Controls
+
+* [AnimatedGradientView](https://github.com/rwbutler/AnimatedGradientView) - Powerful gradient animations made simple for iOS.
+
+|[AnimatedGradientView](https://github.com/rwbutler/AnimatedGradientView) |
+|:-------------------------:|
+|[![AnimatedGradientView](https://raw.githubusercontent.com/rwbutler/AnimatedGradientView/master/docs/images/animated-gradient-view-logo.png)](https://github.com/rwbutler/AnimatedGradientView) 
 
 ### Frameworks
 
@@ -281,7 +299,7 @@ Connectivity is available under the MIT license. See the [LICENSE file](./LICENS
 
 |[Cheats](https://github.com/rwbutler/Cheats) |[Connectivity](https://github.com/rwbutler/Connectivity) | [FeatureFlags](https://github.com/rwbutler/FeatureFlags) | [Skylark](https://github.com/rwbutler/Skylark) | [TypographyKit](https://github.com/rwbutler/TypographyKit) | [Updates](https://github.com/rwbutler/Updates) |
 |:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|
-|[![Cheats](https://raw.githubusercontent.com/rwbutler/Cheats/master/docs/images/cheats-logo.png)](https://github.com/rwbutler/Cheats) |[![Connectivity](https://github.com/rwbutler/Connectivity/raw/master/ConnectivityLogo.png)](https://github.com/rwbutler/Connectivity) | [![FeatureFlags](https://raw.githubusercontent.com/rwbutler/FeatureFlags/master/docs/images/feature-flags-logo.png)](https://github.com/rwbutler/FeatureFlags) | [![Skylark](https://github.com/rwbutler/Skylark/raw/master/SkylarkLogo.png)](https://github.com/rwbutler/Skylark) | [![TypographyKit](https://github.com/rwbutler/TypographyKit/raw/master/TypographyKitLogo.png)](https://github.com/rwbutler/TypographyKit) | [![Updates](https://raw.githubusercontent.com/rwbutler/Updates/master/docs/images/updates-logo.png)](https://github.com/rwbutler/Updates)
+|[![Cheats](https://raw.githubusercontent.com/rwbutler/Cheats/master/docs/images/cheats-logo.png)](https://github.com/rwbutler/Cheats) |[![Connectivity](https://github.com/rwbutler/Connectivity/raw/master/ConnectivityLogo.png)](https://github.com/rwbutler/Connectivity) | [![FeatureFlags](https://raw.githubusercontent.com/rwbutler/FeatureFlags/master/docs/images/feature-flags-logo.png)](https://github.com/rwbutler/FeatureFlags) | [![Skylark](https://github.com/rwbutler/Skylark/raw/master/SkylarkLogo.png)](https://github.com/rwbutler/Skylark) | [![TypographyKit](https://raw.githubusercontent.com/rwbutler/TypographyKit/master/docs/images/typography-kit-logo.png)](https://github.com/rwbutler/TypographyKit) | [![Updates](https://raw.githubusercontent.com/rwbutler/Updates/master/docs/images/updates-logo.png)](https://github.com/rwbutler/Updates)
 
 ### Tools
 

@@ -19,6 +19,9 @@ public protocol _CollectionViewMultiNodeProvider: FlixCustomStringConvertible {
 
     func _itemSelected(_ collectionView: UICollectionView, indexPath: IndexPath, node: _Node)
 
+    
+    func onCreate(_ collectionView: UICollectionView, cell: UICollectionViewCell, indexPath: IndexPath)
+
     func _itemDeselected(_ collectionView: UICollectionView, indexPath: IndexPath, node: _Node)
     
     func _createNodes() -> Observable<[Node]>

@@ -29,7 +29,7 @@ class KZPlex: NSObject {
 
         static let syncItems = "\(_plexTV)/devices/\(KZPlex.clientIdentifier.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!)/sync_items"
 
-        struct pins {
+        enum Pins {
             static let _pins = "\(_plexTV)/pins"
             static let request = "\(_pins).json"
             static func check(pin pinId: Int) -> String {
@@ -37,12 +37,12 @@ class KZPlex: NSObject {
             }
         }
 
-        struct pms {
+        enum PMS {
             static let _pms = "\(_plexTV)/pms"
             static let servers = "\(_pms)/servers"
         }
 
-        struct api {
+        enum API {
             static let _api = "\(_plexTV)/api"
             static let resources = "\(_api)/resources"
         }
@@ -216,7 +216,7 @@ class KZPlex: NSObject {
 
     func signIn(progressCallback: @escaping (NSAttributedString) -> Void, completionCallBack: @escaping (_ pinRequest: PinRequest) -> Void) {
         return async {
-            let result = try await(self.post(Path.pins.request))
+            let result = try await(self.post(Path.Pins.request))
             var pinRequest: PinRequest = try KZPlex.parseResponseOrError(data: result.data, keyPath: "pin")
             let status = NSMutableAttributedString(string: "Invite PIN: \(pinRequest.code)\nPlease visit: ")
             status.append(NSAttributedString(string: Path.linkAccount, attributes: [NSAttributedString.Key.link: URL(string: Path.linkAccount)!]))
@@ -224,7 +224,7 @@ class KZPlex: NSObject {
 
             while pinRequest.authToken == nil && pinRequest.expiresAt.timeIntervalSinceNow.sign == .plus {
                 let result = try await(after(seconds: 5.0).then {
-                    return self.get(Path.pins.check(pin: pinRequest.id))
+                    return self.get(Path.Pins.check(pin: pinRequest.id))
                 })
                 pinRequest = try KZPlex.parseResponseOrError(data: result.data, keyPath: "pin")
             }
@@ -238,7 +238,7 @@ class KZPlex: NSObject {
 
     func servers() -> Promise<PMSServersGETResponse> {
         return async {
-            let result = try await(self.get(Path.pms.servers))
+            let result = try await(self.get(Path.PMS.servers))
             guard let data = String(bytes: result.data, encoding: .utf8) else {
                 throw Error.dataParsingError
             }
@@ -254,7 +254,7 @@ class KZPlex: NSObject {
 
     func resources() -> Promise<APIResourcesGETResponse> {
         return async {
-            let result = try await(self.get("\(Path.api.resources)?includeHttps=1&includeRelay=1"))
+            let result = try await(self.get("\(Path.API.resources)?includeHttps=1&includeRelay=1"))
             guard let data = String(bytes: result.data, encoding: .utf8) else {
                 throw Error.dataParsingError
             }

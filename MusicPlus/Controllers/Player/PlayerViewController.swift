@@ -16,6 +16,8 @@ fileprivate extension UIImage {
     static let previous = #imageLiteral(resourceName: "Image")
     static let smallPause = #imageLiteral(resourceName: "smallPauseBT")
 
+    static let minimize = #imageLiteral(resourceName: "largeArrowDown")
+
 }
 
 class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
@@ -23,7 +25,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     static let shared = PlayerViewController()
     lazy var minimizeButton: ExtendedButton = {
         let button = ExtendedButton()
-        button.setImage(#imageLiteral(resourceName: "largeArrowDown"), for: .normal)
+        button.setImage(.minimize, for: .normal)
         button.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.minimizePlayer), for: .touchUpInside)
         return button
     }()

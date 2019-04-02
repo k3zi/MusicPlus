@@ -15,6 +15,10 @@ public typealias SingleUICollectionViewCellProvider = SingleCollectionViewProvid
 public typealias UniqueCustomCollectionViewProvider = SingleUICollectionViewCellProvider
 
 open class SingleCollectionViewProvider<Cell: UICollectionViewCell>: CustomProvider, UniqueAnimatableCollectionViewProvider, ProviderHiddenable, CustomIdentityType {
+    public func onCreate(_ collectionView: UICollectionView, cell: UICollectionViewCell, indexPath: IndexPath) {
+
+    }
+
 
     public typealias Cell = UICollectionViewCell
     

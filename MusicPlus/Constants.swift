@@ -493,7 +493,7 @@ extension UIColor {
 
 extension Array where Element: Equatable {
     mutating func remove(object: Element) {
-        if let index = index(of: object) {
+        if let index = firstIndex(of: object) {
             remove(at: index)
         }
     }
