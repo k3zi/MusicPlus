@@ -1,52 +1,53 @@
 PODS:
   - Alamofire (4.8.2)
-  - AlamofireImage (3.5.1):
+  - AlamofireImage (3.5.2):
     - Alamofire (~> 4.8)
   - AwaitKit (5.1.0):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
-  - Connectivity (2.2.1)
-  - Differentiator (3.1.0)
-  - Flix (2.0.0):
-    - RxCocoa (~> 4.3)
-    - RxDataSources (~> 3.1)
-    - RxSwift (~> 4.3)
+  - Connectivity (3.0.0)
+  - Differentiator (4.0.1)
+  - Flix (4.0.0):
+    - RxCocoa (~> 5.0)
+    - RxDataSources (~> 4.0)
+    - RxSwift (~> 5.0)
   - KZ (3.0.0):
     - PureLayout
     - Reusable
-  - PromiseKit (6.8.3):
-    - PromiseKit/CorePromise (= 6.8.3)
-    - PromiseKit/Foundation (= 6.8.3)
-    - PromiseKit/UIKit (= 6.8.3)
-  - PromiseKit/Alamofire (6.8.3):
+  - PromiseKit (6.8.4):
+    - PromiseKit/CorePromise (= 6.8.4)
+    - PromiseKit/Foundation (= 6.8.4)
+    - PromiseKit/UIKit (= 6.8.4)
+  - PromiseKit/Alamofire (6.8.4):
     - Alamofire (~> 4.0)
     - PromiseKit/CorePromise
-  - PromiseKit/CorePromise (6.8.3)
-  - PromiseKit/Foundation (6.8.3):
+  - PromiseKit/CorePromise (6.8.4)
+  - PromiseKit/Foundation (6.8.4):
     - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.8.3):
+  - PromiseKit/UIKit (6.8.4):
     - PromiseKit/CorePromise
   - PRTween (0.1.0)
   - PureLayout (3.1.4)
-  - Realm (3.14.0):
-    - Realm/Headers (= 3.14.0)
-  - Realm/Headers (3.14.0)
-  - RealmSwift (3.14.0):
-    - Realm (= 3.14.0)
-  - Reusable (4.0.5):
-    - Reusable/Storyboard (= 4.0.5)
-    - Reusable/View (= 4.0.5)
-  - Reusable/Storyboard (4.0.5)
-  - Reusable/View (4.0.5)
-  - RxAtomic (4.4.2)
-  - RxCocoa (4.4.2):
-    - RxSwift (>= 4.4.2, ~> 4.4)
-  - RxDataSources (3.1.0):
-    - Differentiator (~> 3.0)
-    - RxCocoa (~> 4.0)
-    - RxSwift (~> 4.0)
-  - RxSwift (4.4.2):
-    - RxAtomic (>= 4.4.2, ~> 4.4)
+  - Realm (3.15.0):
+    - Realm/Headers (= 3.15.0)
+  - Realm/Headers (3.15.0)
+  - RealmSwift (3.15.0):
+    - Realm (= 3.15.0)
+  - Reusable (4.1.0):
+    - Reusable/Storyboard (= 4.1.0)
+    - Reusable/View (= 4.1.0)
+  - Reusable/Storyboard (4.1.0)
+  - Reusable/View (4.1.0)
+  - RxCocoa (5.0.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxDataSources (4.0.1):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxRelay (5.0.0):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.0)
   - SecureNSUserDefaults (1.0.1):
     - CocoaSecurity (~> 1.2.4)
   - XMLMapper (1.5.2):
@@ -55,7 +56,7 @@ PODS:
   - Zip (1.1.0)
 
 DEPENDENCIES:
-  - Alamofire
+  - Alamofire (~> 4.8.2)
   - AlamofireImage
   - AwaitKit
   - Connectivity
@@ -86,9 +87,9 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - Reusable
-    - RxAtomic
     - RxCocoa
     - RxDataSources
+    - RxRelay
     - RxSwift
     - SecureNSUserDefaults
     - XMLMapper
@@ -96,27 +97,27 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  AlamofireImage: 1ea645cb3328d612ba7f3e3d75a947a17eb427c2
+  AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
   AwaitKit: a8a3d8982097ee09ac75f5c5d3952fbcc2f26f1c
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Connectivity: 120bdaaed16f708b0762603cbca6fd496cde9ca7
-  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
-  Flix: 04392305c5fa58d2c2b75b1fd1ff523d9d860bc4
+  Connectivity: 0c36c25d92ae7499305125dbb61888f3fd6adab4
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
+  Flix: 1f5f22609a3769a9c1dbc4072767035c9b3b57e5
   KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
-  PromiseKit: 94c6e781838c5bf4717677d0d882b0e7250c80fc
+  PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
-  Realm: 221b25919bb5a010a3c597d707f8df3492dcd93a
-  RealmSwift: 28f22dfa6a27b9a778cfb09471558b6afcf1022c
-  Reusable: 188be1a54ac0691bc66e5bb24ec6eb91971b315b
-  RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
-  RxCocoa: 477990dc3b4c3ff55fb0ac77e1cc06244e0aaec8
-  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
-  RxSwift: 74c29b693c8e42b0f64400e8b06564575742d649
+  Realm: 9b834e1be6062f544805252c812348872dc5d4ed
+  RealmSwift: 8a41886f8ab6efef9eb8df97de2f2bb911561a79
+  Reusable: 82be188f29d96dc5eff0db7b2393bcc08d2cdd5b
+  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
+  RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
+  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SecureNSUserDefaults: 8a07fc6a6fde31c7f8fa6ead73d3c9c3706a6364
   XMLMapper: e562e26d47ebc9a48370b97b4fd1b03c51148cb6
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 1475a1cf0b4b90feac9ae118fc0bb6da8668dec6
+PODFILE CHECKSUM: 3287b99b3bc281b686c9a9917817e780c398f578
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.7.0.rc.1

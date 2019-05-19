@@ -130,14 +130,26 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func pause() {
+        guard auPlayer.isPlaying else {
+            return
+        }
+
         auPlayer.pause()
     }
 
     func play() {
+        guard !auPlayer.isPlaying else {
+            return
+        }
+
         auPlayer.play()
     }
 
     func stop() {
+        guard auPlayer.isPlaying else {
+            return
+        }
+
         auPlayer.stop()
     }
 
@@ -150,11 +162,15 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func currentTime(item: KZPlayerItemBase? = nil) -> Double {
+        guard auPlayer.engine != nil else {
+            return 0
+        }
+
         if overrideURL == nil, let auPlayer = auPlayer as? KZRemoteAudioPlayerNode, let currentTime = auPlayer.currentTime {
             return currentTime
         }
 
-        guard auPlayer.engine != nil, let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
+        guard let nodeTime = auPlayer.lastRenderTime, let playerTime = auPlayer.playerTime(forNodeTime: nodeTime) else {
             return 0
         }
 

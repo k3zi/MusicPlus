@@ -133,7 +133,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
             }
         }
 
-        self.view.layoutIfNeeded()
+//        self.view.layoutIfNeeded()
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {

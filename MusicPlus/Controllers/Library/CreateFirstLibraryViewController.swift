@@ -212,12 +212,12 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                     self.nextButoon.setTitle("Requesting Access...", for: .normal)
                     self.infoLabel.attributedText = status
                 }
-            }) { request in
+            }, completionCallBack: { request in
                 DispatchQueue.main.async {
                     self.nextButoon.setTitle("Loading Libraries...", for: .normal)
                 }
                 plex.authToken = request.authToken
-                plex.resources().then { response -> Promise<[LibrarySectionsGETResponse?]> in
+                _ = plex.resources().then { response -> Promise<[LibrarySectionsGETResponse?]> in
                     let arrayOfPromises = response.devices.flatMap({ $0.connections }).map({ $0.sections() })
                     return when(fulfilled: arrayOfPromises)
                 }.done { response in
@@ -251,7 +251,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                         self.present(librarySelectionAlertController, animated: true, completion: nil)
                     }
                 }
-            }
+            })
         default: break
         }
     }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol MPOptionsButtonDelegate {
+protocol MPOptionsButtonDelegate: class {
     func optionsButtonWillExpand(_ button: MPOptionsButton)
     func optionsButtonDidClick(_ button: MPOptionsButton, index: Int)
 }
@@ -18,7 +18,7 @@ class MPOptionsButton: UIView {
     let toggleButton = ExtendedButton()
     var buttonHolder = UIView()
     var buttons = [UIButton]()
-    var delegate: MPOptionsButtonDelegate?
+    weak var delegate: MPOptionsButtonDelegate?
 
     var closedConstraints = [NSLayoutConstraint]()
     var expandedConstraints = [NSLayoutConstraint]()

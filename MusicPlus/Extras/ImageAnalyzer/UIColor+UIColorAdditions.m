@@ -43,7 +43,6 @@ struct hsv_color {
     struct hsv_color hsv;
 
     CGFloat rgb_min, rgb_max;
-    rgb_min = MIN3(rgb.r, rgb.g, rgb.b);
     rgb_max = MAX3(rgb.r, rgb.g, rgb.b);
 
     hsv.val = rgb_max;

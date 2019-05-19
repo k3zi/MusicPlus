@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 fileprivate extension UIImage {
 
@@ -23,15 +24,24 @@ fileprivate extension UIImage {
 class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     static let shared = PlayerViewController()
+
+    let disposeBag = DisposeBag()
+    var compactConstraints = [NSLayoutConstraint]()
+    var regularConstraints = [NSLayoutConstraint]()
+
+    let controlViewHolder = UIView()
+
     lazy var minimizeButton: ExtendedButton = {
-        let button = ExtendedButton()
-        button.setImage(.minimize, for: .normal)
-        button.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.minimizePlayer), for: .touchUpInside)
-        return button
+        let view = ExtendedButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setImage(.minimize, for: .normal)
+        view.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.minimizePlayer), for: .touchUpInside)
+        return view
     }()
 
     lazy var miniPlayerView: MiniPlayerView = {
         let view = MiniPlayerView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.autoSetDimension(.height, toSize: .miniPlayerViewHeight)
 
         let tapRecognizer = UITapGestureRecognizer(target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.maximizePlayer))
@@ -43,6 +53,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var volumeSlider: SliderView = {
         let view = SliderView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundTrackColor = UIColor.white.withAlphaComponent(0.3)
         view.progressTrackColor = .white
         view.innerScrubberColor = .white
@@ -56,6 +67,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var timeSlider: SliderView = {
         let view = SliderView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundTrackColor = UIColor.white.withAlphaComponent(0.3)
         view.progressTrackColor = AppDelegate.del().session.tintColor ?? .white
         view.innerScrubberColor = .white
@@ -74,6 +86,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     let infoHolderView = UIView()
     lazy var songTitleLabel: UILabel = {
         let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         view.textAlignment = .center
@@ -82,6 +95,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var albumTitleLabel: UILabel = {
         let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         view.textAlignment = .center
@@ -90,6 +104,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var artistTitleLabel: UILabel = {
         let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         view.textAlignment = .center
@@ -98,6 +113,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var playPauseButton: UIButton = {
         let view = UIButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(.play, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.togglePlay), for: .touchUpInside)
@@ -109,6 +125,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var previousButton: UIButton = {
         let view = ExtendedButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(.previous, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.prev), for: .touchUpInside)
@@ -120,6 +137,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var nextButton: UIButton = {
         let view = ExtendedButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(.next, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.next), for: .touchUpInside)
@@ -155,21 +173,27 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     override func viewDidLoad() {
         view.addSubview(miniPlayerView)
         view.addSubview(minimizeButton)
-        view.addSubview(volumeSlider)
-        view.addSubview(timeSlider)
 
+        controlViewHolder.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(controlViewHolder)
+        controlViewHolder.addSubview(volumeSlider)
+        controlViewHolder.addSubview(timeSlider)
+
+        infoHolderView.translatesAutoresizingMaskIntoConstraints = false
         infoHolderView.addSubview(songTitleLabel)
         infoHolderView.addSubview(albumTitleLabel)
         infoHolderView.addSubview(artistTitleLabel)
-        view.addSubview(infoHolderView)
+        controlViewHolder.addSubview(infoHolderView)
 
-        view.addSubview(previousButton)
-        view.addSubview(playPauseButton)
-        view.addSubview(nextButton)
+        controlViewHolder.addSubview(previousButton)
+        controlViewHolder.addSubview(playPauseButton)
+        controlViewHolder.addSubview(nextButton)
 
+        artworkViewHolder.translatesAutoresizingMaskIntoConstraints = false
         artworkViewHolder.clipsToBounds = false
         artworkViewHolderViewHolder.addSubview(artworkViewHolder)
 
+        artworkViewHolderViewHolder.translatesAutoresizingMaskIntoConstraints = false
         artworkViewHolderViewHolder.clipsToBounds = true
         view.addSubview(artworkViewHolderViewHolder)
 
@@ -183,7 +207,15 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         peekPop.registerForPreviewingWithDelegate(self, sourceView: infoHolderView)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: artworkViewHolder)
 
-        KZPlayer.sharedInstance.audioSession.addObserver(self, forKeyPath: Constants.Observation.outputVolume, options: [.initial, .new], context: nil)
+        KZPlayer.sharedInstance.audioSession.rx.observe(NSNumber.self, Constants.Observation.outputVolume)
+            .map { $0?.floatValue }
+            .bind { [unowned self] volume in
+                guard let volume = volume else {
+                    return
+                }
+
+                self.volumeSlider.progress = CGFloat(volume)
+            }.disposed(by: disposeBag)
 
         NotificationCenter.default.addObserver(forName: .tintColorDidChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
             guard let self = self else {
@@ -284,20 +316,19 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         miniPlayerView.autoPinEdge(toSuperviewEdge: .right)
         miniPlayerView.autoPinEdge(toSuperviewEdge: .top)
 
+        minimizeButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView, withOffset: 30)
         minimizeButton.autoAlignAxis(toSuperviewAxis: .vertical)
 
+        artworkViewHolderViewHolder.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
         artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
-        artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .right)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .vertical)
         artworkViewHolder.autoMatch(.width, to: .width, of: artworkViewHolderViewHolder, withMultiplier: 0.9)
 
         resetArtwork()
 
-        timeSlider.autoPinEdge(.top, to: .bottom, of: artworkViewHolderViewHolder, withOffset: 18)
-        timeSlider.autoMatch(.width, to: .width, of: view, withMultiplier: 0.9)
-        timeSlider.autoAlignAxis(toSuperviewAxis: .vertical)
+        timeSlider.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
 
         infoHolderView.autoPinEdge(.top, to: .bottom, of: timeSlider, withOffset: 18)
         infoHolderView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
@@ -330,6 +361,45 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         volumeSlider.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.horizontalSizeClass == .compact {
+            NSLayoutConstraint.deactivate(regularConstraints)
+
+            // Create the cpompact constraints for the first time if necessary.
+            if compactConstraints.isEmpty {
+                compactConstraints = [
+                    view.rightAnchor.constraint(equalTo: artworkViewHolderViewHolder.rightAnchor),
+
+                    controlViewHolder.topAnchor.constraint(equalToSystemSpacingBelow: artworkViewHolderViewHolder.bottomAnchor, multiplier: 2),
+                    controlViewHolder.leftAnchor.constraint(equalToSystemSpacingAfter: view.leftAnchor, multiplier: 2),
+                    controlViewHolder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                    view.bottomAnchor.constraint(equalToSystemSpacingBelow: controlViewHolder.bottomAnchor, multiplier: 2)
+                ]
+            }
+
+            NSLayoutConstraint.activate(compactConstraints)
+        } else {
+            NSLayoutConstraint.deactivate(compactConstraints)
+
+            // Create the regular constraints for the first time if necessary.
+            if regularConstraints.isEmpty {
+                regularConstraints = [
+                    view.bottomAnchor.constraint(equalToSystemSpacingBelow: artworkViewHolderViewHolder.bottomAnchor, multiplier: 2),
+
+                    controlViewHolder.leftAnchor.constraint(equalToSystemSpacingAfter: artworkViewHolderViewHolder.rightAnchor, multiplier: 2),
+                    view.rightAnchor.constraint(equalToSystemSpacingAfter: controlViewHolder.rightAnchor, multiplier: 2),
+                    controlViewHolder.topAnchor.constraint(equalTo: artworkViewHolderViewHolder.topAnchor),
+                    controlViewHolder.centerYAnchor.constraint(equalTo: artworkViewHolderViewHolder.centerYAnchor),
+                    controlViewHolder.widthAnchor.constraint(equalTo: artworkViewHolderViewHolder.widthAnchor)
+                ]
+            }
+
+            NSLayoutConstraint.activate(regularConstraints)
+        }
     }
 
     func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {
@@ -368,6 +438,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     @discardableResult
     func addArtwork(at index: Int) -> UIImageView {
         let artworkView = UIImageView()
+        artworkView.translatesAutoresizingMaskIntoConstraints = false
         artworkView.backgroundColor = UIColor.init(white: 1.0, alpha: 0.7)
         artworkViewHolder.addSubview(artworkView)
         artworkViews.insert(artworkView, at: index)
@@ -408,10 +479,10 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             self.artworkViewConstraints.removeAll()
             self.resetArtwork()
             self.view.layoutIfNeeded()
-        }) { _ in
+        }, completion: { _ in
             newArtwork.isHidden = false
             self.loadArtwork()
-        }
+        })
     }
 
     func goToPreviousArtwork() {
@@ -430,10 +501,10 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             self.artworkViewConstraints.removeAll()
             self.resetArtwork()
             self.view.layoutIfNeeded()
-        }) { _ in
+        }, completion: { _ in
             newArtwork.isHidden = false
             self.loadArtwork()
-        }
+        })
     }
 
     func loadArtwork() {
@@ -465,14 +536,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
                 return currentNumber == self.loadArtworkNumber
             }
         }
-    }
-
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        guard context == nil, keyPath == Constants.Observation.outputVolume, let volume = (change?[NSKeyValueChangeKey.newKey] as? NSNumber)?.floatValue else {
-            return super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
-
-        volumeSlider.progress = CGFloat(volume)
     }
 
 }

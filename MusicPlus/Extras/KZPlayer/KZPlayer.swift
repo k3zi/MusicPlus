@@ -204,13 +204,11 @@ extension KZPlayer {
             }
         }
 
-        #if !targetEnvironment(simulator)
         do {
             try audioEngine.start()
         } catch {
             os_log(.error, log: .player, "Error starting audio engine")
         }
-        #endif
     }
 
     func addPlayerSet(bus: Int, item: KZPlayerItemBase) -> KZAudioPlayerSet {
@@ -389,13 +387,6 @@ extension KZPlayer {
         }
     }
 
-    func toggleLike() {
-        guard let item = itemForChannel() else {
-            return
-        }
-
-        // MPRemoteCommandCenter.sharedCommandCenter().likeCommand.active = item.liked
-    }
 }
 
 // MARK: Settings
@@ -474,9 +465,7 @@ extension KZPlayer {
         let tempo = customTempo ?? item.tempo
 
         if !audioEngine.isRunning {
-            #if !targetEnvironment(simulator)
             try? audioEngine.start()
-            #endif
         }
 
         os_log(.default, log: .player, "activePlayer = %d", channel)
@@ -565,7 +554,7 @@ extension KZPlayer {
         return true
     }
 
-    func internalPrev() -> Bool {
+    @discardableResult func internalPrev() -> Bool {
         if currentTime() > 3 {
             return setCurrentTime(0)
         }
@@ -761,6 +750,7 @@ extension KZPlayer {
 
         let currentTime = self.currentTime(item: currentItem)
         if !checkTimeFunctioning && settings.crossfade && !crossfading && (currentItem.endTime - currentTime) < settings.crossfadeAtSeconds {
+            os_log("Will crossfade since: (%f - %f) < %f", currentItem.endTime, currentTime, settings.crossfadeAtSeconds)
             checkTimeFunctioning = true
             backgroundNext()
             checkTimeFunctioning = false
@@ -1032,7 +1022,7 @@ extension KZPlayer {
 
         if (position - plusOne) < collection.count && (position - plusOne) > -1 {
             x = collection[position - plusOne]
-        } else if settings.repeatMode == .repeatAll {
+        } else if settings.repeatMode == .repeatAll && plusOne <= collection.count {
             // Go to end of collection
             x = collection[collection.count - plusOne]
         } else {
@@ -1211,20 +1201,6 @@ extension KZPlayer {
         }
 
         return result
-    }
-
-    // MARK: - Song Interaction
-
-    func likeItem(_ item: KZPlayerItem) {
-        guard let realm = currentLibrary?.realm() else {
-            fatalError("No library is currently set.")
-        }
-    }
-
-    func unLikeItem(_ item: KZPlayerItem) {
-        guard let realm = currentLibrary?.realm() else {
-            fatalError("No library is currently set.")
-        }
     }
 
     // MARK: Adding Items

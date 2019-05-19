@@ -17,23 +17,25 @@ class MPAlbumCollectionViewCell: UICollectionViewCell, Reusable {
     let highloightView = UIView()
     var album: KZPlayerAlbum?
 
-    var widthConstraint: NSLayoutConstraint?
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.backgroundColor = RGB(217)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         contentView.addSubview(imageView)
 
+        highloightView.translatesAutoresizingMaskIntoConstraints = false
         imageView.addSubview(highloightView)
 
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.medium)
         titleLabel.numberOfLines = 2
         titleLabel.textColor = .white
         contentView.addSubview(titleLabel)
 
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.font = UIFont.systemFont(ofSize: 10, weight: UIFont.Weight.light)
         subtitleLabel.textColor = .white
         contentView.addSubview(subtitleLabel)
@@ -46,9 +48,8 @@ class MPAlbumCollectionViewCell: UICollectionViewCell, Reusable {
     }
 
     func setupConstraints() {
-        imageView.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets.zero, excludingEdge: .bottom)
+        imageView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         imageView.autoMatch(.height, to: .width, of: imageView)
-        widthConstraint = imageView.autoSetDimension(.width, toSize: 120)
 
         highloightView.autoPinEdgesToSuperviewEdges()
 

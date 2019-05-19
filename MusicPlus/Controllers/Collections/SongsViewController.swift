@@ -19,6 +19,7 @@ class SongsViewController: MPSongCollectionViewController {
         super.viewDidLoad()
 
         title = "Songs"
+        definesPresentationContext = true
         tableView.tableHeaderView = shuffleButton
         tableView.delaysContentTouches = false
 

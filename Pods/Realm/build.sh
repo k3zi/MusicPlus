@@ -126,7 +126,7 @@ xc() {
 }
 
 xctest() {
-  xc "$@" build
+  xc "$@" build-for-testing
   xc "$@" test
 }
 
@@ -157,15 +157,12 @@ build_combined() {
         fi
     elif [[ "$os" == "appletvos"  ]]; then
         os_name="tvos"
-        if (( $(xcode_version_major) >= 9 )); then
-            destination="Apple TV"
-        else
-            destination="Apple TV 1080p"
-        fi
+        destination="Apple TV"
     fi
 
     # Derive build paths
     local build_products_path="build/DerivedData/Realm/Build/Products"
+    local build_intermediates_path="build/DerivedData/Realm/Build/Intermediates.noindex"
     local product_name="$module_name.framework"
     local binary_path="$module_name"
     local os_path="$build_products_path/$config-$os$scope_suffix/$product_name"
@@ -179,6 +176,20 @@ build_combined() {
     # Combine .swiftmodule
     if [ -d $simulator_path/Modules/$module_name.swiftmodule ]; then
       cp $simulator_path/Modules/$module_name.swiftmodule/* $os_path/Modules/$module_name.swiftmodule/
+    fi
+
+    # Xcode 10.2 merges the generated headers together with ifdef guards for
+    # each of the target platforms. This doesn't handle merging
+    # device/simulator builds, so we need to take care of that ourselves.
+    # Currently all platforms have identical headers, so we just pick one and
+    # use that rather than merging, but this may change in the future.
+    if [ -f $os_path/Headers/$module_name-Swift.h ]; then
+      unique_headers=$(find $build_intermediates_path -name $module_name-Swift.h -exec shasum {} \; | cut -d' ' -f 1 | uniq | grep -c '^')
+      if [ $unique_headers != "1" ]; then
+        echo "Platform-specific Swift generated headers are not identical. Merging them is required and is not yet implemented."
+        exit 1
+      fi
+      find $build_intermediates_path -name $module_name-Swift.h -exec cp {} $os_path/Headers \; -quit
     fi
 
     # Copy *.bcsymbolmap to .framework for submitting app with bitcode
@@ -212,17 +223,7 @@ move_to_clean_dir() {
 
 test_ios_static() {
     destination="$1"
-    xc "-scheme 'Realm iOS static' -configuration $CONFIGURATION -sdk iphonesimulator -destination '$destination' build"
-    if (( $(xcode_version_major) < 9 )); then
-        xc "-scheme 'Realm iOS static' -configuration $CONFIGURATION -sdk iphonesimulator -destination '$destination' test 'ARCHS=\$(ARCHS_STANDARD_32_BIT)'"
-    fi
-
-    # Xcode's depending tracking is lacking and it doesn't realize that the Realm static framework's static library
-    # needs to be recreated when the active architectures change. Help Xcode out by removing the static library.
-    settings=$(xcode "-scheme 'Realm iOS static' -configuration $CONFIGURATION -sdk iphonesimulator -destination '$destination' -showBuildSettings")
-    path=$(echo "$settings" | awk '/CONFIGURATION_BUILD_DIR/ { cbd = $3; } /EXECUTABLE_PATH/ { ep = $3; } END { printf "%s/%s\n", cbd, ep; }')
-    rm "$path"
-
+    xc "-scheme 'Realm iOS static' -configuration $CONFIGURATION -sdk iphonesimulator -destination '$destination' build-for-testing"
     xc "-scheme 'Realm iOS static' -configuration $CONFIGURATION -sdk iphonesimulator -destination '$destination' test"
 }
 
@@ -597,19 +598,13 @@ case "$COMMAND" in
         ;;
 
     "test-ios-dynamic")
-        xc "-scheme Realm -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' build"
-        if (( $(xcode_version_major) < 9 )); then
-            xc "-scheme Realm -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' test 'ARCHS=\$(ARCHS_STANDARD_32_BIT)'"
-        fi
+        xc "-scheme Realm -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' build-for-testing"
         xc "-scheme Realm -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' test"
         exit 0
         ;;
 
     "test-ios-swift")
-        xc "-scheme RealmSwift -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' build"
-        if (( $(xcode_version_major) < 9 )); then
-            xc "-scheme RealmSwift -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' test 'ARCHS=\$(ARCHS_STANDARD_32_BIT)'"
-        fi
+        xc "-scheme RealmSwift -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' build-for-testing"
         xc "-scheme RealmSwift -configuration $CONFIGURATION -sdk iphonesimulator -destination 'name=iPhone 6' test"
         exit 0
         ;;
@@ -633,21 +628,13 @@ case "$COMMAND" in
         ;;
 
     "test-tvos")
-        if (( $(xcode_version_major) >= 9 )); then
-            destination="Apple TV"
-        else
-            destination="Apple TV 1080p"
-        fi
+        destination="Apple TV"
         xctest "-scheme Realm -configuration $CONFIGURATION -sdk appletvsimulator -destination 'name=$destination'"
         exit $?
         ;;
 
     "test-tvos-swift")
-        if (( $(xcode_version_major) >= 9 )); then
-            destination="Apple TV"
-        else
-            destination="Apple TV 1080p"
-        fi
+        destination="Apple TV"
         xctest "-scheme RealmSwift -configuration $CONFIGURATION -sdk appletvsimulator -destination 'name=$destination'"
         exit $?
         ;;
@@ -751,7 +738,6 @@ case "$COMMAND" in
 
     "verify-osx")
         sh build.sh test-osx
-        sh build.sh analyze-osx
         sh build.sh examples-osx
 
         (
@@ -895,11 +881,7 @@ case "$COMMAND" in
 
     "examples-tvos")
         workspace="examples/tvos/objc/RealmExamples.xcworkspace"
-        if (( $(xcode_version_major) >= 9 )); then
-            destination="Apple TV"
-        else
-            destination="Apple TV 1080p"
-        fi
+        destination="Apple TV"
 
         xc "-workspace $workspace -scheme DownloadCache -configuration $CONFIGURATION -destination 'name=$destination' build ${CODESIGN_PARAMS}"
         xc "-workspace $workspace -scheme PreloadedData -configuration $CONFIGURATION -destination 'name=$destination' build ${CODESIGN_PARAMS}"
@@ -912,12 +894,7 @@ case "$COMMAND" in
             workspace="${workspace/swift/swift-$REALM_XCODE_VERSION}"
         fi
 
-        if (( $(xcode_version_major) >= 9 )); then
-            destination="Apple TV"
-        else
-            destination="Apple TV 1080p"
-        fi
-
+        destination="Apple TV"
         xc "-workspace $workspace -scheme DownloadCache -configuration $CONFIGURATION -destination 'name=$destination' build ${CODESIGN_PARAMS}"
         xc "-workspace $workspace -scheme PreloadedData -configuration $CONFIGURATION -destination 'name=$destination' build ${CODESIGN_PARAMS}"
         exit 0
@@ -1213,7 +1190,7 @@ EOM
 
     package-*-swift)
         PLATFORM=$(echo $COMMAND | cut -d - -f 2)
-        for version in 9.2 9.3 9.4 10.0 10.1 10.2; do
+        for version in 9.2 9.3 9.4 10.0 10.1 10.2.1; do
             REALM_XCODE_VERSION=$version
             REALM_SWIFT_VERSION=
             set_xcode_and_swift_versions
@@ -1222,7 +1199,7 @@ EOM
         done
 
         cd build/$PLATFORM
-        zip --symlinks -r realm-swift-framework-$PLATFORM.zip swift-9.2 swift-9.2 swift-9.4 swift-10.0 swift-10.1 swift-10.2
+        zip --symlinks -r realm-swift-framework-$PLATFORM.zip swift-9.2 swift-9.2 swift-9.4 swift-10.0 swift-10.1 swift-10.2.1
         ;;
 
     package-*-swift-*)
@@ -1426,8 +1403,9 @@ x.y.z Release notes (yyyy-MM-dd)
 
 ### Compatibility
 * File format: Generates Realms with format v9 (Reads and upgrades all previous formats)
-* Realm Object Server: 3.11.0 or later.
+* Realm Object Server: 3.21.0 or later.
 * APIs are backwards compatible with all previous releases in the 3.x.y series.
+* Carthage release for Swift is built with Xcode 10.2.1.
 EOS)
         changelog=$(cat CHANGELOG.md)
         echo "$empty_section" > CHANGELOG.md

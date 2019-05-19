@@ -33,11 +33,10 @@ class MPSectionHeaderView: UIView {
     func setupView() {
         backgroundColor = .init(white: 0, alpha: 0.2)
 
+        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 18, weight: UIFont.Weight.semibold)
         label.textColor = AppDelegate.del().session.tintColor
         addSubview(label)
-
-        label.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16))
 
         fillInView()
         setupConstraints()
@@ -48,7 +47,12 @@ class MPSectionHeaderView: UIView {
     }
 
     func setupConstraints() {
-        label.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 0))
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.leftAnchor.constraint(equalToSystemSpacingAfter: leftAnchor, multiplier: 2),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor),
+            label.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
     }
 
     @objc func updateTint() {

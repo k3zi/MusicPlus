@@ -26,23 +26,17 @@ Flx 关注构建 `UICollectionView` / `UITableView` 的 Cell，它不限制视�
 
 ## 使用要求
 
-- Xcode 9.0+
-- Swift 4.2+
-- RxSwift 4.3+
-- RxDataSources 3.1+
+- Xcode 10.2+
+- Swift 5+
+- RxSwift 5.0+
+- RxDataSources 4.0+
 
 ## 安装
 
 ### CocoaPods
 
 ```ruby
-pod 'Flix', '~> 2.0'
-```
-
-### Carthage
-
-```
-github "DianQK/Flix" ~> 1.2
+pod 'Flix', '~> 4.0'
 ```
 
 ## 原理
@@ -253,8 +247,6 @@ self.tableView.flix.build([
 ## Contact
 
 Raise an [Issue](https://github.com/DianQK/Flix/issues) or hit me up on Twitter [@Songxut](https://twitter.com/Songxut).
-
-You can also join Telegram Group https://t.me/Flix_iOS.
 
 ## License
 

@@ -41,7 +41,7 @@ static uint32_t *bitmapData;
 	// Create a bitmap context to draw the uiimage into
 	CGContextRef context = [self newBitmapRGBA8ContextFromImage:imageRef];
 	
-	if(!context) {
+	if (!context) {
 		return NULL;
 	}
 	
@@ -62,11 +62,11 @@ static uint32_t *bitmapData;
 	
 	unsigned char *newBitmap = NULL;
 	
-	if(bitmapData) {
+	if (bitmapData) {
 		newBitmap = (unsigned char *)malloc(sizeof(unsigned char) * bytesPerRow * height);
 		
-		if(newBitmap) {	// Copy the data
-			for(int i = 0; i < bufferLength; ++i) {
+		if (newBitmap) {	// Copy the data
+			for (int i = 0; i < bufferLength; ++i) {
 				newBitmap[i] = bitmapData[i];
 			}
 		}
@@ -98,16 +98,16 @@ static uint32_t *bitmapData;
 	
 	colorSpace = CGColorSpaceCreateDeviceRGB();
 	
-	if(!colorSpace) {
+	if (!colorSpace) {
 		NSLog(@"Error allocating color space RGB\n");
 		return NULL;
 	}
 	
-    if(bitmapData)free(bitmapData);
+    if (bitmapData)free(bitmapData);
 	// Allocate memory for image data
 	bitmapData = (uint32_t *)malloc(bufferLength);
 	
-	if(!bitmapData) {
+	if (!bitmapData) {
 		NSLog(@"Error allocating memory for bitmap\n");
 		CGColorSpaceRelease(colorSpace);
 		return NULL;
@@ -122,7 +122,7 @@ static uint32_t *bitmapData;
 									colorSpace, 
                                     kCGImageAlphaPremultipliedLast);	// RGBA
 	
-	if(!context) {
+	if (!context) {
 		free(bitmapData);
 		NSLog(@"Bitmap context not created");
 	}
@@ -144,7 +144,7 @@ static uint32_t *bitmapData;
 	size_t bytesPerRow = 4 * width;
 	
 	CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
-	if(colorSpaceRef == NULL) {
+	if (colorSpaceRef == NULL) {
 		NSLog(@"Error allocating color space");
 		CGDataProviderRelease(provider);
 		return nil;
@@ -166,7 +166,7 @@ static uint32_t *bitmapData;
     
 	uint32_t* pixels = (uint32_t*)malloc(bufferLength);
 	
-	if(pixels == NULL) {
+	if (pixels == NULL) {
 		NSLog(@"Error: Memory not allocated for bitmap");
 		CGDataProviderRelease(provider);
 		CGColorSpaceRelease(colorSpaceRef);
@@ -182,20 +182,21 @@ static uint32_t *bitmapData;
 												 colorSpaceRef,
                                                  bitmapInfo);
 	
-	if(context == NULL) {
+	if (context == NULL) {
 		NSLog(@"Error context not created");
 		free(pixels);
+        pixels = nil;
 	}
 	
 	UIImage *image = nil;
-	if(context) {
+	if (context) {
 		
 		CGContextDrawImage(context, CGRectMake(0.0f, 0.0f, width, height), iref);
 		
 		CGImageRef imageRef = CGBitmapContextCreateImage(context);
 		
 		// Support both iPad 3.2 and iPhone 4 Retina displays with the correct scale
-		if([UIImage respondsToSelector:@selector(imageWithCGImage:scale:orientation:)]) {
+		if ([UIImage respondsToSelector:@selector(imageWithCGImage:scale:orientation:)]) {
 			float scale = [[UIScreen mainScreen] scale];
 			image = [UIImage imageWithCGImage:imageRef scale:scale orientation:UIImageOrientationUp];
 		} else {
@@ -210,7 +211,7 @@ static uint32_t *bitmapData;
 	CGImageRelease(iref);
 	CGDataProviderRelease(provider);
 	
-	if(pixels) {
+	if (pixels) {
 		free(pixels);
 	}	
 	return image;
@@ -241,9 +242,9 @@ static NSInteger __white = 0;
             // }
             free(__colorMatrix[i][j]);
         }
-        free(*__colorMatrix[i]);
+        free(__colorMatrix[i]);
     }
-    free(**__colorMatrix);
+    free(__colorMatrix);
 }
 
 + (void)_resetColorMatrix {
@@ -269,9 +270,9 @@ static NSInteger __white = 0;
         __colorMatrixSize = matrixSize;
     }
     
-    __colorMatrix = malloc(__colorMatrixSize * sizeof(NSInteger));
+    __colorMatrix = malloc(__colorMatrixSize * sizeof(NSInteger**));
     for (int i = 0; i < __colorMatrixSize; i++) {
-        __colorMatrix[i] = malloc(__colorMatrixSize * sizeof(NSInteger));
+        __colorMatrix[i] = malloc(__colorMatrixSize * sizeof(NSInteger*));
         for (int j = 0; j < __colorMatrixSize; j++) {
             __colorMatrix[i][j] = malloc(__colorMatrixSize * sizeof(NSInteger));
             for (int k = 0; k < __colorMatrixSize; k++) {
@@ -315,7 +316,7 @@ static NSInteger __white = 0;
 	// Create a bitmap context to draw the uiimage into
 	CGContextRef context = [self newBitmapRGBA8ContextFromImage:imageRef];
 	
-	if(!context) {
+	if (!context) {
 		return nil;
 	}
 	
@@ -344,7 +345,7 @@ static NSInteger __white = 0;
     
     // NSInteger doubleColorMatrixSize = (__colorMatrixSize * __colorMatrixSize);
     
-    for(int i = 0; i < bufferLength; i += 4) {
+    for (int i = 0; i < bufferLength; i += 4) {
         // newBitmap[i] = bitmapData[i];
         // r = newBitmap[i] >> 24;
         // pixel = ((pixelRGBA8)newBitmap[i]);

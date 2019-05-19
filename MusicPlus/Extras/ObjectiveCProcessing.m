@@ -97,7 +97,12 @@ typedef struct Address3D Address3D;
     // Create a bitmap context to draw the uiimage into
     CGContextRef context = [self newBitmapRGBA8ContextFromImage:imageRef];
 
-    if(!context || self.isCancelled) {
+    if(!context) {
+        return nil;
+    }
+
+    if (self.isCancelled) {
+        CGContextRelease(context);
         return nil;
     }
 
@@ -139,7 +144,7 @@ typedef struct Address3D Address3D;
 
     Address3D *mostRecentColors = malloc(frequentColorsCount * sizeof(Address3D));
 
-    for (int i = 0; !self.isCancelled && i < frequentColorsCount; i++) {
+    for (int i = 0; i < frequentColorsCount; i++) {
         mostRecentColors[i].x = 0;
         mostRecentColors[i].y = 0;
         mostRecentColors[i].z = 0;
@@ -192,9 +197,9 @@ typedef struct Address3D Address3D;
         __colorMatrixSize = matrixSize;
     }
 
-    __colorMatrix = malloc(__colorMatrixSize * sizeof(NSInteger));
+    __colorMatrix = malloc(__colorMatrixSize * sizeof(NSInteger**));
     for (int i = 0; !self.isCancelled && i < __colorMatrixSize; i++) {
-        __colorMatrix[i] = malloc(__colorMatrixSize * sizeof(NSInteger));
+        __colorMatrix[i] = malloc(__colorMatrixSize * sizeof(NSInteger*));
         for (int j = 0; !self.isCancelled && j < __colorMatrixSize; j++) {
             __colorMatrix[i][j] = malloc(__colorMatrixSize * sizeof(NSInteger));
             for (int k = 0; !self.isCancelled && k < __colorMatrixSize; k++) {
@@ -212,9 +217,9 @@ typedef struct Address3D Address3D;
             // }
             free(__colorMatrix[i][j]);
         }
-        free(*__colorMatrix[i]);
+        free(__colorMatrix[i]);
     }
-    free(**__colorMatrix);
+    free(__colorMatrix);
 }
 
 - (void)_resetColorMatrix {

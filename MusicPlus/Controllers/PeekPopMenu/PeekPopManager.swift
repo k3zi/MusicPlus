@@ -99,13 +99,13 @@ class PeekPopManager {
 
         UIView.animate(withDuration: 0.2, delay: 0.1, options: [], animations: {
             self.peekPopWindow.alpha = 0.0
-        }) { _ in
+        }, completion: { _ in
             self.peekPop.peekPopGestureRecognizer?.resetValues()
             self.peekPopWindow.isHidden = true
             view.removeFromSuperview()
             self.peekPopWindow.resignKey()
             self.peekPopWindow.removeFromSuperview()
-        }
+        })
 
         peekPopView = nil
     }

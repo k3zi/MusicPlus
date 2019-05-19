@@ -53,11 +53,11 @@ class MPNavigationAnimatedTransitiion: NSObject, UIViewControllerAnimatedTransit
         UIView.animate(withDuration: Constants.UI.Animation.controllerPushPop, delay: 0.0, usingSpringWithDamping: 1000, initialSpringVelocity: 1, options: [], animations: {
             toView?.frame = container.frame
             fromView?.frame = fromDestinationFrame!
-            }) { _ in
-                toView?.frame = container.frame
-                toView?.isUserInteractionEnabled = true
-                fromView?.removeFromSuperview()
-                transitionContext.completeTransition(true)
-        }
+        }, completion: { _ in
+            toView?.frame = container.frame
+            toView?.isUserInteractionEnabled = true
+            fromView?.removeFromSuperview()
+            transitionContext.completeTransition(true)
+        })
     }
 }

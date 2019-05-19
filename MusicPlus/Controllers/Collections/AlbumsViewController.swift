@@ -186,12 +186,6 @@ class AlbumsViewController: KZViewController {
         let cellWidth = (size.width - cellsPerRow*10)/cellsPerRow
         layout.itemSize = CGSize(width: cellWidth, height: cellWidth + 50)
 
-        for cell in collectionView.visibleCells {
-            if let cell = cell as? MPAlbumCollectionViewCell {
-                cell.widthConstraint?.constant = layout.itemSize.width
-            }
-        }
-
         layout.invalidateLayout()
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -277,8 +271,6 @@ extension AlbumsViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
             }
         }
-        cell.widthConstraint?.constant = layout.itemSize.width
-        cell.layoutIfNeeded()
 
         return cell
     }

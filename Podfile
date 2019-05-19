@@ -13,7 +13,7 @@ target 'MusicPlus' do
     pod 'RealmSwift'
     pod 'PRTween'
 
-    pod 'Alamofire'
+    pod 'Alamofire', '~> 4.8.2'
     pod 'PromiseKit/Alamofire'
     pod 'AlamofireImage'
     pod 'XMLMapper'

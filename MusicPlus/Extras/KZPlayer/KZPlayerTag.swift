@@ -19,11 +19,12 @@ class KZPlayerTag: Object {
 }
 
 extension UIColor {
+
     convenience init(hexString: String) {
         let hexString = hexString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         let scanner = Scanner(string: hexString)
 
-        if (hexString.hasPrefix("#")) {
+        if hexString.hasPrefix("#") {
             scanner.scanLocation = 1
         }
 
@@ -51,7 +52,7 @@ extension UIColor {
         getRed(&r, green: &g, blue: &b, alpha: &a)
 
         let rgb: Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
-
         return NSString(format: "#%06x", rgb) as String
     }
+
 }

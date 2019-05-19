@@ -15,10 +15,6 @@ public typealias SingleUICollectionViewCellProvider = SingleCollectionViewProvid
 public typealias UniqueCustomCollectionViewProvider = SingleUICollectionViewCellProvider
 
 open class SingleCollectionViewProvider<Cell: UICollectionViewCell>: CustomProvider, UniqueAnimatableCollectionViewProvider, ProviderHiddenable, CustomIdentityType {
-    public func onCreate(_ collectionView: UICollectionView, cell: UICollectionViewCell, indexPath: IndexPath) {
-
-    }
-
 
     public typealias Cell = UICollectionViewCell
     
@@ -67,7 +63,7 @@ open class SingleCollectionViewProvider<Cell: UICollectionViewCell>: CustomProvi
         self.customIdentity = ""
     }
 
-    open func onCreate(_ collectionView: UICollectionView, cell: Cell, indexPath: IndexPath) {
+    open func onCreate(_ collectionView: UICollectionView, cell: UICollectionViewCell, indexPath: IndexPath) {
         self.onGetCell(cell)
         cell.selectedBackgroundView = self.selectedBackgroundView
         cell.backgroundView = self.backgroundView
