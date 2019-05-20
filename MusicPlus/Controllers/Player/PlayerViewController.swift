@@ -28,6 +28,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     let disposeBag = DisposeBag()
     var compactConstraints = [NSLayoutConstraint]()
     var regularConstraints = [NSLayoutConstraint]()
+    var minimizeButtonTopConstraint: NSLayoutConstraint?
 
     let controlViewHolder = UIView()
 
@@ -309,6 +310,12 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         volumeSlider.progress = CGFloat(KZPlayer.sharedInstance.systemVolume)
     }
 
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        minimizeButtonTopConstraint?.constant = view.safeAreaInsets.top
+        view.layoutIfNeeded()
+    }
+
     override func setupConstraints() {
         super.setupConstraints()
 
@@ -316,14 +323,15 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         miniPlayerView.autoPinEdge(toSuperviewEdge: .right)
         miniPlayerView.autoPinEdge(toSuperviewEdge: .top)
 
-        minimizeButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView, withOffset: 30)
+        minimizeButton.setContentHuggingPriority(.init(999), for: .vertical)
+        minimizeButtonTopConstraint = minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView)
         minimizeButton.autoAlignAxis(toSuperviewAxis: .vertical)
 
         artworkViewHolderViewHolder.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
         artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .vertical)
+        artworkViewHolder.autoAlignAxis(toSuperviewAxis: .horizontal)
         artworkViewHolder.autoMatch(.width, to: .width, of: artworkViewHolderViewHolder, withMultiplier: 0.9)
 
         resetArtwork()
