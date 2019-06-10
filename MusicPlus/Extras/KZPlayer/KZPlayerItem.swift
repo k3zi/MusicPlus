@@ -314,16 +314,17 @@ extension UIImageView {
 
     func setImage(with item: KZPlayerItemBase, isStillValid: (() -> Bool)? = nil) {
         // Collisions should be bearable.
-        let newTag = item.systemID.MD5().hashValue
+        let newTag = item.systemID.hashValue
         guard tag != newTag else {
             return
         }
         tag = newTag
 
-        image = item.fetchArtwork { artwork in
-            if self.tag == newTag, let isStillValid = isStillValid, !isStillValid() {
+        image = item.fetchArtwork { [weak self] artwork in
+            guard let self = self, self.tag == newTag, let isStillValid = isStillValid, isStillValid() else {
                 return
             }
+
             self.image = artwork.image(at: self.bounds.size)
         }?.image(at: bounds.size)
     }

@@ -10,10 +10,12 @@ import Foundation
 import AVFoundation
 
 class KZAudioPlayerSet: StreamingDelegate {
-    var auPlayer: AVAudioPlayerNode
-    var auSpeed: AVAudioUnitTimePitch
-    var auEqualizer: AVAudioUnitEQ
-    var itemKey: String
+
+    let auPlayer: AVAudioPlayerNode
+    let auSpeed: AVAudioUnitTimePitch
+    let auEqualizer: AVAudioUnitEQ
+    let itemKey: String
+
     var shouldUseCallback = true
 
     /// Whether the set has or will be removed from the audio engine and should thus be disregarded
@@ -162,7 +164,7 @@ class KZAudioPlayerSet: StreamingDelegate {
     }
 
     func currentTime(item: KZPlayerItemBase? = nil) -> Double {
-        guard auPlayer.engine != nil else {
+        guard auPlayer.isPlaying && auPlayer.engine != nil else {
             return 0
         }
 

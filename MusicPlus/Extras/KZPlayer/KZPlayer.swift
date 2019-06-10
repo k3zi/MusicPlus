@@ -211,17 +211,19 @@ extension KZPlayer {
         }
     }
 
-    func addPlayerSet(bus: Int, item: KZPlayerItemBase) -> KZAudioPlayerSet {
+    func createPlayerSet(forChannel channel: Int, item: KZPlayerItemBase) -> KZAudioPlayerSet {
         let set = KZAudioPlayerSet(item: item.originalItem)
         let format = auMixer.inputFormat(forBus: 0)
 
+         os_log(.default, log: .player, "connecting channel %d to engine")
         for unit in [set.auPlayer, set.auEqualizer, set.auSpeed] as [AVAudioNode] {
             audioEngine.attach(unit)
         }
 
         audioEngine.connect(set.auPlayer, to: set.auSpeed, format: format)
         audioEngine.connect(set.auSpeed, to: set.auEqualizer, format: format)
-        audioEngine.connect(set.auEqualizer, to: auMixer, fromBus: 0, toBus: bus, format: format)
+        audioEngine.connect(set.auEqualizer, to: auMixer, fromBus: 0, toBus: channel, format: format)
+        os_log(.default, log: .player, "finished connecting channel %d to engine")
 
         set.volume = 0.0
 
@@ -462,14 +464,14 @@ extension KZPlayer {
             return
         }
 
-        persistentPlayNextSong(collection[index], times: collection.count, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
+        playNextSongPersistently(collection[index], times: collection.count, shouldCrossfadeOnSkip: settings.crossfadeOnNext)
         NotificationCenter.default.post(name: .didStartNewCollection, object: nil)
     }
 
     // Play Single Item
     func play(_ item: KZPlayerItemBase, silent: Bool = false, isQueueItem: Bool = false, tempo customTempo: Double? = nil) -> Bool {
         let channel = rotateChannelInt()
-        let playerSet = addPlayerSet(bus: channel, item: item)
+        let playerSet = createPlayerSet(forChannel: channel, item: item)
         auPlayerSets[channel] = playerSet
         os_log(.default, log: .player, "will attempt to play %@ on channel %d", item.title, channel)
 
@@ -669,12 +671,15 @@ extension KZPlayer {
             return
         }
 
+        os_log(.default, log: .player, "removing channel %d", channel)
+
         set.isRemoved = true
         for unit in [set.auPlayer, set.auEqualizer, set.auSpeed].reversed() as [AVAudioNode] {
             unit.reset()
             audioEngine.detach(unit)
         }
         auPlayerSets.removeValue(forKey: channel)
+        os_log(.default, log: .player, "removed channel %d", channel)
     }
 
     func playerCompleted(_ channel: Int, force: Bool = false, shouldCrossfadeOnSkip: Bool = true) {
@@ -685,11 +690,11 @@ extension KZPlayer {
             return
         }
 
-        persistentPlayNextSong(shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
+        playNextSongPersistently(shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
         NotificationCenter.default.post(name: .nextSongDidPlay, object: nil)
     }
 
-    func persistentPlayNextSong(_ item: KZPlayerItemBase? = nil, times: Int = 1, shouldCrossfadeOnSkip: Bool = true) {
+    func playNextSongPersistently(_ item: KZPlayerItemBase? = nil, times: Int = 1, shouldCrossfadeOnSkip: Bool = true) {
         var played = false
         var i = 0
         while !played && i < times {
@@ -983,6 +988,7 @@ extension KZPlayer {
     }
 
     func resetPlayer() {
+        os_log(.default, log: .player, "resetting player")
         activePlayer = -1
         auPlayerSets.forEach {
             $0.value.isRemoved = true
@@ -991,6 +997,7 @@ extension KZPlayer {
         stopCrossfade()
         auPlayerSets.removeAll()
         averagePower = 0.0
+        os_log(.default, log: .player, "finished resetting player")
     }
 }
 
