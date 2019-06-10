@@ -369,15 +369,15 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         volumeSlider.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
         volumeSlider.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
+
+        setupTraitSpecificConstraints()
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
+    func setupTraitSpecificConstraints() {
         if traitCollection.horizontalSizeClass == .compact {
             NSLayoutConstraint.deactivate(regularConstraints)
 
-            // Create the cpompact constraints for the first time if necessary.
+            // Create the compact constraints for the first time if necessary.
             if compactConstraints.isEmpty {
                 compactConstraints = [
                     view.rightAnchor.constraint(equalTo: artworkViewHolderViewHolder.rightAnchor),
@@ -408,6 +408,12 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
             NSLayoutConstraint.activate(regularConstraints)
         }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupTraitSpecificConstraints()
     }
 
     func previewingContext(_ previewingContext: PreviewingContext, viewForLocation location: CGPoint) -> UIView? {

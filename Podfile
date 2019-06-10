@@ -10,7 +10,8 @@ target 'MusicPlus' do
 
     pod 'Zip'
 
-    pod 'RealmSwift'
+    pod 'Realm', git: 'https://github.com/realm/realm-cocoa.git', branch: 'master', submodules: true
+    pod 'RealmSwift', git: 'https://github.com/realm/realm-cocoa.git', branch: 'master', submodules: true
     pod 'PRTween'
 
     pod 'Alamofire', '~> 4.8.2'

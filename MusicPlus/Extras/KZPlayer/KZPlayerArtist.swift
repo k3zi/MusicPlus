@@ -11,6 +11,7 @@ import MediaPlayer
 import RealmSwift
 
 class KZPlayerArtist: Object, RealmGenerating {
+
     @objc dynamic var name = ""
     @objc dynamic var liked = false
 

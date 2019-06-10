@@ -296,17 +296,28 @@ extension KZPlayer {
 
         AppDelegate.del().window?.addSubview(volumeView)
 
-        MPRemoteCommandCenter.shared().playCommand.addTarget(self, action: #selector(resume))
-        MPRemoteCommandCenter.shared().pauseCommand.addTarget(self, action: #selector(pause))
-        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget(self, action: #selector(next))
-        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget(self, action: #selector(prev))
-        // MPRemoteCommandCenter.sharedCommandCenter().likeCommand.addTarget(self, action: #selector(self.toggleLike))
-        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget { event -> MPRemoteCommandHandlerStatus in
+        MPRemoteCommandCenter.shared().playCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+            self?.resume()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().pauseCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+            self?.pause()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+            self?.next()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().previousTrackCommand.addTarget { [weak self] _ -> MPRemoteCommandHandlerStatus in
+            _ = self?.prev()
+            return .success
+        }
+        MPRemoteCommandCenter.shared().changePlaybackPositionCommand.addTarget { [weak self] event -> MPRemoteCommandHandlerStatus in
             guard let event = event as? MPChangePlaybackPositionCommandEvent else {
                 return .commandFailed
             }
 
-            return self.setCurrentTime(event.positionTime) ? .success : .commandFailed
+            return self?.setCurrentTime(event.positionTime) == true ? .success : .commandFailed
         }
 
         MPRemoteCommandCenter.shared().playCommand.isEnabled = true

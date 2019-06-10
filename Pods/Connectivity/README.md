@@ -6,7 +6,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/c3041fef8e33cc4d00df/maintainability)](https://codeclimate.com/github/rwbutler/Connectivity/maintainability)
 [![License](https://img.shields.io/cocoapods/l/Connectivity.svg?style=flat)](http://cocoapods.org/pods/Connectivity)
 [![Platform](https://img.shields.io/cocoapods/p/Connectivity.svg?style=flat)](http://cocoapods.org/pods/Connectivity)
-[![Swift 4.2](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://swift.org/)
+[![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat)](https://swift.org/)
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 Connectivity is a wrapper for Apple's [Reachability](https://developer.apple.com/library/content/samplecode/Reachability/Introduction/Intro.html) providing a reliable measure of whether Internet connectivity is available where Reachability alone can only indicate whether _an interface is available that might allow a connection_.
@@ -47,6 +47,18 @@ To learn more about how to use Connectivity, take a look at the [keynote present
 ## What's new in Connectivity 3.0.0?
 
 Connectivity 3.0.0 brings support for Swift 5.0. The previous version supporting Swift 4.2 is version 2.2.1.
+
+If you require the Swift 4.2 version then in your `Podfile`:
+
+```ruby
+pod "Connectivity" "~> 2.0" 
+```
+
+Or if you are using Carthage add the following to your `Cartfile`:
+
+```ogdl
+github "rwbutler/Connectivity" ~> 2.2.1
+```
 
 ## What's new in Connectivity 2.0.0?
 

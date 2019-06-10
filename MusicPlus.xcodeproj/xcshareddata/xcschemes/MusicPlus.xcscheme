@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "EAA040C21CF437FA005453F9"
+            BuildableName = "MusicPlus.app"
+            BlueprintName = "MusicPlus"
+            ReferencedContainer = "container:MusicPlus.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -49,17 +58,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EAA040C21CF437FA005453F9"
-            BuildableName = "MusicPlus.app"
-            BlueprintName = "MusicPlus"
-            ReferencedContainer = "container:MusicPlus.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -72,6 +70,7 @@
       debugDocumentVersioning = "YES"
       stopOnEveryUBSanitizerIssue = "YES"
       stopOnEveryMainThreadCheckerIssue = "YES"
+      migratedStopOnEveryIssue = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable
