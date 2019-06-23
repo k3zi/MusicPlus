@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Connectivity",
+        "repositoryURL": "git@github.com:k3zi/Connectivity.git",
+        "state": {
+          "branch": "support_spm",
+          "revision": "52616d12e9dddba3008eb888b8fa000c861fe11a",
+          "version": null
+        }
+      },
+      {
         "package": "Gooey",
         "repositoryURL": "git@github.com:k3zi/Gooey.git",
         "state": {

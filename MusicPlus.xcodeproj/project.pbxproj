@@ -78,6 +78,10 @@
 		EA85E1E321EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E221EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift */; };
 		EA85E1E521EA3226000188F7 /* SyncItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E421EA3226000188F7 /* SyncItem.swift */; };
 		EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA85E1E621EA33B2000188F7 /* MediaSettings.swift */; };
+		EA8A0FD422BF527100C20273 /* Connectivity in Frameworks */ = {isa = PBXBuildFile; productRef = EA8A0FD322BF527100C20273 /* Connectivity */; };
+		EA8A0FF122BFCA3200C20273 /* Array-AnyCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF022BFCA3200C20273 /* Array-AnyCancellable.swift */; };
+		EA8A0FF422BFD25700C20273 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF322BFD25700C20273 /* Images.swift */; };
+		EA8A0FF622C0015000C20273 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF522C0015000C20273 /* Colors.swift */; };
 		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
 		EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */; };
 		EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */; };
@@ -230,6 +234,9 @@
 		EA85E1E221EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesSyncItemsGETResponse.swift; sourceTree = "<group>"; };
 		EA85E1E421EA3226000188F7 /* SyncItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncItem.swift; sourceTree = "<group>"; };
 		EA85E1E621EA33B2000188F7 /* MediaSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaSettings.swift; sourceTree = "<group>"; };
+		EA8A0FF022BFCA3200C20273 /* Array-AnyCancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array-AnyCancellable.swift"; sourceTree = "<group>"; };
+		EA8A0FF322BFD25700C20273 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		EA8A0FF522C0015000C20273 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntermediatePredicate.swift; path = ../../../Dependencies/IntermediatePredicate/IntermediatePredicate/IntermediatePredicate.swift; sourceTree = "<group>"; };
 		EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewCell.swift; sourceTree = "<group>"; };
@@ -298,6 +305,7 @@
 				EA4D565D21F391EF00CD3930 /* aubio.framework in Frameworks */,
 				EA4D565C21F3918000CD3930 /* Accelerate.framework in Frameworks */,
 				EA4D565A21F3917C00CD3930 /* AudioToolbox.framework in Frameworks */,
+				EA8A0FD422BF527100C20273 /* Connectivity in Frameworks */,
 				EABBC7D822BEE34300F96285 /* Gooey in Frameworks */,
 				EAF47D94D855E246A20B9D2B /* Pods_MusicPlus.framework in Frameworks */,
 			);
@@ -512,6 +520,26 @@
 			path = Player;
 			sourceTree = "<group>";
 		};
+		EA8A0FCF22BF3E1700C20273 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				EA8A0FF022BFCA3200C20273 /* Array-AnyCancellable.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		EA8A0FF222BFCE3300C20273 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EAA040CD1CF437FA005453F9 /* Assets.xcassets */,
+				29C25DDB1D0CF12300309122 /* MusicPlus-BridgeHeader.h */,
+				EAA040CF1CF437FA005453F9 /* LaunchScreen.storyboard */,
+				291F6A3F1D1180500032BB51 /* MusicPlus.entitlements */,
+				EAA040D21CF437FA005453F9 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		EAA040BA1CF437FA005453F9 = {
 			isa = PBXGroup;
 			children = (
@@ -537,19 +565,13 @@
 		EAA040C51CF437FA005453F9 /* MusicPlus */ = {
 			isa = PBXGroup;
 			children = (
+				EA8A0FF222BFCE3300C20273 /* Resources */,
 				EABBC7D922BEE72400F96285 /* Core */,
 				EAF6AE3D21E17C8600E1F727 /* Extensions */,
 				29E6409E1D0E17C2005BA3D7 /* Extras */,
 				EAA040F51CF4475B005453F9 /* Models */,
 				EAA040F61CF44762005453F9 /* Views */,
 				EAA040F71CF44768005453F9 /* Controllers */,
-				EAA040C61CF437FA005453F9 /* AppDelegate.swift */,
-				29C25DDC1D0CF4C000309122 /* Constants.swift */,
-				29C25DDB1D0CF12300309122 /* MusicPlus-BridgeHeader.h */,
-				EAA040CD1CF437FA005453F9 /* Assets.xcassets */,
-				EAA040CF1CF437FA005453F9 /* LaunchScreen.storyboard */,
-				EAA040D21CF437FA005453F9 /* Info.plist */,
-				291F6A3F1D1180500032BB51 /* MusicPlus.entitlements */,
 			);
 			path = MusicPlus;
 			sourceTree = "<group>";
@@ -644,6 +666,9 @@
 			isa = PBXGroup;
 			children = (
 				EABBC7DA22BEE73E00F96285 /* Appearance */,
+				EA8A0FCF22BF3E1700C20273 /* Helpers */,
+				29C25DDC1D0CF4C000309122 /* Constants.swift */,
+				EAA040C61CF437FA005453F9 /* AppDelegate.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -651,7 +676,9 @@
 		EABBC7DA22BEE73E00F96285 /* Appearance */ = {
 			isa = PBXGroup;
 			children = (
+				EA8A0FF322BFD25700C20273 /* Images.swift */,
 				EABBC7DB22BEE75900F96285 /* Strings.swift */,
+				EA8A0FF522C0015000C20273 /* Colors.swift */,
 			);
 			path = Appearance;
 			sourceTree = "<group>";
@@ -811,6 +838,7 @@
 			name = MusicPlus;
 			packageProductDependencies = (
 				EABBC7D722BEE34300F96285 /* Gooey */,
+				EA8A0FD322BF527100C20273 /* Connectivity */,
 			);
 			productName = MusicPlus;
 			productReference = EAA040C31CF437FA005453F9 /* MusicPlus.app */;
@@ -899,6 +927,7 @@
 			mainGroup = EAA040BA1CF437FA005453F9;
 			packageReferences = (
 				EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */,
+				EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */,
 			);
 			productRefGroup = EAA040C41CF437FA005453F9 /* Products */;
 			projectDirPath = "";
@@ -943,53 +972,12 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MusicPlus/Pods-MusicPlus-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
-				"${BUILT_PRODUCTS_DIR}/AwaitKit/AwaitKit.framework",
-				"${BUILT_PRODUCTS_DIR}/CocoaSecurity/CocoaSecurity.framework",
-				"${BUILT_PRODUCTS_DIR}/Connectivity/Connectivity.framework",
-				"${BUILT_PRODUCTS_DIR}/Differentiator/Differentiator.framework",
-				"${BUILT_PRODUCTS_DIR}/Flix/Flix.framework",
-				"${BUILT_PRODUCTS_DIR}/KZ/KZ.framework",
-				"${BUILT_PRODUCTS_DIR}/PRTween/PRTween.framework",
-				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
-				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
-				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
-				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/Reusable/Reusable.framework",
-				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
-				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
-				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SecureNSUserDefaults/SecureNSUserDefaults.framework",
-				"${BUILT_PRODUCTS_DIR}/XMLMapper/XMLMapper.framework",
-				"${BUILT_PRODUCTS_DIR}/Zip/Zip.framework",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MusicPlus/Pods-MusicPlus-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AwaitKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CocoaSecurity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Connectivity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Differentiator.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flix.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KZ.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PRTween.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reusable.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureNSUserDefaults.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/XMLMapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Zip.framework",
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MusicPlus/Pods-MusicPlus-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1041,6 +1029,7 @@
 				EA1CB45A21ED9B4500CB1F23 /* PopupItemActionView.swift in Sources */,
 				29E640A61D0E17FB005BA3D7 /* KZPlayerTag.swift in Sources */,
 				EA1CB44821EC250200CB1F23 /* KZUniqueCustomTableViewSectionProvider.swift in Sources */,
+				EA8A0FF622C0015000C20273 /* Colors.swift in Sources */,
 				29C25DE51D0D147F00309122 /* MPNavigationController.swift in Sources */,
 				29F941E01D1267CA001A3515 /* SettingsViewController.swift in Sources */,
 				EAC85DCA2184BB5C00C61B6F /* PlayerViewController.swift in Sources */,
@@ -1065,6 +1054,7 @@
 				29F941E81D128600001A3515 /* KZPlayerArtist.swift in Sources */,
 				EAF6AE5321E2527000E1F727 /* Device.swift in Sources */,
 				29E640A71D0E17FB005BA3D7 /* KZPlayerPlaylist.swift in Sources */,
+				EA8A0FF122BFCA3200C20273 /* Array-AnyCancellable.swift in Sources */,
 				295DACCC1D136C6A002E6C47 /* MPSectionHeaderView.swift in Sources */,
 				EA02198421F6444600EE067E /* KZRealmLibrary.swift in Sources */,
 				29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */,
@@ -1146,6 +1136,7 @@
 				EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */,
 				29F941EB1D128F14001A3515 /* MPArtistTableViewCell.swift in Sources */,
 				EAF6AE3F21E17CD000E1F727 /* UserDefaults+Codable.swift in Sources */,
+				EA8A0FF422BFD25700C20273 /* Images.swift in Sources */,
 				EAF6AE8321E2E49200E1F727 /* Downloader.swift in Sources */,
 				2940701D1D1295970069E27E /* UIColor+Chroma.swift in Sources */,
 				EAF6AE8421E2E49200E1F727 /* Downloader+URLSessionDelegate.swift in Sources */,
@@ -1336,7 +1327,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
-				INFOPLIST_FILE = MusicPlus/Info.plist;
+				INFOPLIST_FILE = MusicPlus/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1356,8 +1347,6 @@
 					"\"AwaitKit\"",
 					"-framework",
 					"\"CocoaSecurity\"",
-					"-framework",
-					"\"Connectivity\"",
 					"-framework",
 					"\"Differentiator\"",
 					"-framework",
@@ -1397,7 +1386,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "match Development io.kez.musicplus";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/MusicPlus-BridgeHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/Resources/MusicPlus-BridgeHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1422,7 +1411,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Frameworks",
 				);
-				INFOPLIST_FILE = MusicPlus/Info.plist;
+				INFOPLIST_FILE = MusicPlus/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1442,8 +1431,6 @@
 					"\"AwaitKit\"",
 					"-framework",
 					"\"CocoaSecurity\"",
-					"-framework",
-					"\"Connectivity\"",
 					"-framework",
 					"\"Differentiator\"",
 					"-framework",
@@ -1484,7 +1471,7 @@
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/MusicPlus-BridgeHeader.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/Resources/MusicPlus-BridgeHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1607,6 +1594,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:k3zi/Connectivity.git";
+			requirement = {
+				branch = support_spm;
+				kind = branch;
+			};
+		};
 		EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:k3zi/Gooey.git";
@@ -1618,6 +1613,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EA8A0FD322BF527100C20273 /* Connectivity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */;
+			productName = Connectivity;
+		};
 		EABBC7D722BEE34300F96285 /* Gooey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */;

@@ -77,13 +77,14 @@ class SliderView: UIView {
     // Movement
 
     var progressConstraint: NSLayoutConstraint?
-
     private var isSliding = false
     var updateWhenOffScreen = false
-
     let progress = CurrentValueSubject<CGFloat, Never>(0.0)
+    let userDidUpdate = PassthroughSubject<CGFloat, Never>()
 
     // Initialization
+
+    private var cancellables = [AnyCancellable]()
 
     convenience init() {
         self.init(frame: CGRect.zero)
@@ -93,9 +94,11 @@ class SliderView: UIView {
         super.init(frame: frame)
 
         backgroundTrackView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundTrackView.layer.cornerRadius = CGFloat.goo.systemSpacing(multiplier: 0.5)
         addSubview(backgroundTrackView)
 
         progressTrackView.translatesAutoresizingMaskIntoConstraints = false
+        progressTrackView.layer.cornerRadius = CGFloat.goo.systemSpacing(multiplier: 0.5)
         addSubview(progressTrackView)
 
         outerScrubberView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +109,8 @@ class SliderView: UIView {
 
         setupConstraints()
 
-        _ = progress
+         cancellables += progress
+            .receive(on: DispatchQueue.main)
             .sink { [unowned self] value in
             guard !self.isSliding, self.updateWhenOffScreen || UIView.isVisible(view: self) else {
                 return
@@ -167,10 +171,13 @@ class SliderView: UIView {
         let progressTranslation = touch.location(in: backgroundTrackView)
         let horizontalTranslation = min(max(progressTranslation.x, 0), backgroundTrackView.bounds.width)
 
-        let progress = horizontalTranslation / backgroundTrackView.bounds.width
+        let progress = max(min(horizontalTranslation / backgroundTrackView.bounds.width, 1), 0)
         progressConstraint?.autoRemove()
         progressConstraint = progressTrackView.autoMatch(.width, to: .width, of: backgroundTrackView, withMultiplier: progress)
         self.progress.send(progress)
+        if final {
+            userDidUpdate.send(progress)
+        }
         self.layoutIfNeeded()
     }
 

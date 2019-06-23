@@ -65,8 +65,9 @@ class MPArtistSectionHeaderView: UIView {
 
         addSubview(infoHolder)
 
-        toggleButton.setImage(#imageLiteral(resourceName: "arrowDown"), for: .normal)
-        toggleButton.setImage(#imageLiteral(resourceName: "arrowUp"), for: .selected)
+        toggleButton.setImage(Images.chevronDown, for: .normal)
+        toggleButton.setImage(Images.chevronUp, for: .selected)
+        toggleButton.tintColor = Colors.artistAlbumToggleButton
         addSubview(toggleButton)
 
         fillInView()

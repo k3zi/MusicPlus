@@ -118,8 +118,10 @@ class KZPlayer: NSObject {
     var averagePower: Float = 0.0
     var volumeView = MPVolumeView()
 
-    var currentTime = PassthroughSubject<PlayingTime?, Never>()
-
+    private let currentTimeSubject = CurrentValueSubject<PlayingTime?, Never>(nil)
+    var currentTime: AnyPublisher<PlayingTime?, Never> {
+        currentTimeSubject.eraseToAnyPublisher()
+    }
     // Library
 
     var currentLibraryUniqueIdentifier: String?
@@ -780,7 +782,7 @@ extension KZPlayer {
             checkTimeFunctioning = false
         }
 
-        self.currentTime.send(PlayingTime(currentTime: currentTime, duration: self.duration(item: currentItem)))
+        self.currentTimeSubject.send(PlayingTime(currentTime: currentTime, duration: self.duration(item: currentItem)))
     }
 
     func stopCrossfade() {

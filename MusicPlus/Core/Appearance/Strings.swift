@@ -18,7 +18,7 @@ enum Strings {
 extension Strings.Placeholders {
 
     static var search: String {
-        return NSLocalizedString("Search", comment: "")
+        NSLocalizedString("Search", comment: "")
     }
 
 }
@@ -26,7 +26,7 @@ extension Strings.Placeholders {
 extension Strings.Titles {
 
     static var songs: String {
-        return NSLocalizedString("Songs", comment: "")
+        NSLocalizedString("Songs", comment: "")
     }
 
 }

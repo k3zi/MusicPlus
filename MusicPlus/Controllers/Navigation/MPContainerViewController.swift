@@ -27,32 +27,27 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
 
     var currentNavigationController: MPNavigationController?
 
-    var playerViewTopConstraint: NSLayoutConstraint?
+    var miniPlayerViewTopConstraint: NSLayoutConstraint?
     var playerViewStyle: PlayerViewStyle = .hidden {
         didSet {
-            if playerViewStyle != .hidden {
-                playerViewController.viewWillAppear(true)
-            }
-            view.bringSubviewToFront(playerViewController.view)
+            view.bringSubviewToFront(miniPlayerView)
             view.bringSubviewToFront(blurView)
 
             UIView.animate(withDuration: Constants.UI.Animation.menuSlide, delay: 0.0, options: [.allowUserInteraction, .beginFromCurrentState], animations: {
-                self.playerViewTopConstraint?.autoRemove()
+                self.miniPlayerViewTopConstraint?.autoRemove()
 
                 switch self.playerViewStyle {
                 case .mini:
-                    self.playerViewTopConstraint = self.playerViewController.miniPlayerView.autoPinEdge(.bottom, to: .bottom, of: self.view)
+                    self.miniPlayerViewTopConstraint = self.miniPlayerView.autoPinEdge(.bottom, to: .bottom, of: self.view)
                     self.centerNavigationControllers.forEach { vc in
-                        vc.additionalSafeAreaInsets = .init(top: 0, left: 0, bottom: self.playerViewController.miniPlayerView.bounds.height, right: 0)
+                        vc.additionalSafeAreaInsets = .init(top: 0, left: 0, bottom: self.miniPlayerView.bounds.height, right: 0)
                     }
                 case .full:
-                    self.playerViewTopConstraint = self.playerViewController.miniPlayerView.autoPinEdge(.bottom, to: .top, of: self.view)
+                    self.miniPlayerViewTopConstraint = self.miniPlayerView.autoPinEdge(.bottom, to: .top, of: self.view)
                 case .hidden:
-                    self.playerViewTopConstraint = self.playerViewController.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
-                    if #available(iOS 11.0, *) {
-                        self.centerNavigationControllers.forEach { vc in
-                            vc.additionalSafeAreaInsets = .zero
-                        }
+                    self.miniPlayerViewTopConstraint = self.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
+                    self.centerNavigationControllers.forEach { vc in
+                        vc.additionalSafeAreaInsets = .zero
                     }
                 }
 
@@ -67,6 +62,18 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         let blur = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         view.addSubview(blur)
         blur.autoPinEdgesToSuperviewEdges()
+        return view
+    }()
+
+    lazy var miniPlayerView: MiniPlayerView = {
+        let view = MiniPlayerView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.autoSetDimension(.height, toSize: .miniPlayerViewHeight)
+
+        let tapRecognizer = UITapGestureRecognizer(target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.maximizePlayer))
+        tapRecognizer.cancelsTouchesInView = true
+        view.addGestureRecognizer(tapRecognizer)
+
         return view
     }()
 
@@ -103,10 +110,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         // Player
         view.addSubview(playerViewController.view)
         addChild(playerViewController)
-        playerViewController.view.autoPinEdge(.left, to: .right, of: leftViewController.view)
-        playerViewController.view.autoMatch(.height, to: .height, of: view, withOffset: .miniPlayerViewHeight)
-        playerViewController.view.autoMatch(.width, to: .width, of: view)
-        playerViewTopConstraint = playerViewController.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
+        playerViewController.view.translatesAutoresizingMaskIntoConstraints = false
 
         blurView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(hideMenu)))
         view.addSubview(blurView)
@@ -124,12 +128,16 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         }
 
         view.bringSubviewToFront(playerViewController.view)
+        view.bringSubviewToFront(miniPlayerView)
         view.bringSubviewToFront(blurView)
-        if #available(iOS 11.0, *) {
-            self.centerNavigationControllers.forEach { vc in
-                vc.additionalSafeAreaInsets = .zero
-            }
+        self.centerNavigationControllers.forEach { vc in
+            vc.additionalSafeAreaInsets = .zero
         }
+
+        // Mini Player
+
+        view.addSubview(miniPlayerView)
+        miniPlayerViewTopConstraint = miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {
@@ -140,6 +148,39 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
                 self.playerViewStyle = .full
             }
         }.dispose(with: self)
+
+        NotificationCenter.default.addObserver(forName: .songDidChange, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self, let song = KZPlayer.sharedInstance.itemForChannel(allowUpNext: true)  else {
+                return
+            }
+
+            UIView.performWithoutAnimation {
+                self.miniPlayerView.songTitleLabel.text = song.title
+                self.miniPlayerView.subTitleLabel.text = song.subtitleText()
+            }
+        }.dispose(with: self)
+
+        NotificationCenter.default.addObserver(forName: .playStateDidChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
+            guard let self = self else {
+                return
+            }
+
+            self.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? Images.pause : Images.play, for: .normal)
+        }.dispose(with: self)
+
+        leftViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.goo.activate([
+            leftViewController.view.goo.boundingAnchor.makeVerticalEdgesEqualToSuperview(),
+
+            miniPlayerView.leadingAnchor.constraint(equalTo: leftViewController.view.trailingAnchor),
+            miniPlayerView.widthAnchor.constraint(equalTo: view.widthAnchor),
+
+            playerViewController.view.leadingAnchor.constraint(equalTo: leftViewController.view.trailingAnchor),
+            playerViewController.view.heightAnchor.constraint(equalTo: view.heightAnchor),
+            playerViewController.view.widthAnchor.constraint(equalTo: view.widthAnchor),
+            playerViewController.view.topAnchor.constraint(equalTo: miniPlayerView.bottomAnchor)
+        ])
+        xOffsetConstraint = leftViewController.view.autoPinEdge(toSuperviewEdge: .left, withInset: -120)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -148,12 +189,6 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         if KZRealmLibrary.libraries.isEmpty {
             self.present(CreateLibraryViewController(), animated: true, completion: nil)
         }
-    }
-
-    override func setupConstraints() {
-        leftViewController.view.autoPinEdge(toSuperviewEdge: .top)
-        leftViewController.view.autoPinEdge(toSuperviewEdge: .bottom)
-        xOffsetConstraint = leftViewController.view.autoPinEdge(toSuperviewEdge: .left, withInset: -120)
     }
 
     @objc func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
@@ -229,6 +264,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
         prevNavigationController?.view.isHidden = true
         view.bringSubviewToFront(navigationController.view)
         view.bringSubviewToFront(playerViewController.view)
+        view.bringSubviewToFront(miniPlayerView)
         view.bringSubviewToFront(blurView)
         navigationController.didMove(toParent: self)
         navigationController.viewDidAppear(true)

@@ -21,7 +21,7 @@ class MPMenuViewController: KZViewController {
     lazy var selectLibraryButton: ExtendedButton = {
         let button = ExtendedButton()
         button.setTitle("Library", for: .normal)
-        button.setImage(#imageLiteral(resourceName: "disclosureArrow"), for: .normal)
+        button.setImage(Images.chevronTrailing, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: UIFont.Weight.medium)
 
         button.transform = CGAffineTransform(scaleX: -1.0, y: 1.0)

@@ -38,12 +38,13 @@ class MPNavigationAnimatedTransition: NSObject, UIViewControllerAnimatedTransiti
             toInitialFrame.origin.x = containerWidth
             toView?.frame = toInitialFrame
             fromDestinationFrame?.origin.x = -containerWidth
-            container.addSubview(toView!)
         } else if operation == .pop {
             toInitialFrame.origin.x = -containerWidth
             toView?.frame = toInitialFrame
             fromDestinationFrame?.origin.x = containerWidth
         }
+
+        container.addSubview(toView!)
 
         toView?.isUserInteractionEnabled = false
 

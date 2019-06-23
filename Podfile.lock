@@ -5,7 +5,6 @@ PODS:
   - AwaitKit (5.1.0):
     - PromiseKit (~> 6)
   - CocoaSecurity (1.2.4)
-  - Connectivity (3.0.1)
   - Differentiator (4.0.1)
   - Flix (4.0.0):
     - RxCocoa (~> 5.0)
@@ -14,25 +13,25 @@ PODS:
   - KZ (3.0.0):
     - PureLayout
     - Reusable
-  - PromiseKit (6.8.4):
-    - PromiseKit/CorePromise (= 6.8.4)
-    - PromiseKit/Foundation (= 6.8.4)
-    - PromiseKit/UIKit (= 6.8.4)
-  - PromiseKit/Alamofire (6.8.4):
+  - PromiseKit (6.9.0):
+    - PromiseKit/CorePromise (= 6.9.0)
+    - PromiseKit/Foundation (= 6.9.0)
+    - PromiseKit/UIKit (= 6.9.0)
+  - PromiseKit/Alamofire (6.9.0):
     - Alamofire (~> 4.0)
     - PromiseKit/CorePromise
-  - PromiseKit/CorePromise (6.8.4)
-  - PromiseKit/Foundation (6.8.4):
+  - PromiseKit/CorePromise (6.9.0)
+  - PromiseKit/Foundation (6.9.0):
     - PromiseKit/CorePromise
-  - PromiseKit/UIKit (6.8.4):
+  - PromiseKit/UIKit (6.9.0):
     - PromiseKit/CorePromise
   - PRTween (0.1.0)
   - PureLayout (3.1.4)
-  - Realm (3.16.1):
-    - Realm/Headers (= 3.16.1)
-  - Realm/Headers (3.16.1)
-  - RealmSwift (3.16.1):
-    - Realm (= 3.16.1)
+  - Realm (3.16.2):
+    - Realm/Headers (= 3.16.2)
+  - Realm/Headers (3.16.2)
+  - RealmSwift (3.16.2):
+    - Realm (= 3.16.2)
   - Reusable (4.1.0):
     - Reusable/Storyboard (= 4.1.0)
     - Reusable/View (= 4.1.0)
@@ -59,14 +58,13 @@ DEPENDENCIES:
   - Alamofire (~> 4.8.2)
   - AlamofireImage
   - AwaitKit
-  - Connectivity
   - Flix
   - KZ
   - PromiseKit/Alamofire
   - PRTween
   - PureLayout
-  - Realm (from `https://github.com/realm/realm-cocoa.git`, branch `master`)
-  - RealmSwift (from `https://github.com/realm/realm-cocoa.git`, branch `master`)
+  - Realm
+  - RealmSwift
   - Reusable
   - SecureNSUserDefaults
   - XMLMapper
@@ -78,13 +76,14 @@ SPEC REPOS:
     - AlamofireImage
     - AwaitKit
     - CocoaSecurity
-    - Connectivity
     - Differentiator
     - Flix
     - KZ
     - PromiseKit
     - PRTween
     - PureLayout
+    - Realm
+    - RealmSwift
     - Reusable
     - RxCocoa
     - RxDataSources
@@ -94,40 +93,19 @@ SPEC REPOS:
     - XMLMapper
     - Zip
 
-EXTERNAL SOURCES:
-  Realm:
-    :branch: master
-    :git: https://github.com/realm/realm-cocoa.git
-    :submodules: true
-  RealmSwift:
-    :branch: master
-    :git: https://github.com/realm/realm-cocoa.git
-    :submodules: true
-
-CHECKOUT OPTIONS:
-  Realm:
-    :commit: 930eb761c418cdd9babf2e599fb79ff22e371ffb
-    :git: https://github.com/realm/realm-cocoa.git
-    :submodules: true
-  RealmSwift:
-    :commit: 930eb761c418cdd9babf2e599fb79ff22e371ffb
-    :git: https://github.com/realm/realm-cocoa.git
-    :submodules: true
-
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   AlamofireImage: 63cfe3baf1370be6c498149687cf6db3e3b00999
   AwaitKit: a8a3d8982097ee09ac75f5c5d3952fbcc2f26f1c
   CocoaSecurity: d288a6f87e0f363823d2cb83e753814a6944f71a
-  Connectivity: e1f7ff488d8cc28209d6bcfa4d323c7d2231ef26
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   Flix: 1f5f22609a3769a9c1dbc4072767035c9b3b57e5
   KZ: d1fe64ceba678500fd8ded4698f9eeeae7949c37
-  PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
+  PromiseKit: 97397236f9e9c443d5b70a941d49cad25160af7a
   PRTween: 6c58c7e32ebcf31e33e6a6e6bc727ebef3b668ef
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
-  Realm: 601cacc51d8be3b17a377ef787be0f6ee0e76cf1
-  RealmSwift: 486f2e09d5a8ccff63ed66e48d0846b111deb5e5
+  Realm: 0e73b4edeb5b6a90da3d83206883b2e34e00eb38
+  RealmSwift: a81e650171ef0a5f999df1ed8d39ba8d6fce88a4
   Reusable: 82be188f29d96dc5eff0db7b2393bcc08d2cdd5b
   RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
   RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
@@ -137,6 +115,6 @@ SPEC CHECKSUMS:
   XMLMapper: 26bfd75cd204b514b608a41681415f2bdbac1053
   Zip: 8877eede3dda76bcac281225c20e71c25270774c
 
-PODFILE CHECKSUM: 8f7ed14f684d578b8f4ab54a16fe90e4c5ee98f0
+PODFILE CHECKSUM: 28834a741f09d94e74a7b68fc72366fa96f33ef1
 
-COCOAPODS: 1.7.1
+COCOAPODS: 1.7.2

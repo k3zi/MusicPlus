@@ -9,10 +9,7 @@
 import Foundation
 
 fileprivate extension UIImage {
-
-    static let play = #imageLiteral(resourceName: "playBT")
     static let pause = #imageLiteral(resourceName: "pauseBT")
-    static let next = #imageLiteral(resourceName: "nextBT")
     static let previous = #imageLiteral(resourceName: "Image")
 }
 
@@ -23,9 +20,9 @@ class MiniPlayerView: UIView {
     let darkOverlayView = GradientView()
 
     lazy var playPauseButton: UIButton = {
-        let view = UIButton()
+        let view = ExtendedButton()
         view.tintColor = .white
-        view.setImage(.play, for: .normal)
+        view.setImage(Images.play, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.togglePlay), for: .touchUpInside)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
@@ -44,7 +41,7 @@ class MiniPlayerView: UIView {
     lazy var nextButton: UIButton = {
         let view = ExtendedButton()
         view.tintColor = .white
-        view.setImage(.next, for: .normal)
+        view.setImage(Images.next, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.next), for: .touchUpInside)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill

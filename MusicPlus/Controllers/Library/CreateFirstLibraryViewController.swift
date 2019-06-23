@@ -18,7 +18,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
     var typeSelectedIndexPath: IndexPath?
     let tableView = KZIntrinsicTableView()
     let infoLabel = UILabel()
-    let nextButoon = UIButton()
+    let nextButton = UIButton()
 
     var libraryTypes = [Any]()
 
@@ -64,16 +64,16 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         infoLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(openRequestLink)))
         view.addSubview(infoLabel)
 
-        nextButoon.setTitle("Create", for: .normal)
-        nextButoon.setTitleColor(.white, for: .normal)
-        nextButoon.setTitleColor(.lightGray, for: .disabled)
-        nextButoon.setBackgroundColor(.nativeBlue, forState: .normal)
-        nextButoon.setBackgroundColor(RGB(250), forState: .disabled)
-        nextButoon.setBackgroundColor(UIColor.nativeBlue.withAlphaComponent(0.1), forState: .highlighted)
-        nextButoon.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
-        nextButoon.layer.cornerRadius = 10
-        nextButoon.layer.masksToBounds = true
-        view.addSubview(nextButoon)
+        nextButton.setTitle("Create", for: .normal)
+        nextButton.setTitleColor(.white, for: .normal)
+        nextButton.setTitleColor(.lightGray, for: .disabled)
+        nextButton.setBackgroundColor(.nativeBlue, forState: .normal)
+        nextButton.setBackgroundColor(RGB(250), forState: .disabled)
+        nextButton.setBackgroundColor(UIColor.nativeBlue.withAlphaComponent(0.1), forState: .highlighted)
+        nextButton.addTarget(self, action: #selector(didTapNext), for: .touchUpInside)
+        nextButton.layer.cornerRadius = 10
+        nextButton.layer.masksToBounds = true
+        view.addSubview(nextButton)
 
         if KZRealmLibrary.libraries.isEmpty {
             welcomeLabel.text =  "Add A Library"
@@ -121,11 +121,11 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         infoLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
         infoLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
 
-        nextButoon.autoPinEdge(.top, to: .bottom, of: infoLabel, withOffset: 12)
-        nextButoon.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
-        nextButoon.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
-        nextButoon.autoSetDimension(.height, toSize: 44)
-        nextButoon.autoPin(toBottomLayoutGuideOf: self, withInset: 24, relation: .greaterThanOrEqual)
+        nextButton.autoPinEdge(.top, to: .bottom, of: infoLabel, withOffset: 12)
+        nextButton.autoPinEdge(toSuperviewEdge: .left, withInset: 12)
+        nextButton.autoPinEdge(toSuperviewEdge: .right, withInset: 12)
+        nextButton.autoSetDimension(.height, toSize: 44)
+        nextButton.autoPin(toBottomLayoutGuideOf: self, withInset: 24, relation: .greaterThanOrEqual)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -157,7 +157,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard nextButoon.isEnabled else {
+        guard nextButton.isEnabled else {
             return
         }
 
@@ -175,7 +175,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         }
 
         nameTextField.isEnabled = false
-        nextButoon.isEnabled = false
+        nextButton.isEnabled = false
 
         switch typeSelectedIndexPath.row {
         case 0:
@@ -192,12 +192,12 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
             try! realm.write {
                 realm.add(library)
             }
-            nextButoon.setTitle("Importing Songs...", for: .normal)
+            nextButton.setTitle("Importing Songs...", for: .normal)
             let safeLibrary = library.safeRefrence
             MPMediaLibrary.requestAuthorization { _ in
                 safeLibrary.resolve()?.addAllItems { status, complete in
                     DispatchQueue.main.async {
-                        self.nextButoon.setTitle(status, for: .normal)
+                        self.nextButton.setTitle(status, for: .normal)
                         if complete {
                             KZPlayer.sharedInstance.currentLibrary = library
                             self.presentingViewController?.dismiss(animated: true, completion: nil)
@@ -209,12 +209,12 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
             let plex = KZPlex()
             plex.signIn(progressCallback: { status in
                 DispatchQueue.main.async {
-                    self.nextButoon.setTitle("Requesting Access...", for: .normal)
+                    self.nextButton.setTitle("Requesting Access...", for: .normal)
                     self.infoLabel.attributedText = status
                 }
             }, completionCallBack: { request in
                 DispatchQueue.main.async {
-                    self.nextButoon.setTitle("Loading Libraries...", for: .normal)
+                    self.nextButton.setTitle("Loading Libraries...", for: .normal)
                 }
                 plex.authToken = request.authToken
                 _ = plex.resources().then { response -> Promise<[LibrarySectionsGETResponse?]> in
@@ -244,8 +244,8 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                             librarySelectionAlertController.addAction(action)
                         }
                         if let popoverController = librarySelectionAlertController.popoverPresentationController {
-                            popoverController.sourceView = self.nextButoon
-                            popoverController.sourceRect = CGRect(x: self.nextButoon.bounds.midX, y: self.nextButoon.bounds.midY, width: 0, height: 0)
+                            popoverController.sourceView = self.nextButton
+                            popoverController.sourceRect = CGRect(x: self.nextButton.bounds.midX, y: self.nextButton.bounds.midY, width: 0, height: 0)
                             popoverController.permittedArrowDirections = []
                         }
                         self.present(librarySelectionAlertController, animated: true, completion: nil)

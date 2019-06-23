@@ -6,49 +6,29 @@
 //  Copyright © 2018 Kesi Maduka. All rights reserved.
 //
 
+import Combine
 import UIKit
 import RxSwift
-
-fileprivate extension UIImage {
-
-    static let play = #imageLiteral(resourceName: "playBT")
-    static let pause = #imageLiteral(resourceName: "pauseBT")
-    static let next = #imageLiteral(resourceName: "nextBT")
-    static let previous = #imageLiteral(resourceName: "Image")
-    static let smallPause = #imageLiteral(resourceName: "smallPauseBT")
-
-    static let minimize = #imageLiteral(resourceName: "largeArrowDown")
-
-}
 
 class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     static let shared = PlayerViewController()
 
     let disposeBag = DisposeBag()
+    var cancellables = [AnyCancellable]()
     var compactConstraints = [NSLayoutConstraint]()
     var regularConstraints = [NSLayoutConstraint]()
-    var minimizeButtonTopConstraint: NSLayoutConstraint?
 
     let controlViewHolder = UIView()
 
     lazy var minimizeButton: ExtendedButton = {
         let view = ExtendedButton()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.setImage(.minimize, for: .normal)
+        view.setImage(Images.chevronDown, for: .normal)
+        view.tintColor = Colors.minimizeButton
         view.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.minimizePlayer), for: .touchUpInside)
-        return view
-    }()
-
-    lazy var miniPlayerView: MiniPlayerView = {
-        let view = MiniPlayerView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.autoSetDimension(.height, toSize: .miniPlayerViewHeight)
-
-        let tapRecognizer = UITapGestureRecognizer(target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.maximizePlayer))
-        tapRecognizer.cancelsTouchesInView = true
-        view.addGestureRecognizer(tapRecognizer)
-
+        view.imageView?.contentMode = .scaleAspectFit
+        view.contentHorizontalAlignment = .fill
+        view.contentVerticalAlignment = .fill
         return view
     }()
 
@@ -60,11 +40,12 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         view.innerScrubberColor = .white
         view.outerScrubberColor = UIColor.white.withAlphaComponent(0.2)
         view.updateWhenOffScreen = true
-        _ = view.progress
+        cancellables += view.progress
             .map { Float($0) }
             .sink {
                 KZPlayer.sharedInstance.systemVolume = $0
             }
+
         return view
     }()
 
@@ -75,9 +56,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         view.progressTrackColor = AppDelegate.del().session.tintColor ?? .white
         view.innerScrubberColor = .white
         view.outerScrubberColor = UIColor.white.withAlphaComponent(0.2)
-        _ = view.progress
-            .subscribe(on: DispatchQueue.global(qos: .background))
-            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: true)
+        cancellables += view.userDidUpdate
             .map { Double($0) * KZPlayer.sharedInstance.duration() }
             .sink {
                 KZPlayer.sharedInstance.setCurrentTime($0)
@@ -117,7 +96,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         let view = UIButton()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
-        view.setImage(.play, for: .normal)
+        view.setImage(Images.play, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.togglePlay), for: .touchUpInside)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
@@ -129,7 +108,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         let view = ExtendedButton()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
-        view.setImage(.previous, for: .normal)
+        view.setImage(Images.previous, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.prev), for: .touchUpInside)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
@@ -141,7 +120,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         let view = ExtendedButton()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
-        view.setImage(.next, for: .normal)
+        view.setImage(Images.next, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.next), for: .touchUpInside)
         view.contentHorizontalAlignment = .fill
         view.contentVerticalAlignment = .fill
@@ -173,7 +152,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     // MARK: Setup View
 
     override func viewDidLoad() {
-        view.addSubview(miniPlayerView)
+        minimizeButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(minimizeButton)
 
         controlViewHolder.translatesAutoresizingMaskIntoConstraints = false
@@ -209,7 +188,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         peekPop.registerForPreviewingWithDelegate(self, sourceView: infoHolderView)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: artworkViewHolder)
 
-        _ = KZPlayer.sharedInstance.audioSession.publisher(for: \.outputVolume)
+        cancellables += KZPlayer.sharedInstance.audioSession.publisher(for: \.outputVolume)
             .receive(on: RunLoop.main)
             .map {
                 CGFloat($0)
@@ -236,11 +215,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             self.songTitleLabel.text = song.title
             self.albumTitleLabel.text = song.albumName
             self.artistTitleLabel.text = song.artistName
-
-            UIView.performWithoutAnimation {
-                self.miniPlayerView.songTitleLabel.text = song.title
-                self.miniPlayerView.subTitleLabel.text = song.subtitleText()
-            }
 
             if self.currentArtworkView.image == nil {
                 self.loadArtwork()
@@ -284,16 +258,15 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
                 return
             }
 
-            self.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
-            self.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
+            self.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? Images.pause : Images.play, for: .normal)
         }.dispose(with: self)
 
-        _ = KZPlayer.sharedInstance.currentTime
-            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
+        cancellables += KZPlayer.sharedInstance.currentTime
+            .receive(on: DispatchQueue.global(qos: .background))
             .map {
                 $0.flatMap { CGFloat($0.currentTime / $0.duration) }
             }
-            .replaceNil(with: 0)
+            .filter { $0 != nil }.map { $0! }
             .subscribe(timeSlider.progress)
     }
 
@@ -308,22 +281,15 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
-        minimizeButtonTopConstraint?.constant = view.safeAreaInsets.top
         view.layoutIfNeeded()
     }
 
     override func setupConstraints() {
         super.setupConstraints()
 
-        miniPlayerView.autoPinEdge(toSuperviewEdge: .left)
-        miniPlayerView.autoPinEdge(toSuperviewEdge: .right)
-        miniPlayerView.autoPinEdge(toSuperviewEdge: .top)
-
-        minimizeButton.setContentHuggingPriority(.init(999), for: .vertical)
-        minimizeButtonTopConstraint = minimizeButton.autoPinEdge(.top, to: .bottom, of: miniPlayerView)
-        minimizeButton.autoAlignAxis(toSuperviewAxis: .vertical)
-
+        minimizeButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
         artworkViewHolderViewHolder.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
         artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
         artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .vertical)
@@ -349,8 +315,19 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         artistTitleLabel.autoMatch(.height, to: .height, of: albumTitleLabel)
 
         playPauseButton.autoSetDimension(.height, toSize: 80)
-        previousButton.autoSetDimension(.height, toSize: 70)
-        nextButton.autoSetDimension(.height, toSize: 70)
+
+        NSLayoutConstraint.goo.activate([
+            minimizeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            minimizeButton.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
+            minimizeButton.widthAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension / 2),
+            minimizeButton.heightAnchor.constraint(equalTo: minimizeButton.widthAnchor),
+
+            playPauseButton.widthAnchor.constraint(equalTo: playPauseButton.heightAnchor),
+            previousButton.heightAnchor.constraint(equalTo: playPauseButton.heightAnchor, multiplier: 0.5),
+            nextButton.heightAnchor.constraint(equalTo: previousButton.heightAnchor),
+            previousButton.widthAnchor.constraint(equalTo: previousButton.heightAnchor),
+            nextButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor)
+        ])
 
         playPauseButton.autoPinEdge(.top, to: .bottom, of: infoHolderView, withOffset: 18)
         playPauseButton.autoAlignAxis(toSuperviewAxis: .vertical)
