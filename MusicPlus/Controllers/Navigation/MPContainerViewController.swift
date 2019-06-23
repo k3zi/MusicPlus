@@ -42,10 +42,8 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
                 switch self.playerViewStyle {
                 case .mini:
                     self.playerViewTopConstraint = self.playerViewController.miniPlayerView.autoPinEdge(.bottom, to: .bottom, of: self.view)
-                    if #available(iOS 11.0, *) {
-                        self.centerNavigationControllers.forEach { vc in
-                            vc.additionalSafeAreaInsets = .init(top: 0, left: 0, bottom: self.playerViewController.miniPlayerView.bounds.height, right: 0)
-                        }
+                    self.centerNavigationControllers.forEach { vc in
+                        vc.additionalSafeAreaInsets = .init(top: 0, left: 0, bottom: self.playerViewController.miniPlayerView.bounds.height, right: 0)
                     }
                 case .full:
                     self.playerViewTopConstraint = self.playerViewController.miniPlayerView.autoPinEdge(.bottom, to: .top, of: self.view)
@@ -132,8 +130,6 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
                 vc.additionalSafeAreaInsets = .zero
             }
         }
-
-//        self.view.layoutIfNeeded()
 
         NotificationCenter.default.addObserver(forName: .didStartNewCollection, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else {
@@ -259,6 +255,6 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
     // MARK: - Navigtaion Controller
 
     @objc func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return MPNavigationAnimatedTransitiion(operation: operation)
+        return MPNavigationAnimatedTransition(operation: operation)
     }
 }

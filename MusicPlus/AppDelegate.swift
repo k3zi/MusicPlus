@@ -44,9 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = NSAttributedString(string: "Search", attributes: [NSAttributedString.Key.foregroundColor: UIColor.init(white: 1.0, alpha: 0.4)])
-
+        UISearchTextField.appearance().defaultTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        UISearchTextField.appearance().attributedPlaceholder = NSAttributedString(string: Strings.Placeholders.search, attributes: [NSAttributedString.Key.foregroundColor: UIColor(white: 1.0, alpha: 0.4)])
         window?.rootViewController = MPContainerViewController.sharedInstance
         window?.makeKeyAndVisible()
 
@@ -121,7 +120,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         synth.speak(speech)
     }
 
-    // MARK: System Search
+    // MARK: - System Search
 
     func application(_ application: UIApplication, willContinueUserActivityWithType userActivityType: String) -> Bool {
         return true

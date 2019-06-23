@@ -6,11 +6,13 @@
 //  Copyright © 2018 Kesi Maduka. All rights reserved.
 //
 
+import Combine
+import Gooey
 import UIKit
 
 class SliderView: UIView {
 
-    // Background Track
+    // MARK: Background Track
 
     private lazy var backgroundTrackView: UIView = {
         let view = UIView()
@@ -24,7 +26,7 @@ class SliderView: UIView {
         }
     }
 
-    // Progress Track
+    // MARK: Progress Track
 
     private lazy var progressTrackView: UIView = {
         let view = UIView()
@@ -74,33 +76,12 @@ class SliderView: UIView {
 
     // Movement
 
-    var prgressConstraint: NSLayoutConstraint?
+    var progressConstraint: NSLayoutConstraint?
 
     private var isSliding = false
     var updateWhenOffScreen = false
 
-    var progress: CGFloat = 0.0 {
-        didSet {
-            guard !isSliding, updateWhenOffScreen || UIView.isVisible(view: self) else {
-                return
-            }
-
-            if self.progress.isInfinite {
-                self.progress = 1.0
-            }
-
-            UIView.animate(withDuration: 0.1, delay: 0.0, options: [.allowUserInteraction], animations: {
-                self.prgressConstraint?.autoRemove()
-                self.prgressConstraint = self.progressTrackView.autoMatch(.width, to: .width, of: self.backgroundTrackView, withMultiplier: max(min(self.progress, 1), 0.0))
-
-                self.layoutIfNeeded()
-            }, completion: nil)
-        }
-    }
-
-    // Delegate
-
-    var progressDidChange: ((_ prgress: CGFloat, _ complete: Bool) -> Void)?
+    let progress = CurrentValueSubject<CGFloat, Never>(0.0)
 
     // Initialization
 
@@ -111,13 +92,38 @@ class SliderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
+        backgroundTrackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(backgroundTrackView)
+
+        progressTrackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(progressTrackView)
 
+        outerScrubberView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(outerScrubberView)
+
+        innerScrubberView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(innerScrubberView)
 
         setupConstraints()
+
+        _ = progress
+            .sink { [unowned self] value in
+            guard !self.isSliding, self.updateWhenOffScreen || UIView.isVisible(view: self) else {
+                return
+            }
+
+            if value.isInfinite {
+                self.progress.send(1)
+                return
+            }
+
+            UIView.animate(withDuration: 0.1, delay: 0.0, options: [.allowUserInteraction], animations: {
+                self.progressConstraint?.autoRemove()
+                self.progressConstraint = self.progressTrackView.autoMatch(.width, to: .width, of: self.backgroundTrackView, withMultiplier: max(min(value, 1), 0.0))
+
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -125,7 +131,7 @@ class SliderView: UIView {
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-        return bounds.insetBy(dx: -10, dy: -10).contains(point)
+        return bounds.insetBy(dx: -CGFloat.goo.systemSpacing, dy: -CGFloat.goo.systemSpacing).contains(point)
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -162,31 +168,32 @@ class SliderView: UIView {
         let horizontalTranslation = min(max(progressTranslation.x, 0), backgroundTrackView.bounds.width)
 
         let progress = horizontalTranslation / backgroundTrackView.bounds.width
-        prgressConstraint?.autoRemove()
-        prgressConstraint = progressTrackView.autoMatch(.width, to: .width, of: backgroundTrackView, withMultiplier: progress)
-        self.progress = progress
-        self.progressDidChange?(progress, final)
+        progressConstraint?.autoRemove()
+        progressConstraint = progressTrackView.autoMatch(.width, to: .width, of: backgroundTrackView, withMultiplier: progress)
+        self.progress.send(progress)
         self.layoutIfNeeded()
     }
 
     func setupConstraints() {
-        backgroundTrackView.autoPinEdge(toSuperviewEdge: .left, withInset: SliderView.outerScrubberHeight / 2)
-        backgroundTrackView.autoPinEdge(toSuperviewEdge: .right, withInset: SliderView.outerScrubberHeight / 2)
-        backgroundTrackView.autoSetDimension(.height, toSize: 5)
-        backgroundTrackView.autoAlignAxis(toSuperviewAxis: .horizontal)
+        NSLayoutConstraint.goo.activate([
+            backgroundTrackView.goo.boundingAnchor.makeHorizontalEdgesEqualToSuperview(insets: .both(type(of: self).outerScrubberHeight / CGFloat(2))),
+            backgroundTrackView.heightAnchor.constraint(equalToConstant: CGFloat.goo.systemSpacing),
+            backgroundTrackView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-        progressTrackView.autoPinEdge(.left, to: .left, of: backgroundTrackView)
-        progressTrackView.autoMatch(.height, to: .height, of: backgroundTrackView)
-        progressTrackView.autoAlignAxis(toSuperviewAxis: .horizontal)
+            progressTrackView.leadingAnchor.constraint(equalTo: backgroundTrackView.leadingAnchor),
+            progressTrackView.heightAnchor.constraint(equalTo: backgroundTrackView.heightAnchor),
+            progressTrackView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-        outerScrubberView.autoPinEdge(toSuperviewEdge: .top)
-        outerScrubberView.autoPinEdge(toSuperviewEdge: .bottom)
-        outerScrubberView.autoSetDimensions(to: .init(width: SliderView.outerScrubberHeight, height: SliderView.outerScrubberHeight))
-        outerScrubberView.autoPinEdge(.right, to: .right, of: progressTrackView, withOffset: SliderView.outerScrubberHeight / 2)
+            outerScrubberView.goo.boundingAnchor.makeVerticalEdgesEqualToSuperview(),
+            outerScrubberView.widthAnchor.constraint(equalToConstant: SliderView.outerScrubberHeight),
+            outerScrubberView.heightAnchor.constraint(equalTo: outerScrubberView.widthAnchor),
+            outerScrubberView.trailingAnchor.constraint(equalTo: progressTrackView.trailingAnchor, constant: SliderView.outerScrubberHeight / 2),
 
-        innerScrubberView.autoSetDimensions(to: .init(width: SliderView.innerScrubberHeight, height: SliderView.innerScrubberHeight))
-        innerScrubberView.autoAlignAxis(.horizontal, toSameAxisOf: outerScrubberView)
-        innerScrubberView.autoAlignAxis(.vertical, toSameAxisOf: outerScrubberView)
+            innerScrubberView.widthAnchor.constraint(equalToConstant: SliderView.innerScrubberHeight),
+            innerScrubberView.heightAnchor.constraint(equalTo: innerScrubberView.widthAnchor),
+            innerScrubberView.centerYAnchor.constraint(equalTo: outerScrubberView.centerYAnchor),
+            innerScrubberView.centerXAnchor.constraint(equalTo: outerScrubberView.centerXAnchor)
+        ])
     }
 
     override func layoutSubviews() {

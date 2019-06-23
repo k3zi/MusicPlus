@@ -1,12 +1,12 @@
 // 
-//  ObjectiveCProcessing.m
+//  TintColorOperation.m
 //  Music+
 // 
 //  Created by Kesi Maduka on 6/16/16.
 //  Copyright © 2016 Kesi Maduka. All rights reserved.
 // 
 
-#import "ObjectiveCProcessing.h"
+#import "TintColorOperation.h"
 #import "UIColor+UIColorAdditions.h"
 
 struct Address3D {

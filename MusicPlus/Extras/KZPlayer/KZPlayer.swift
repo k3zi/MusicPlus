@@ -7,6 +7,7 @@
 // 
 // swiftlint:disable force_try
 
+import Combine
 import UIKit
 import AVFoundation
 import Accelerate
@@ -69,6 +70,11 @@ enum KZPLayerCrossFadeMode {
     case crossfade
 }
 
+struct PlayingTime {
+    let currentTime: Double
+    let duration: Double
+}
+
 // MARK: Main Player
 class KZPlayer: NSObject {
     static let sharedInstance = KZPlayer()
@@ -112,7 +118,7 @@ class KZPlayer: NSObject {
     var averagePower: Float = 0.0
     var volumeView = MPVolumeView()
 
-    var currentTimeObservationHandler: ((_ currentTime: Double, _ duration: Double) -> Void)?
+    var currentTime = PassthroughSubject<PlayingTime?, Never>()
 
     // Library
 
@@ -478,7 +484,7 @@ extension KZPlayer {
         let tempo = customTempo ?? item.tempo
 
         if !audioEngine.isRunning {
-            try? audioEngine.start()
+            try! audioEngine.start()
         }
 
         os_log(.default, log: .player, "activePlayer = %d", channel)
@@ -698,6 +704,7 @@ extension KZPlayer {
         var played = false
         var i = 0
         while !played && i < times {
+            os_log(.default, log: .player, "attempting to play (%d) - %@ ", i, item?.title ?? "")
             played = playNextSong(item, shouldCrossfadeOnSkip: shouldCrossfadeOnSkip)
             i += 1
         }
@@ -739,7 +746,8 @@ extension KZPlayer {
     }
 }
 
-// MARK: crossfade Functions
+// MARK: - Crossfade Functions
+
 extension KZPlayer {
 
     func checkTime() {
@@ -772,7 +780,7 @@ extension KZPlayer {
             checkTimeFunctioning = false
         }
 
-        currentTimeObservationHandler?(currentTime, self.duration(item: currentItem))
+        self.currentTime.send(PlayingTime(currentTime: currentTime, duration: self.duration(item: currentItem)))
     }
 
     func stopCrossfade() {

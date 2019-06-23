@@ -15,7 +15,6 @@
 
 #import <CommonCrypto/CommonCrypto.h>
 
-#import "ANStepperView.h"
-#import "ObjectiveCProcessing.h"
+#import "TintColorOperation.h"
 
 #endif /* MusicPlus_BridgeHeader_h */

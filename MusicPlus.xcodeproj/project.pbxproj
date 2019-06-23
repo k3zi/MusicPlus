@@ -3,13 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2940701B1D1295920069E27E /* ImageAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2940701A1D1295920069E27E /* ImageAnalyzer.swift */; };
 		2940701D1D1295970069E27E /* UIColor+Chroma.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2940701C1D1295970069E27E /* UIColor+Chroma.swift */; };
-		295DACC81D135BC8002E6C47 /* MPNavigationAnimatedTransitiion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransitiion.swift */; };
+		295DACC81D135BC8002E6C47 /* MPNavigationAnimatedTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransition.swift */; };
 		295DACCA1D13683E002E6C47 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DACC91D13683D002E6C47 /* AlbumViewController.swift */; };
 		295DACCC1D136C6A002E6C47 /* MPSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295DACCB1D136C6A002E6C47 /* MPSectionHeaderView.swift */; };
 		29C25DDA1D0CF0E200309122 /* SongsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C25DD91D0CF0E200309122 /* SongsViewController.swift */; };
@@ -36,15 +35,13 @@
 		29ECD2001D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */; };
 		29F0B8501D0F40A80094EEA2 /* UIButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */; };
 		29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */; };
-		29F941DD1D1266EE001A3515 /* ANStepperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941DC1D1266EE001A3515 /* ANStepperView.m */; };
 		29F941E01D1267CA001A3515 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941DF1D1267CA001A3515 /* SettingsViewController.swift */; };
 		29F941E21D126AF6001A3515 /* MPBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E11D126AF6001A3515 /* MPBackgroundView.swift */; };
 		29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E31D127E13001A3515 /* MPSectionedTableViewController.swift */; };
 		29F941E61D127F21001A3515 /* MPSongCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E51D127F21001A3515 /* MPSongCollectionViewController.swift */; };
 		29F941E81D128600001A3515 /* KZPlayerArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E71D128600001A3515 /* KZPlayerArtist.swift */; };
 		29F941EB1D128F14001A3515 /* MPArtistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941EA1D128F14001A3515 /* MPArtistTableViewCell.swift */; };
-		29F941F11D129B33001A3515 /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F01D129B33001A3515 /* ImageHelper.m */; };
-		29F941F41D129B7F001A3515 /* ObjectiveCProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F31D129B7F001A3515 /* ObjectiveCProcessing.m */; };
+		29F941F41D129B7F001A3515 /* TintColorOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F31D129B7F001A3515 /* TintColorOperation.m */; };
 		29F941F71D129C1B001A3515 /* UIColor+UIColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F61D129C1B001A3515 /* UIColor+UIColorAdditions.m */; };
 		29F941F91D12A7FE001A3515 /* KZPlayerAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */; };
 		29F941FB1D12B179001A3515 /* ArtistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941FA1D12B179001A3515 /* ArtistViewController.swift */; };
@@ -91,6 +88,8 @@
 		EAA040E71CF437FA005453F9 /* Music_UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040E61CF437FA005453F9 /* Music_UITests.swift */; };
 		EAAEF8BE218AA35000B2F09A /* MPLibraryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAEF8BD218AA35000B2F09A /* MPLibraryCell.swift */; };
 		EAAEF8C4218AA5D100B2F09A /* MPLibraryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAEF8C3218AA5D100B2F09A /* MPLibraryItem.swift */; };
+		EABBC7D822BEE34300F96285 /* Gooey in Frameworks */ = {isa = PBXBuildFile; productRef = EABBC7D722BEE34300F96285 /* Gooey */; };
+		EABBC7DC22BEE75900F96285 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABBC7DB22BEE75900F96285 /* Strings.swift */; };
 		EAC85DC3217E033100C61B6F /* KZPlex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DC2217E033100C61B6F /* KZPlex.swift */; };
 		EAC85DC621817DBE00C61B6F /* PinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DC521817DBE00C61B6F /* PinRequest.swift */; };
 		EAC85DC82184068D00C61B6F /* CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC85DC72184068D00C61B6F /* CustomStringConvertible.swift */; };
@@ -154,9 +153,8 @@
 
 /* Begin PBXFileReference section */
 		291F6A3F1D1180500032BB51 /* MusicPlus.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPlus.entitlements; sourceTree = "<group>"; };
-		2940701A1D1295920069E27E /* ImageAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageAnalyzer.swift; sourceTree = "<group>"; };
 		2940701C1D1295970069E27E /* UIColor+Chroma.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Chroma.swift"; sourceTree = "<group>"; };
-		295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransitiion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPNavigationAnimatedTransitiion.swift; sourceTree = "<group>"; };
+		295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPNavigationAnimatedTransition.swift; sourceTree = "<group>"; };
 		295DACC91D13683D002E6C47 /* AlbumViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		295DACCB1D136C6A002E6C47 /* MPSectionHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPSectionHeaderView.swift; sourceTree = "<group>"; };
 		29C25DD91D0CF0E200309122 /* SongsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongsViewController.swift; sourceTree = "<group>"; };
@@ -184,18 +182,14 @@
 		29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonStyles.swift; sourceTree = "<group>"; };
 		29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPOptionsButton.swift; sourceTree = "<group>"; };
-		29F941DB1D1266ED001A3515 /* ANStepperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANStepperView.h; sourceTree = "<group>"; };
-		29F941DC1D1266EE001A3515 /* ANStepperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANStepperView.m; sourceTree = "<group>"; };
 		29F941DF1D1267CA001A3515 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		29F941E11D126AF6001A3515 /* MPBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPBackgroundView.swift; sourceTree = "<group>"; };
 		29F941E31D127E13001A3515 /* MPSectionedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPSectionedTableViewController.swift; sourceTree = "<group>"; };
 		29F941E51D127F21001A3515 /* MPSongCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPSongCollectionViewController.swift; sourceTree = "<group>"; };
 		29F941E71D128600001A3515 /* KZPlayerArtist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerArtist.swift; sourceTree = "<group>"; };
 		29F941EA1D128F14001A3515 /* MPArtistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPArtistTableViewCell.swift; sourceTree = "<group>"; };
-		29F941EF1D129B33001A3515 /* ImageHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageHelper.h; sourceTree = "<group>"; };
-		29F941F01D129B33001A3515 /* ImageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
-		29F941F21D129B7F001A3515 /* ObjectiveCProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveCProcessing.h; sourceTree = "<group>"; };
-		29F941F31D129B7F001A3515 /* ObjectiveCProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveCProcessing.m; sourceTree = "<group>"; };
+		29F941F21D129B7F001A3515 /* TintColorOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TintColorOperation.h; sourceTree = "<group>"; };
+		29F941F31D129B7F001A3515 /* TintColorOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TintColorOperation.m; sourceTree = "<group>"; };
 		29F941F51D129C1B001A3515 /* UIColor+UIColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+UIColorAdditions.h"; sourceTree = "<group>"; };
 		29F941F61D129C1B001A3515 /* UIColor+UIColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+UIColorAdditions.m"; sourceTree = "<group>"; };
 		29F941F81D12A7FE001A3515 /* KZPlayerAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPlayerAlbum.swift; sourceTree = "<group>"; };
@@ -252,6 +246,7 @@
 		EAA040E81CF437FA005453F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EAAEF8BD218AA35000B2F09A /* MPLibraryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPLibraryCell.swift; sourceTree = "<group>"; };
 		EAAEF8C3218AA5D100B2F09A /* MPLibraryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPLibraryItem.swift; sourceTree = "<group>"; };
+		EABBC7DB22BEE75900F96285 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		EAC85DC2217E033100C61B6F /* KZPlex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZPlex.swift; sourceTree = "<group>"; };
 		EAC85DC521817DBE00C61B6F /* PinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinRequest.swift; sourceTree = "<group>"; };
 		EAC85DC72184068D00C61B6F /* CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStringConvertible.swift; sourceTree = "<group>"; };
@@ -303,6 +298,7 @@
 				EA4D565D21F391EF00CD3930 /* aubio.framework in Frameworks */,
 				EA4D565C21F3918000CD3930 /* Accelerate.framework in Frameworks */,
 				EA4D565A21F3917C00CD3930 /* AudioToolbox.framework in Frameworks */,
+				EABBC7D822BEE34300F96285 /* Gooey in Frameworks */,
 				EAF47D94D855E246A20B9D2B /* Pods_MusicPlus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,9 +323,8 @@
 		294070191D12956C0069E27E /* ImageAnalyzer */ = {
 			isa = PBXGroup;
 			children = (
-				29F941EF1D129B33001A3515 /* ImageHelper.h */,
-				29F941F01D129B33001A3515 /* ImageHelper.m */,
-				2940701A1D1295920069E27E /* ImageAnalyzer.swift */,
+				29F941F21D129B7F001A3515 /* TintColorOperation.h */,
+				29F941F31D129B7F001A3515 /* TintColorOperation.m */,
 				2940701C1D1295970069E27E /* UIColor+Chroma.swift */,
 				29F941F51D129C1B001A3515 /* UIColor+UIColorAdditions.h */,
 				29F941F61D129C1B001A3515 /* UIColor+UIColorAdditions.m */,
@@ -342,7 +337,7 @@
 			children = (
 				29C25DDF1D0D106900309122 /* GradientView.swift */,
 				29F941E11D126AF6001A3515 /* MPBackgroundView.swift */,
-				295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransitiion.swift */,
+				295DACC71D135BC8002E6C47 /* MPNavigationAnimatedTransition.swift */,
 			);
 			path = Convenience;
 			sourceTree = "<group>";
@@ -372,12 +367,9 @@
 			isa = PBXGroup;
 			children = (
 				294070191D12956C0069E27E /* ImageAnalyzer */,
-				29F941DA1D1266E2001A3515 /* ANStepperView */,
 				EAC85DC1217E031600C61B6F /* KZPlex */,
 				29E6409F1D0E17DE005BA3D7 /* KZPlayer */,
 				EAF6AE3621E1465200E1F727 /* KZLibrary */,
-				29F941F21D129B7F001A3515 /* ObjectiveCProcessing.h */,
-				29F941F31D129B7F001A3515 /* ObjectiveCProcessing.m */,
 				EAC85DC72184068D00C61B6F /* CustomStringConvertible.swift */,
 				EA1CB43A21EBCA5100CB1F23 /* BackgroundWorker.swift */,
 			);
@@ -434,15 +426,6 @@
 				29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */,
 			);
 			path = Buttons;
-			sourceTree = "<group>";
-		};
-		29F941DA1D1266E2001A3515 /* ANStepperView */ = {
-			isa = PBXGroup;
-			children = (
-				29F941DB1D1266ED001A3515 /* ANStepperView.h */,
-				29F941DC1D1266EE001A3515 /* ANStepperView.m */,
-			);
-			name = ANStepperView;
 			sourceTree = "<group>";
 		};
 		29F941DE1D126796001A3515 /* Settings */ = {
@@ -554,6 +537,7 @@
 		EAA040C51CF437FA005453F9 /* MusicPlus */ = {
 			isa = PBXGroup;
 			children = (
+				EABBC7D922BEE72400F96285 /* Core */,
 				EAF6AE3D21E17C8600E1F727 /* Extensions */,
 				29E6409E1D0E17C2005BA3D7 /* Extras */,
 				EAA040F51CF4475B005453F9 /* Models */,
@@ -654,6 +638,22 @@
 				EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */,
 			);
 			path = Tables;
+			sourceTree = "<group>";
+		};
+		EABBC7D922BEE72400F96285 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				EABBC7DA22BEE73E00F96285 /* Appearance */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		EABBC7DA22BEE73E00F96285 /* Appearance */ = {
+			isa = PBXGroup;
+			children = (
+				EABBC7DB22BEE75900F96285 /* Strings.swift */,
+			);
+			path = Appearance;
 			sourceTree = "<group>";
 		};
 		EAC85DC1217E031600C61B6F /* KZPlex */ = {
@@ -809,6 +809,9 @@
 			dependencies = (
 			);
 			name = MusicPlus;
+			packageProductDependencies = (
+				EABBC7D722BEE34300F96285 /* Gooey */,
+			);
 			productName = MusicPlus;
 			productReference = EAA040C31CF437FA005453F9 /* MusicPlus.app */;
 			productType = "com.apple.product-type.application";
@@ -894,6 +897,9 @@
 				Base,
 			);
 			mainGroup = EAA040BA1CF437FA005453F9;
+			packageReferences = (
+				EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */,
+			);
 			productRefGroup = EAA040C41CF437FA005453F9 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1054,6 +1060,7 @@
 				EA1CB45E21EDAAFD00CB1F23 /* PopupMenuItemView.swift in Sources */,
 				29C25DDA1D0CF0E200309122 /* SongsViewController.swift in Sources */,
 				EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */,
+				EABBC7DC22BEE75900F96285 /* Strings.swift in Sources */,
 				EA1CB44D21ECC47000CB1F23 /* PeekPopGestureRecognizer.swift in Sources */,
 				29F941E81D128600001A3515 /* KZPlayerArtist.swift in Sources */,
 				EAF6AE5321E2527000E1F727 /* Device.swift in Sources */,
@@ -1080,7 +1087,6 @@
 				EA1CB43D21EBF08700CB1F23 /* UIViewController+Menu.swift in Sources */,
 				29E640AA1D0EADD8005BA3D7 /* AlbumsViewController.swift in Sources */,
 				EA1CB45C21EDA80B00CB1F23 /* PopupItemView.swift in Sources */,
-				2940701B1D1295920069E27E /* ImageAnalyzer.swift in Sources */,
 				EAF6AE8121E2E49200E1F727 /* Parser.swift in Sources */,
 				29E640AC1D0EADEF005BA3D7 /* ArtistsViewController.swift in Sources */,
 				EAF6AE8221E2E49200E1F727 /* Downloading.swift in Sources */,
@@ -1101,14 +1107,12 @@
 				EA1CB45321ECC70600CB1F23 /* PeekPopView.swift in Sources */,
 				EAF6AE8921E2E49200E1F727 /* ReaderError.swift in Sources */,
 				29E640A51D0E17FB005BA3D7 /* KZPlayerItem.swift in Sources */,
-				29F941F11D129B33001A3515 /* ImageHelper.m in Sources */,
 				EAF6AE5921E26E0800E1F727 /* Directory.swift in Sources */,
 				EAF6AE6121E2BB6500E1F727 /* Media.swift in Sources */,
 				EAF6AE6521E2E15700E1F727 /* KZRemoteAudioPlayerNode.swift in Sources */,
 				EA1CB43B21EBCA5100CB1F23 /* BackgroundWorker.swift in Sources */,
 				29E844891D1425070067CE56 /* MPShuffleTableViewCell.swift in Sources */,
 				EA85E1E721EA33B2000188F7 /* MediaSettings.swift in Sources */,
-				29F941DD1D1266EE001A3515 /* ANStepperView.m in Sources */,
 				EAF6AE8C21E2E49200E1F727 /* Streaming.swift in Sources */,
 				29C25DDD1D0CF4C000309122 /* Constants.swift in Sources */,
 				EA1CB43F21EC068500CB1F23 /* SwitchTableViewCellProvider.swift in Sources */,
@@ -1116,7 +1120,7 @@
 				29E640971D0D35F5005BA3D7 /* MPMenuItemTableViewCell.swift in Sources */,
 				EA1CB44321EC07C400CB1F23 /* SpacingSectionProvider.swift in Sources */,
 				EAF6AE8A21E2E49200E1F727 /* Reader+Converter.swift in Sources */,
-				295DACC81D135BC8002E6C47 /* MPNavigationAnimatedTransitiion.swift in Sources */,
+				295DACC81D135BC8002E6C47 /* MPNavigationAnimatedTransition.swift in Sources */,
 				EA5C5AD821E5E83400B0B822 /* PlexLibraryConfig.swift in Sources */,
 				EAC85DC82184068D00C61B6F /* CustomStringConvertible.swift in Sources */,
 				29F941E21D126AF6001A3515 /* MPBackgroundView.swift in Sources */,
@@ -1131,7 +1135,7 @@
 				29ECD2001D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift in Sources */,
 				EA4D565F21F394C200CD3930 /* KZPlayerItemBase+Analyze.swift in Sources */,
 				EAF6AE5721E26D5100E1F727 /* LibrarySectionsGETResponse.swift in Sources */,
-				29F941F41D129B7F001A3515 /* ObjectiveCProcessing.m in Sources */,
+				29F941F41D129B7F001A3515 /* TintColorOperation.m in Sources */,
 				29ECD1FD1D13DEC4009A2A45 /* MPTitleHeaderView.swift in Sources */,
 				29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */,
 				EAF6AE7F21E2E49200E1F727 /* Parser+Packets.swift in Sources */,
@@ -1246,7 +1250,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1301,7 +1305,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1333,8 +1337,11 @@
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = MusicPlus/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LLVM_LTO = YES_THIN;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1416,8 +1423,11 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = MusicPlus/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LLVM_LTO = YES_THIN;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1472,9 +1482,10 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore io.kez.musicplus";
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "MusicPlus/MusicPlus-BridgeHeader.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1485,7 +1496,11 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = MusicPlusTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stormedgeapps.Music-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -1499,10 +1514,15 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = MusicPlusTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stormedgeapps.Music-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicPlus.app/MusicPlus";
@@ -1513,7 +1533,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = MusicPlusUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stormedgeapps.Music-UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
@@ -1526,10 +1550,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = MusicPlusUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stormedgeapps.Music-UITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = MusicPlus;
@@ -1576,6 +1605,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:k3zi/Gooey.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EABBC7D722BEE34300F96285 /* Gooey */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */;
+			productName = Gooey;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EAA040BB1CF437FA005453F9 /* Project object */;
 }

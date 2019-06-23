@@ -147,15 +147,6 @@ class MPSongCollectionViewController: MPSectionedTableViewController, PeekPopPre
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let textField = searchViewController.searchBar.textField {
-            let backgroundView = textField.subviews.first
-            if #available(iOS 11.0, *) { // If `searchController` is in `navigationItem`
-                backgroundView?.backgroundColor = UIColor.init(white: 0, alpha: 0.2)
-                backgroundView?.subviews.forEach { $0.removeFromSuperview() }
-            }
-            backgroundView?.layer.cornerRadius = 10.5
-            backgroundView?.layer.masksToBounds = true
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

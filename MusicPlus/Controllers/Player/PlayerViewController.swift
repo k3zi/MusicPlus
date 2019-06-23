@@ -60,9 +60,11 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         view.innerScrubberColor = .white
         view.outerScrubberColor = UIColor.white.withAlphaComponent(0.2)
         view.updateWhenOffScreen = true
-        view.progressDidChange = { progress, _ in
-            KZPlayer.sharedInstance.systemVolume = Float(progress)
-        }
+        _ = view.progress
+            .map { Float($0) }
+            .sink {
+                KZPlayer.sharedInstance.systemVolume = $0
+            }
         return view
     }()
 
@@ -73,14 +75,13 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         view.progressTrackColor = AppDelegate.del().session.tintColor ?? .white
         view.innerScrubberColor = .white
         view.outerScrubberColor = UIColor.white.withAlphaComponent(0.2)
-        view.progressDidChange = { progress, final in
-            guard final else {
-                return
+        _ = view.progress
+            .subscribe(on: DispatchQueue.global(qos: .background))
+            .throttle(for: 0.5, scheduler: DispatchQueue.main, latest: true)
+            .map { Double($0) * KZPlayer.sharedInstance.duration() }
+            .sink {
+                KZPlayer.sharedInstance.setCurrentTime($0)
             }
-
-            let duration = KZPlayer.sharedInstance.duration()
-            KZPlayer.sharedInstance.setCurrentTime(duration * Double(progress))
-        }
         return view
     }()
 
@@ -208,15 +209,12 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         peekPop.registerForPreviewingWithDelegate(self, sourceView: infoHolderView)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: artworkViewHolder)
 
-        KZPlayer.sharedInstance.audioSession.rx.observe(NSNumber.self, Constants.Observation.outputVolume)
-            .map { $0?.floatValue }
-            .bind { [unowned self] volume in
-                guard let volume = volume else {
-                    return
-                }
-
-                self.volumeSlider.progress = CGFloat(volume)
-            }.disposed(by: disposeBag)
+        _ = KZPlayer.sharedInstance.audioSession.publisher(for: \.outputVolume)
+            .receive(on: RunLoop.main)
+            .map {
+                CGFloat($0)
+            }
+            .subscribe(volumeSlider.progress)
 
         NotificationCenter.default.addObserver(forName: .tintColorDidChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
             guard let self = self else {
@@ -290,15 +288,13 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             self.miniPlayerView.playPauseButton.setImage(KZPlayer.sharedInstance.audioEngine.isRunning ? .pause : .play, for: .normal)
         }.dispose(with: self)
 
-        KZPlayer.sharedInstance.currentTimeObservationHandler = { [weak self] currentTime, duration in
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    return
-                }
-
-                self.timeSlider.progress = CGFloat(currentTime / duration)
+        _ = KZPlayer.sharedInstance.currentTime
+            .throttle(for: 0.5, scheduler: RunLoop.main, latest: true)
+            .map {
+                $0.flatMap { CGFloat($0.currentTime / $0.duration) }
             }
-        }
+            .replaceNil(with: 0)
+            .subscribe(timeSlider.progress)
     }
 
     deinit {
@@ -307,7 +303,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        volumeSlider.progress = CGFloat(KZPlayer.sharedInstance.systemVolume)
+        volumeSlider.progress.send(CGFloat(KZPlayer.sharedInstance.systemVolume))
     }
 
     override func viewSafeAreaInsetsDidChange() {

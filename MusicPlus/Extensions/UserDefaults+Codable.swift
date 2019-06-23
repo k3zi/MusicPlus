@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension UserDefaults {
+extension UserDefaults {
 
     /// Set UserDefaults object for key to value of Codable object
     ///
