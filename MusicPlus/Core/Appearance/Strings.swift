@@ -10,8 +10,17 @@ import Foundation
 
 enum Strings {
 
+    enum Buttons { }
     enum Placeholders { }
-    enum Titles {}
+    enum Titles { }
+
+}
+
+extension Strings.Buttons {
+
+    static var shuffleAll: String {
+        return NSLocalizedString("Shuffle All", comment: "")
+    }
 
 }
 

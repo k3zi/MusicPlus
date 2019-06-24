@@ -34,7 +34,6 @@
 		29ECD1FD1D13DEC4009A2A45 /* MPTitleHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FC1D13DEC4009A2A45 /* MPTitleHeaderView.swift */; };
 		29ECD2001D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */; };
 		29F0B8501D0F40A80094EEA2 /* UIButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */; };
-		29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */; };
 		29F941E01D1267CA001A3515 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941DF1D1267CA001A3515 /* SettingsViewController.swift */; };
 		29F941E21D126AF6001A3515 /* MPBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E11D126AF6001A3515 /* MPBackgroundView.swift */; };
 		29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F941E31D127E13001A3515 /* MPSectionedTableViewController.swift */; };
@@ -82,6 +81,9 @@
 		EA8A0FF122BFCA3200C20273 /* Array-AnyCancellable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF022BFCA3200C20273 /* Array-AnyCancellable.swift */; };
 		EA8A0FF422BFD25700C20273 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF322BFD25700C20273 /* Images.swift */; };
 		EA8A0FF622C0015000C20273 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FF522C0015000C20273 /* Colors.swift */; };
+		EA8A0FFB22C032C500C20273 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FFA22C032C500C20273 /* PlayerViewModel.swift */; };
+		EA8A0FFE22C0375100C20273 /* TintColorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FFD22C0375100C20273 /* TintColorProvider.swift */; };
+		EA8A100122C056AE00C20273 /* Predicate in Frameworks */ = {isa = PBXBuildFile; productRef = EA8A100022C056AE00C20273 /* Predicate */; };
 		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
 		EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */; };
 		EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */; };
@@ -185,7 +187,6 @@
 		29ECD1FC1D13DEC4009A2A45 /* MPTitleHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPTitleHeaderView.swift; sourceTree = "<group>"; };
 		29ECD1FF1D13FDE1009A2A45 /* MPAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 		29F0B84F1D0F40A80094EEA2 /* UIButtonStyles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonStyles.swift; sourceTree = "<group>"; };
-		29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPOptionsButton.swift; sourceTree = "<group>"; };
 		29F941DF1D1267CA001A3515 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		29F941E11D126AF6001A3515 /* MPBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPBackgroundView.swift; sourceTree = "<group>"; };
 		29F941E31D127E13001A3515 /* MPSectionedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPSectionedTableViewController.swift; sourceTree = "<group>"; };
@@ -237,6 +238,8 @@
 		EA8A0FF022BFCA3200C20273 /* Array-AnyCancellable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array-AnyCancellable.swift"; sourceTree = "<group>"; };
 		EA8A0FF322BFD25700C20273 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		EA8A0FF522C0015000C20273 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		EA8A0FFA22C032C500C20273 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		EA8A0FFD22C0375100C20273 /* TintColorProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TintColorProvider.swift; sourceTree = "<group>"; };
 		EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IntermediatePredicate.swift; path = ../../../Dependencies/IntermediatePredicate/IntermediatePredicate/IntermediatePredicate.swift; sourceTree = "<group>"; };
 		EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewCell.swift; sourceTree = "<group>"; };
@@ -302,6 +305,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA8A100122C056AE00C20273 /* Predicate in Frameworks */,
 				EA4D565D21F391EF00CD3930 /* aubio.framework in Frameworks */,
 				EA4D565C21F3918000CD3930 /* Accelerate.framework in Frameworks */,
 				EA4D565A21F3917C00CD3930 /* AudioToolbox.framework in Frameworks */,
@@ -428,14 +432,6 @@
 			path = Styles;
 			sourceTree = "<group>";
 		};
-		29F0B8511D0F44CE0094EEA2 /* Buttons */ = {
-			isa = PBXGroup;
-			children = (
-				29F0B8521D0F45310094EEA2 /* MPOptionsButton.swift */,
-			);
-			path = Buttons;
-			sourceTree = "<group>";
-		};
 		29F941DE1D126796001A3515 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -540,6 +536,31 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		EA8A0FF722C0327A00C20273 /* Sections */ = {
+			isa = PBXGroup;
+			children = (
+				EA8A0FF822C032AA00C20273 /* Player */,
+			);
+			path = Sections;
+			sourceTree = "<group>";
+		};
+		EA8A0FF822C032AA00C20273 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				EAC85DC92184BB5C00C61B6F /* PlayerViewController.swift */,
+				EA8A0FFA22C032C500C20273 /* PlayerViewModel.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
+		EA8A0FFC22C0373F00C20273 /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				EA8A0FFD22C0375100C20273 /* TintColorProvider.swift */,
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
 		EAA040BA1CF437FA005453F9 = {
 			isa = PBXGroup;
 			children = (
@@ -565,8 +586,9 @@
 		EAA040C51CF437FA005453F9 /* MusicPlus */ = {
 			isa = PBXGroup;
 			children = (
-				EA8A0FF222BFCE3300C20273 /* Resources */,
 				EABBC7D922BEE72400F96285 /* Core */,
+				EA8A0FF222BFCE3300C20273 /* Resources */,
+				EA8A0FF722C0327A00C20273 /* Sections */,
 				EAF6AE3D21E17C8600E1F727 /* Extensions */,
 				29E6409E1D0E17C2005BA3D7 /* Extras */,
 				EAA040F51CF4475B005453F9 /* Models */,
@@ -608,7 +630,6 @@
 			isa = PBXGroup;
 			children = (
 				EA5389E021867EA400CFA9B7 /* Player */,
-				29F0B8511D0F44CE0094EEA2 /* Buttons */,
 				29F0B84E1D0F3F980094EEA2 /* Styles */,
 				29E640951D0D35BC005BA3D7 /* Cells */,
 				29C25DDE1D0D101B00309122 /* Convenience */,
@@ -665,6 +686,7 @@
 		EABBC7D922BEE72400F96285 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				EA8A0FFC22C0373F00C20273 /* Providers */,
 				EABBC7DA22BEE73E00F96285 /* Appearance */,
 				EA8A0FCF22BF3E1700C20273 /* Helpers */,
 				29C25DDC1D0CF4C000309122 /* Constants.swift */,
@@ -718,7 +740,6 @@
 		EAC85DCD2184D9CD00C61B6F /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				EAC85DC92184BB5C00C61B6F /* PlayerViewController.swift */,
 				EAC85DCE2184DA0100C61B6F /* MiniPlayerView.swift */,
 			);
 			path = Player;
@@ -839,6 +860,7 @@
 			packageProductDependencies = (
 				EABBC7D722BEE34300F96285 /* Gooey */,
 				EA8A0FD322BF527100C20273 /* Connectivity */,
+				EA8A100022C056AE00C20273 /* Predicate */,
 			);
 			productName = MusicPlus;
 			productReference = EAA040C31CF437FA005453F9 /* MusicPlus.app */;
@@ -928,6 +950,7 @@
 			packageReferences = (
 				EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */,
 				EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */,
+				EA8A0FFF22C056AE00C20273 /* XCRemoteSwiftPackageReference "Predicate" */,
 			);
 			productRefGroup = EAA040C41CF437FA005453F9 /* Products */;
 			projectDirPath = "";
@@ -1057,7 +1080,6 @@
 				EA8A0FF122BFCA3200C20273 /* Array-AnyCancellable.swift in Sources */,
 				295DACCC1D136C6A002E6C47 /* MPSectionHeaderView.swift in Sources */,
 				EA02198421F6444600EE067E /* KZRealmLibrary.swift in Sources */,
-				29F0B8531D0F45310094EEA2 /* MPOptionsButton.swift in Sources */,
 				EAF6AE5B21E271B700E1F727 /* Location.swift in Sources */,
 				29E640941D0D352B005BA3D7 /* MPMenuItem.swift in Sources */,
 				EAF6AE6321E2BC4100E1F727 /* Part.swift in Sources */,
@@ -1107,6 +1129,7 @@
 				29C25DDD1D0CF4C000309122 /* Constants.swift in Sources */,
 				EA1CB43F21EC068500CB1F23 /* SwitchTableViewCellProvider.swift in Sources */,
 				EA1CB44A21EC288E00CB1F23 /* DescriptionTableViewCellProvider.swift in Sources */,
+				EA8A0FFB22C032C500C20273 /* PlayerViewModel.swift in Sources */,
 				29E640971D0D35F5005BA3D7 /* MPMenuItemTableViewCell.swift in Sources */,
 				EA1CB44321EC07C400CB1F23 /* SpacingSectionProvider.swift in Sources */,
 				EAF6AE8A21E2E49200E1F727 /* Reader+Converter.swift in Sources */,
@@ -1135,6 +1158,7 @@
 				EAF6AE5D21E2A2BD00E1F727 /* LibrarySectionsAllGETResponse.swift in Sources */,
 				EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */,
 				29F941EB1D128F14001A3515 /* MPArtistTableViewCell.swift in Sources */,
+				EA8A0FFE22C0375100C20273 /* TintColorProvider.swift in Sources */,
 				EAF6AE3F21E17CD000E1F727 /* UserDefaults+Codable.swift in Sources */,
 				EA8A0FF422BFD25700C20273 /* Images.swift in Sources */,
 				EAF6AE8321E2E49200E1F727 /* Downloader.swift in Sources */,
@@ -1602,6 +1626,14 @@
 				kind = branch;
 			};
 		};
+		EA8A0FFF22C056AE00C20273 /* XCRemoteSwiftPackageReference "Predicate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:k3zi/Predicate.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "git@github.com:k3zi/Gooey.git";
@@ -1617,6 +1649,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */;
 			productName = Connectivity;
+		};
+		EA8A100022C056AE00C20273 /* Predicate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA8A0FFF22C056AE00C20273 /* XCRemoteSwiftPackageReference "Predicate" */;
+			productName = Predicate;
 		};
 		EABBC7D722BEE34300F96285 /* Gooey */ = {
 			isa = XCSwiftPackageProductDependency;

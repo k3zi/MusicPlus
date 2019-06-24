@@ -10,6 +10,8 @@ import UIKit
 
 enum Images {
 
+    static var add: UIImage { image() }
+
     static var chevronDown: UIImage { image() }
 
     static var chevronTrailing: UIImage { image() }
@@ -23,6 +25,12 @@ enum Images {
     static var play: UIImage { image() }
 
     static var previous: UIImage { image() }
+
+    static var shuffle: UIImage { image() }
+
+    static var volumeHigh: UIImage { image() }
+
+    static var volumeMute: UIImage { image() }
 
 }
 

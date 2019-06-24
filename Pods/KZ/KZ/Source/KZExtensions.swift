@@ -15,7 +15,7 @@ public typealias KZCompletionBlock = ((String) -> Void)
 public extension UIView {
 
     /**
-     Creates a seperator
+     Creates a separator
 
      - parameter color: The lines color
      - parameter vertical:        Pass in true to make a vertical line instead of a horizontal

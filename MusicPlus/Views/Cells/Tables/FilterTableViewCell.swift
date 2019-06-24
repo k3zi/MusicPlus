@@ -23,8 +23,8 @@ class FilterTableViewCell: KZTableViewCell, UITextFieldDelegate {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         backgroundColor = UIColor.black.withAlphaComponent(0.27)
-        topSeperator.backgroundColor = .black
-        bottomSeperator.backgroundColor = .black
+        topSeparator.backgroundColor = .black
+        bottomSeparator.backgroundColor = .black
 
         selectionStyle = .none
         accessoryType = .none
@@ -99,8 +99,8 @@ class FilterTableViewCell: KZTableViewCell, UITextFieldDelegate {
     }
 
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
-        topSeperator.alpha = 0.14
-        bottomSeperator.alpha = 0.14
+        topSeparator.alpha = 0.14
+        bottomSeparator.alpha = 0.14
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

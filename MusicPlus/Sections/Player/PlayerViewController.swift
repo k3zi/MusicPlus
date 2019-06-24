@@ -16,10 +16,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     let disposeBag = DisposeBag()
     var cancellables = [AnyCancellable]()
-    var compactConstraints = [NSLayoutConstraint]()
-    var regularConstraints = [NSLayoutConstraint]()
-
-    let controlViewHolder = UIView()
 
     lazy var minimizeButton: ExtendedButton = {
         let view = ExtendedButton()
@@ -34,7 +30,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var volumeSlider: SliderView = {
         let view = SliderView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundTrackColor = UIColor.white.withAlphaComponent(0.3)
         view.progressTrackColor = .white
         view.innerScrubberColor = .white
@@ -51,7 +46,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var timeSlider: SliderView = {
         let view = SliderView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundTrackColor = UIColor.white.withAlphaComponent(0.3)
         view.progressTrackColor = AppDelegate.del().session.tintColor ?? .white
         view.innerScrubberColor = .white
@@ -64,10 +58,8 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         return view
     }()
 
-    let infoHolderView = UIView()
     lazy var songTitleLabel: UILabel = {
         let view = UILabel()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         view.textAlignment = .center
@@ -76,7 +68,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var albumTitleLabel: UILabel = {
         let view = UILabel()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         view.textAlignment = .center
@@ -85,7 +76,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var artistTitleLabel: UILabel = {
         let view = UILabel()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.textColor = .white
         view.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         view.textAlignment = .center
@@ -94,7 +84,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var playPauseButton: UIButton = {
         let view = UIButton()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(Images.play, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.togglePlay), for: .touchUpInside)
@@ -106,7 +95,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var previousButton: UIButton = {
         let view = ExtendedButton()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(Images.previous, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.prev), for: .touchUpInside)
@@ -118,7 +106,6 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     lazy var nextButton: UIButton = {
         let view = ExtendedButton()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.tintColor = AppDelegate.del().session.tintColor ?? .white
         view.setImage(Images.next, for: .normal)
         view.addTarget(KZPlayer.sharedInstance, action: #selector(KZPlayer.next), for: .touchUpInside)
@@ -151,41 +138,96 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
 
     // MARK: Setup View
 
+    let contentStackView = UIStackView()
+
     override func viewDidLoad() {
-        minimizeButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(minimizeButton)
-
-        controlViewHolder.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(controlViewHolder)
-        controlViewHolder.addSubview(volumeSlider)
-        controlViewHolder.addSubview(timeSlider)
-
-        infoHolderView.translatesAutoresizingMaskIntoConstraints = false
-        infoHolderView.addSubview(songTitleLabel)
-        infoHolderView.addSubview(albumTitleLabel)
-        infoHolderView.addSubview(artistTitleLabel)
-        controlViewHolder.addSubview(infoHolderView)
-
-        controlViewHolder.addSubview(previousButton)
-        controlViewHolder.addSubview(playPauseButton)
-        controlViewHolder.addSubview(nextButton)
+        super.viewDidLoad()
 
         artworkViewHolder.translatesAutoresizingMaskIntoConstraints = false
         artworkViewHolder.clipsToBounds = false
         artworkViewHolderViewHolder.addSubview(artworkViewHolder)
 
-        artworkViewHolderViewHolder.translatesAutoresizingMaskIntoConstraints = false
         artworkViewHolderViewHolder.clipsToBounds = true
-        view.addSubview(artworkViewHolderViewHolder)
 
         for _ in 0..<numberOfArtworkViews {
             addArtwork(at: 0)
         }
 
-        super.viewDidLoad()
+        let controlsStackView = UIStackView(arrangedSubviews: [previousButton, playPauseButton, nextButton])
+        controlsStackView.spacing = CGFloat.goo.systemSpacing(multiplier: 7)
+        controlsStackView.alignment = .center
+
+        let currentPlayingInfoStackView = UIStackView(arrangedSubviews: [
+            songTitleLabel,
+            albumTitleLabel,
+            artistTitleLabel
+        ])
+        currentPlayingInfoStackView.axis = .vertical
+        currentPlayingInfoStackView.spacing = CGFloat.goo.systemSpacing
+
+        let volumeMuteImageView = UIImageView(image: Images.volumeMute)
+        volumeMuteImageView.contentMode = .scaleAspectFit
+        volumeMuteImageView.tintColor = Colors.volumeLevelAccessory
+        let volumeHighImageView = UIImageView(image: Images.volumeHigh)
+        volumeHighImageView.contentMode = .scaleAspectFit
+        volumeHighImageView.tintColor = Colors.volumeLevelAccessory
+
+        let volumeSliderStackView = UIStackView(arrangedSubviews: [
+            volumeMuteImageView,
+            volumeSlider,
+            volumeHighImageView
+        ])
+        volumeSliderStackView.spacing = CGFloat.goo.systemSpacing(multiplier: 0.5)
+
+        let detailsStackView = UIStackView(arrangedSubviews: [
+            timeSlider,
+            currentPlayingInfoStackView,
+            controlsStackView,
+            volumeSliderStackView
+        ])
+        detailsStackView.axis = .vertical
+        detailsStackView.alignment = .center
+        detailsStackView.distribution = .equalSpacing
+        detailsStackView.spacing = CGFloat.goo.systemSpacing(multiplier: 2)
+        detailsStackView.isLayoutMarginsRelativeArrangement = true
+        detailsStackView.layoutMargins = UIEdgeInsets.goo.systemSpacingInsets(top: 0, left: 1, bottom: 0, right: 1)
+
+        contentStackView.addArrangedSubview(artworkViewHolderViewHolder)
+        contentStackView.addArrangedSubview(detailsStackView)
+        contentStackView.axis = .vertical
+
+        let stackView = UIStackView(arrangedSubviews: [
+            minimizeButton,
+            contentStackView
+        ])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = CGFloat.goo.systemSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets.goo.systemSpacingInsets(top: 1, left: 0, bottom: 2, right: 0)
+        view.addSubview(stackView)
+        stackView.goo.boundingAnchor.makeRelativeEdges(equalTo: view.safeAreaLayoutGuide).activate()
+
+        NSLayoutConstraint.goo.activate([
+            contentStackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            timeSlider.leadingAnchor.constraint(equalToSystemSpacingAfter: detailsStackView.leadingAnchor, multiplier: 1),
+            volumeSliderStackView.leadingAnchor.constraint(equalToSystemSpacingAfter: detailsStackView.leadingAnchor, multiplier: 1),
+            minimizeButton.widthAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension / 2),
+            minimizeButton.heightAnchor.constraint(equalTo: minimizeButton.widthAnchor),
+
+            volumeMuteImageView.widthAnchor.constraint(equalTo: volumeHighImageView.widthAnchor),
+
+            playPauseButton.heightAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension * 2),
+            playPauseButton.widthAnchor.constraint(equalTo: playPauseButton.heightAnchor),
+            previousButton.heightAnchor.constraint(equalTo: playPauseButton.heightAnchor, multiplier: 0.5),
+            nextButton.heightAnchor.constraint(equalTo: previousButton.heightAnchor),
+            previousButton.widthAnchor.constraint(equalTo: previousButton.heightAnchor),
+            nextButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor)
+        ])
 
         peekPop = PeekPop(viewController: self)
-        peekPop.registerForPreviewingWithDelegate(self, sourceView: infoHolderView)
+        peekPop.registerForPreviewingWithDelegate(self, sourceView: currentPlayingInfoStackView)
         peekPop.registerForPreviewingWithDelegate(self, sourceView: artworkViewHolder)
 
         cancellables += KZPlayer.sharedInstance.audioSession.publisher(for: \.outputVolume)
@@ -266,7 +308,7 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
             .map {
                 $0.flatMap { CGFloat($0.currentTime / $0.duration) }
             }
-            .filter { $0 != nil }.map { $0! }
+            .filter { $0 != nil }.map { min(max($0!, 0), 1) }
             .subscribe(timeSlider.progress)
     }
 
@@ -288,98 +330,22 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
         super.setupConstraints()
 
         minimizeButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        artworkViewHolderViewHolder.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        artworkViewHolderViewHolder.setContentCompressionResistancePriority(.required, for: .vertical)
 
-        artworkViewHolderViewHolder.autoPinEdge(.top, to: .bottom, of: minimizeButton, withOffset: 18)
-        artworkViewHolderViewHolder.autoPinEdge(toSuperviewEdge: .left)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .vertical)
         artworkViewHolder.autoAlignAxis(toSuperviewAxis: .horizontal)
-        artworkViewHolder.autoMatch(.width, to: .width, of: artworkViewHolderViewHolder, withMultiplier: 0.9)
+        artworkViewHolder.autoMatch(.width, to: .width, of: artworkViewHolderViewHolder, withMultiplier: 0.85)
 
         resetArtwork()
-
-        timeSlider.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
-
-        infoHolderView.autoPinEdge(.top, to: .bottom, of: timeSlider, withOffset: 18)
-        infoHolderView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-        infoHolderView.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-
-        songTitleLabel.autoPinEdgesToSuperviewSafeArea(with: .zero, excludingEdge: .bottom)
-
-        albumTitleLabel.autoPinEdge(.top, to: .bottom, of: songTitleLabel, withOffset: 9)
-        albumTitleLabel.autoPinEdge(toSuperviewEdge: .left, withInset: 0)
-        albumTitleLabel.autoPinEdge(toSuperviewEdge: .right, withInset: 0)
-
-        artistTitleLabel.autoPinEdge(.top, to: .bottom, of: albumTitleLabel, withOffset: 9)
-        artistTitleLabel.autoPinEdgesToSuperviewSafeArea(with: .zero, excludingEdge: .top)
-        artistTitleLabel.autoMatch(.height, to: .height, of: albumTitleLabel)
-
-        playPauseButton.autoSetDimension(.height, toSize: 80)
-
-        NSLayoutConstraint.goo.activate([
-            minimizeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            minimizeButton.topAnchor.constraint(equalToSystemSpacingBelow: view.safeAreaLayoutGuide.topAnchor, multiplier: 1),
-            minimizeButton.widthAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension / 2),
-            minimizeButton.heightAnchor.constraint(equalTo: minimizeButton.widthAnchor),
-
-            playPauseButton.widthAnchor.constraint(equalTo: playPauseButton.heightAnchor),
-            previousButton.heightAnchor.constraint(equalTo: playPauseButton.heightAnchor, multiplier: 0.5),
-            nextButton.heightAnchor.constraint(equalTo: previousButton.heightAnchor),
-            previousButton.widthAnchor.constraint(equalTo: previousButton.heightAnchor),
-            nextButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor)
-        ])
-
-        playPauseButton.autoPinEdge(.top, to: .bottom, of: infoHolderView, withOffset: 18)
-        playPauseButton.autoAlignAxis(toSuperviewAxis: .vertical)
-
-        previousButton.autoPinEdge(.right, to: .left, of: playPauseButton, withOffset: -60)
-        previousButton.autoAlignAxis(.horizontal, toSameAxisOf: playPauseButton)
-
-        nextButton.autoPinEdge(.left, to: .right, of: playPauseButton, withOffset: 60)
-        nextButton.autoAlignAxis(.horizontal, toSameAxisOf: playPauseButton)
-
-        volumeSlider.autoPinEdge(.top, to: .bottom, of: playPauseButton, withOffset: 18)
-        volumeSlider.autoPinEdge(toSuperviewEdge: .left, withInset: 18)
-        volumeSlider.autoPinEdge(toSuperviewEdge: .right, withInset: 18)
-        volumeSlider.autoPinEdge(toSuperviewEdge: .bottom, withInset: 18)
 
         setupTraitSpecificConstraints()
     }
 
     func setupTraitSpecificConstraints() {
         if traitCollection.horizontalSizeClass == .compact {
-            NSLayoutConstraint.deactivate(regularConstraints)
-
-            // Create the compact constraints for the first time if necessary.
-            if compactConstraints.isEmpty {
-                compactConstraints = [
-                    view.rightAnchor.constraint(equalTo: artworkViewHolderViewHolder.rightAnchor),
-
-                    controlViewHolder.topAnchor.constraint(equalToSystemSpacingBelow: artworkViewHolderViewHolder.bottomAnchor, multiplier: 2),
-                    controlViewHolder.leftAnchor.constraint(equalToSystemSpacingAfter: view.leftAnchor, multiplier: 2),
-                    controlViewHolder.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    view.bottomAnchor.constraint(equalToSystemSpacingBelow: controlViewHolder.bottomAnchor, multiplier: 2)
-                ]
-            }
-
-            NSLayoutConstraint.activate(compactConstraints)
+            contentStackView.axis = .vertical
         } else {
-            NSLayoutConstraint.deactivate(compactConstraints)
-
-            // Create the regular constraints for the first time if necessary.
-            if regularConstraints.isEmpty {
-                regularConstraints = [
-                    view.bottomAnchor.constraint(equalToSystemSpacingBelow: artworkViewHolderViewHolder.bottomAnchor, multiplier: 2),
-
-                    controlViewHolder.leftAnchor.constraint(equalToSystemSpacingAfter: artworkViewHolderViewHolder.rightAnchor, multiplier: 2),
-                    view.rightAnchor.constraint(equalToSystemSpacingAfter: controlViewHolder.rightAnchor, multiplier: 2),
-                    controlViewHolder.topAnchor.constraint(equalTo: artworkViewHolderViewHolder.topAnchor),
-                    controlViewHolder.centerYAnchor.constraint(equalTo: artworkViewHolderViewHolder.centerYAnchor),
-                    controlViewHolder.widthAnchor.constraint(equalTo: artworkViewHolderViewHolder.widthAnchor)
-                ]
-            }
-
-            NSLayoutConstraint.activate(regularConstraints)
+            contentStackView.axis = .horizontal
         }
     }
 
@@ -426,7 +392,8 @@ class PlayerViewController: MPViewController, PeekPopPreviewingDelegate {
     func addArtwork(at index: Int) -> UIImageView {
         let artworkView = UIImageView()
         artworkView.translatesAutoresizingMaskIntoConstraints = false
-        artworkView.backgroundColor = UIColor.init(white: 1.0, alpha: 0.7)
+        artworkView.backgroundColor = nil
+        artworkView.contentMode = .scaleAspectFit
         artworkViewHolder.addSubview(artworkView)
         artworkViews.insert(artworkView, at: index)
         return artworkView

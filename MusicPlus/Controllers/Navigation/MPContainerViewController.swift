@@ -44,6 +44,7 @@ class MPContainerViewController: KZViewController, UINavigationControllerDelegat
                     }
                 case .full:
                     self.miniPlayerViewTopConstraint = self.miniPlayerView.autoPinEdge(.bottom, to: .top, of: self.view)
+                    self.playerViewController.viewWillAppear(true)
                 case .hidden:
                     self.miniPlayerViewTopConstraint = self.miniPlayerView.autoPinEdge(.top, to: .bottom, of: self.view)
                     self.centerNavigationControllers.forEach { vc in

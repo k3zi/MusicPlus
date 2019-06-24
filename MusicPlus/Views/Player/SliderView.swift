@@ -94,11 +94,9 @@ class SliderView: UIView {
         super.init(frame: frame)
 
         backgroundTrackView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundTrackView.layer.cornerRadius = CGFloat.goo.systemSpacing(multiplier: 0.5)
         addSubview(backgroundTrackView)
 
         progressTrackView.translatesAutoresizingMaskIntoConstraints = false
-        progressTrackView.layer.cornerRadius = CGFloat.goo.systemSpacing(multiplier: 0.5)
         addSubview(progressTrackView)
 
         outerScrubberView.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +182,7 @@ class SliderView: UIView {
     func setupConstraints() {
         NSLayoutConstraint.goo.activate([
             backgroundTrackView.goo.boundingAnchor.makeHorizontalEdgesEqualToSuperview(insets: .both(type(of: self).outerScrubberHeight / CGFloat(2))),
-            backgroundTrackView.heightAnchor.constraint(equalToConstant: CGFloat.goo.systemSpacing),
+            backgroundTrackView.heightAnchor.constraint(equalToConstant: CGFloat.goo.systemSpacing(multiplier: 0.5)),
             backgroundTrackView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             progressTrackView.leadingAnchor.constraint(equalTo: backgroundTrackView.leadingAnchor),

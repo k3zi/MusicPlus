@@ -8,10 +8,6 @@
 
 import Foundation
 
-// Start = no or/and
-// Connector = yes or/and
-// End = yes no/end
-
 enum IntermediatePredicateConnectorType: String {
     case or = "OR"
     case and = "AND"
@@ -100,7 +96,7 @@ public protocol IntermediatePredicateQueryable {
 
 fileprivate extension IntermediatePredicateQueryable {
 
-    fileprivate var prefixableResult: String {
+    var prefixableResult: String {
         return result.isEmpty ? "" : "\(result) "
     }
 
@@ -140,6 +136,8 @@ public struct IntermediatePredicateQuery<T>: IntermediatePredicateResult {
         switch value {
         case is String:
             return "\"\(value)\""
+        case is Bool:
+            return value as! Bool ? "YES" : "NO"
         default:
             return "\(value)"
         }
@@ -153,62 +151,67 @@ public struct IntermediatePredicateQuery<T>: IntermediatePredicateResult {
         if diacriticInsensitive {
             flags.append("d")
         }
-        return flags.isNotEmpty ? "[\(flags.joined())]" : ""
+        return !flags.isEmpty ? "[\(flags.joined())]" : ""
+    }
+
+    internal func generateBinaryConnector(with symbol: String, value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+        return Connector("\(result) \(symbol)\(flagString) \(escaped(value: value))")
     }
 
     func equal(to value: Any) -> Connector {
-        return Connector("\(result) == \(escaped(value: value))")
+        return generateBinaryConnector(with: "==", value: value)
     }
 
     func notEqual(to value: Any) -> Connector {
-        return Connector("\(result) != \(escaped(value: value))")
+        return generateBinaryConnector(with: "!=", value: value)
     }
 
     func greater(than value: Any) -> Connector {
-        return Connector("\(result) > \(escaped(value: value))")
+        return generateBinaryConnector(with: ">", value: value)
     }
 
-    func greater(thanOrEqualTo value: Any) -> Connector {
-        return Connector("\(result) >= \(escaped(value: value))")
+    func greaterThanOrEqual(to value: Any) -> Connector {
+        return generateBinaryConnector(with: ">=", value: value)
     }
 
     func less(than value: Any) -> Connector {
-        return Connector("\(result) < \(escaped(value: value))")
+        return generateBinaryConnector(with: "<", value: value)
     }
 
-    func less(thanOrEqualTo value: Any) -> Connector {
-        return Connector("\(result) <= \(escaped(value: value))")
+    func lessThanOrEqual(to value: Any) -> Connector {
+        return generateBinaryConnector(with: "<=", value: value)
     }
 
     func containing(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
-        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
-        return Connector("\(result) CONTAINS\(flagString) \(escaped(value: value))")
+        return generateBinaryConnector(with: "CONTAINS", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
     }
 
     func notContaining(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
-        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
-        return Connector("\(result) NOT CONTAINS\(flagString) \(escaped(value: value))")
+        return generateBinaryConnector(with: "NOT CONTAINS", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
     }
 
     func begins(with value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
-        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
-        return Connector("\(result) BEGINSWITH\(flagString) \(escaped(value: value))")
+        return generateBinaryConnector(with: "BEGINSWITH", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
     }
 
     func ends(with value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
-        let flagString = generateFlags(caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
-        return Connector("\(result) ENDSWITH\(flagString) \(escaped(value: value))")
+        return generateBinaryConnector(with: "ENDSWITH", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
     }
 
-    func matches(_ value: Any) -> Connector {
-        return Connector("\(result) MATCHES \(escaped(value: value))")
+    func like(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        return generateBinaryConnector(with: "LIKE", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
+    }
+
+    func matches(_ value: Any, caseInsensitive: Bool = false, diacriticInsensitive: Bool = false) -> Connector {
+        return generateBinaryConnector(with: "MATCHES", value: value, caseInsensitive: caseInsensitive, diacriticInsensitive: diacriticInsensitive)
     }
 
 }
 
 extension NSPredicate {
 
-    public class func form<T>(with type: T.Type) -> IntermediatePredicateStart<T> {
+    public class func with<T>(type: T.Type) -> IntermediatePredicateStart<T> {
         return .init()
     }
 

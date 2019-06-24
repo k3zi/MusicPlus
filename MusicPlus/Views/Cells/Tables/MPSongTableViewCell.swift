@@ -27,7 +27,7 @@ class MPSongTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        bottomSeperator.backgroundColor = .black
+        bottomSeparator.backgroundColor = .black
 
         titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
@@ -83,7 +83,7 @@ class MPSongTableViewCell: KZTableViewCell {
 
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         if indexPath.row != 0 {
-            bottomSeperator.alpha = 0.14
+            bottomSeparator.alpha = 0.14
         }
 
         self.indexPath = indexPath
@@ -94,7 +94,7 @@ class MPSongTableViewCell: KZTableViewCell {
 
         func runAnimations() {
             backgroundColor = highlighted ? RGB(255, a: 0.2) : UIColor.clear
-            bottomSeperator.alpha = highlighted ? 0.0 : 0.14
+            bottomSeparator.alpha = highlighted ? 0.0 : 0.14
         }
 
         if animated {

@@ -74,7 +74,7 @@ class ArtistViewController: MPSectionedTableViewController {
         view.tag = section
         view.toggleButton.tag = section
         view.toggleButton.isSelected = expandedSections[section]
-        view.bottomSeperator.isHidden = view.toggleButton.isSelected || artist.albums.count == (section + 1)
+        view.bottomSeparator.isHidden = view.toggleButton.isSelected || artist.albums.count == (section + 1)
         view.toggleButton.addTarget(self, action: #selector(toggleSection), for: .touchUpInside)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapSection))

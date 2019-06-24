@@ -16,8 +16,8 @@ class MPArtistSectionHeaderView: UIView {
     let subtitleLabel = UILabel()
     let infoHolder = UIView()
 
-    let topSeperator = UIView()
-    let bottomSeperator = UIView()
+    let topSeparator = UIView()
+    let bottomSeparator = UIView()
 
     let toggleButton = ExtendedButton()
 
@@ -41,13 +41,13 @@ class MPArtistSectionHeaderView: UIView {
     func setupView() {
         self.backgroundColor = UIColor.clear
 
-        topSeperator.backgroundColor = .white
-        topSeperator.alpha = 0.14
-        addSubview(topSeperator)
+        topSeparator.backgroundColor = .white
+        topSeparator.alpha = 0.14
+        addSubview(topSeparator)
 
-        bottomSeperator.backgroundColor = .black
-        bottomSeperator.alpha = 0.14
-        addSubview(bottomSeperator)
+        bottomSeparator.backgroundColor = .black
+        bottomSeparator.alpha = 0.14
+        addSubview(bottomSeparator)
 
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -85,15 +85,15 @@ class MPArtistSectionHeaderView: UIView {
     }
 
     func setupConstraints() {
-        bottomSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .bottom)
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .left)
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .right)
+        bottomSeparator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .bottom)
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .left)
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .right)
 
-        topSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
-        topSeperator.autoPinEdge(toSuperviewEdge: .top)
-        topSeperator.autoPinEdge(toSuperviewEdge: .left)
-        topSeperator.autoPinEdge(toSuperviewEdge: .right)
+        topSeparator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        topSeparator.autoPinEdge(toSuperviewEdge: .top)
+        topSeparator.autoPinEdge(toSuperviewEdge: .left)
+        topSeparator.autoPinEdge(toSuperviewEdge: .right)
 
         imageView.autoPinEdge(toSuperviewEdge: .top, withInset: 10)
         imageView.autoPinEdge(toSuperviewEdge: .left, withInset: 18)

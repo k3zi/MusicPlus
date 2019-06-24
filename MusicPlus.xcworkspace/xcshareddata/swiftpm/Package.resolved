@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "Predicate",
+        "repositoryURL": "git@github.com:k3zi/Predicate.git",
+        "state": {
+          "branch": null,
+          "revision": "fd804e26793da2185fdeff367a49a62ce126c92b",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "Quick",
         "repositoryURL": "https://github.com/Quick/Quick.git",
         "state": {

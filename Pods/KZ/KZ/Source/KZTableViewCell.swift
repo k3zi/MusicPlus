@@ -11,8 +11,8 @@ import PureLayout
 import Reusable
 
 open class KZTableViewCell: UITableViewCell, Reusable {
-    public let topSeperator = UIView()
-    public let bottomSeperator = UIView()
+    public let topSeparator = UIView()
+    public let bottomSeparator = UIView()
 
     var didSetupConstraints = false
     var trailingDetailConstraint = NSLayoutConstraint()
@@ -22,8 +22,8 @@ open class KZTableViewCell: UITableViewCell, Reusable {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = UIColor.clear
 
-        self.contentView.addSubview(topSeperator)
-        self.contentView.addSubview(bottomSeperator)
+        self.contentView.addSubview(topSeparator)
+        self.contentView.addSubview(bottomSeparator)
 
         self.contentView.bounds.size.height = 99999
     }
@@ -35,15 +35,15 @@ open class KZTableViewCell: UITableViewCell, Reusable {
             return
         }
 
-        bottomSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .bottom)
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .left)
-        bottomSeperator.autoPinEdge(toSuperviewEdge: .right)
+        bottomSeparator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .bottom)
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .left)
+        bottomSeparator.autoPinEdge(toSuperviewEdge: .right)
 
-        topSeperator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
-        topSeperator.autoPinEdge(toSuperviewEdge: .top)
-        topSeperator.autoPinEdge(toSuperviewEdge: .left)
-        topSeperator.autoPinEdge(toSuperviewEdge: .right)
+        topSeparator.autoSetDimension(.height, toSize: (1.0/UIScreen.main.scale))
+        topSeparator.autoPinEdge(toSuperviewEdge: .top)
+        topSeparator.autoPinEdge(toSuperviewEdge: .left)
+        topSeparator.autoPinEdge(toSuperviewEdge: .right)
 
         didSetupConstraints = true
     }
@@ -89,9 +89,9 @@ open class KZTableViewCell: UITableViewCell, Reusable {
 
     open func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         if (indexPath as NSIndexPath).row == 0 {
-            topSeperator.alpha = 0.0
+            topSeparator.alpha = 0.0
         } else {
-            topSeperator.alpha = 1.0
+            topSeparator.alpha = 1.0
         }
     }
 

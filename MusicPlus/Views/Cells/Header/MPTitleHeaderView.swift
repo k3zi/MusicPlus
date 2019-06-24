@@ -11,14 +11,33 @@ import UIKit
 class MPTitleHeaderView: UIControl {
 
     let label = UILabel()
-    let imageView = UIImageView(image: #imageLiteral(resourceName: "shuffleBT"))
+    let shuffleImage = UIImageView(image: Images.shuffle)
 
     override init(frame: CGRect) {
         var frame = frame
         frame.size.width = Constants.UI.Screen.width
-        frame.size.height = 46
+        frame.size.height = 55
         super.init(frame: frame)
-        setupView()
+
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
+        label.text = Strings.Buttons.shuffleAll
+
+        shuffleImage.translatesAutoresizingMaskIntoConstraints = false
+        shuffleImage.tintColor = Colors.shuffleButton
+        shuffleImage.contentMode = .scaleAspectFit
+        shuffleImage.setContentHuggingPriority(.required, for: .horizontal)
+
+        let stackView = UIStackView(arrangedSubviews: [label, UIView(), shuffleImage])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets.goo.systemSpacingInsets(2)
+        addSubview(stackView)
+        NSLayoutConstraint.goo.activate([
+            stackView.goo.boundingAnchor.makeRelativeEdgesEqualToSuperview(),
+            shuffleImage.heightAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension / 2),
+            shuffleImage.widthAnchor.constraint(equalTo: shuffleImage.heightAnchor)
+        ])
 
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleGesture))
         gesture.minimumPressDuration = 0.0
@@ -41,26 +60,6 @@ class MPTitleHeaderView: UIControl {
                 sendActions(for: .touchUpInside)
             }
         }
-    }
-
-    func setupView() {
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
-        label.text = "Shuffle All"
-        addSubview(label)
-
-        imageView.alpha = 0.4
-        addSubview(imageView)
-
-        setupConstraints()
-    }
-
-    func setupConstraints() {
-        label.autoPinEdge(toSuperviewEdge: .left, withInset: 17)
-        label.autoAlignAxis(toSuperviewAxis: .horizontal)
-
-        imageView.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
-        imageView.autoAlignAxis(toSuperviewAxis: .horizontal)
     }
 
     func setHighlighted(_ highlighted: Bool, animated: Bool) {

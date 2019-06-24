@@ -14,6 +14,10 @@ enum Colors {
 
     static var minimizeButton: UIColor { color() }
 
+    static var shuffleButton: UIColor { color() }
+
+    static var volumeLevelAccessory: UIColor { color() }
+
 }
 
 private func color(withName name: String = #function, inBundle bundle: Bundle = Bundle.main) -> UIColor {

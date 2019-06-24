@@ -19,8 +19,8 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        topSeperator.backgroundColor = .black
-        bottomSeperator.backgroundColor = .black
+        topSeparator.backgroundColor = .black
+        bottomSeparator.backgroundColor = .black
 
         trackNumberLabel.textColor = .init(white: 1, alpha: 0.5)
         trackNumberLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
@@ -75,8 +75,8 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
     }
 
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
-        topSeperator.alpha = 0.14
-        bottomSeperator.alpha = 0.14
+        topSeparator.alpha = 0.14
+        bottomSeparator.alpha = 0.14
 
         self.indexPath = indexPath
     }
@@ -86,7 +86,7 @@ class MPAlbumSongTableViewCell: KZTableViewCell {
 
         func runAnimations() {
             backgroundColor = highlighted ? RGB(255, a: 0.2) : UIColor.clear
-            bottomSeperator.alpha = highlighted ? 0.0 : 0.14
+            bottomSeparator.alpha = highlighted ? 0.0 : 0.14
         }
 
         if !highlighted {

@@ -32,7 +32,8 @@ class AlbumsViewController: KZViewController {
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         let cellsPerRow = CGFloat(3)
-        let cellWidth = (Constants.UI.Screen.width - cellsPerRow*10)/cellsPerRow
+        let determiningDimension = min(Constants.UI.Screen.width, Constants.UI.Screen.height)
+        let cellWidth = (determiningDimension - cellsPerRow*10)/cellsPerRow
         layout.itemSize = CGSize(width: cellWidth, height: cellWidth + 50)
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
@@ -177,13 +178,15 @@ class AlbumsViewController: KZViewController {
             return
         }
 
+        let determiningDimension = min(size.width, size.height)
+
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 0.0
         layout.minimumLineSpacing = 8.0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         let cellsPerRow = CGFloat(3)
-        let cellWidth = (size.width - cellsPerRow*10)/cellsPerRow
+        let cellWidth = (determiningDimension - cellsPerRow*10)/cellsPerRow
         layout.itemSize = CGSize(width: cellWidth, height: cellWidth + 50)
 
         layout.invalidateLayout()
@@ -307,9 +310,9 @@ extension AlbumsViewController: UICollectionViewDataSourcePrefetching {
     }
 
     func cachedImage(at index: IndexPath) -> UIImage? {
-        return imageCache.filter({ (cache: (row: Int, image: UIImage)) -> Bool in
+        return imageCache.first(where: { (cache: (row: Int, image: UIImage)) -> Bool in
             return cache.row == index.row
-        }).first?.image
+        })?.image
     }
 
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {

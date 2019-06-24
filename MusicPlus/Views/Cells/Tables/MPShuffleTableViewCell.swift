@@ -11,21 +11,33 @@ import UIKit
 class MPShuffleTableViewCell: KZTableViewCell {
 
     let label = UILabel()
-    let shuffleImage = UIImageView(image: #imageLiteral(resourceName: "shuffleBT"))
+    let shuffleImage = UIImageView(image: Images.shuffle)
 
     required init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         selectionStyle = .none
-        bottomSeperator.backgroundColor = .black
+        bottomSeparator.backgroundColor = .black
 
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 17, weight: UIFont.Weight.regular)
-        label.text = "Shuffle All"
-        contentView.addSubview(label)
+        label.text = Strings.Buttons.shuffleAll
 
-        shuffleImage.alpha = 0.4
-        contentView.addSubview(shuffleImage)
+        shuffleImage.translatesAutoresizingMaskIntoConstraints = false
+        shuffleImage.tintColor = Colors.shuffleButton
+        shuffleImage.contentMode = .scaleAspectFit
+        shuffleImage.setContentHuggingPriority(.required, for: .horizontal)
+
+        let stackView = UIStackView(arrangedSubviews: [label, UIView(), shuffleImage])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets.goo.systemSpacingInsets(2)
+        contentView.addSubview(stackView)
+        NSLayoutConstraint.goo.activate([
+            stackView.goo.boundingAnchor.makeRelativeEdgesEqualToSuperview(),
+            shuffleImage.heightAnchor.constraint(equalToConstant: CGFloat.goo.touchTargetDimension / 2),
+            shuffleImage.widthAnchor.constraint(equalTo: shuffleImage.heightAnchor)
+        ])
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -36,30 +48,9 @@ class MPShuffleTableViewCell: KZTableViewCell {
         NotificationCenter.default.removeObserver(self)
     }
 
-    override func updateConstraints() {
-        super.updateConstraints()
-
-        label.autoPinEdge(toSuperviewEdge: .left, withInset: 17)
-        label.autoPinEdge(toSuperviewEdge: .top, withInset: 15)
-        label.autoPinEdge(toSuperviewEdge: .bottom, withInset: 15)
-
-        shuffleImage.autoPinEdge(toSuperviewEdge: .right, withInset: 17)
-        shuffleImage.autoAlignAxis(toSuperviewAxis: .horizontal)
-    }
-
-    override func estimatedHeight() -> CGFloat {
-        let width = Constants.UI.Screen.width
-
-        var height = CGFloat(0)
-        height += 15
-        height += label.estimatedHeight(width)
-        height += 15
-        return height
-    }
-
     override func setIndexPath(_ indexPath: IndexPath, last: Bool) {
         if indexPath.row != 0 {
-            bottomSeperator.alpha = 0.14
+            bottomSeparator.alpha = 0.14
         }
     }
 
@@ -68,7 +59,7 @@ class MPShuffleTableViewCell: KZTableViewCell {
 
         func runAnimations() {
             backgroundColor = highlighted ? RGB(255, a: 0.2) : UIColor.clear
-            bottomSeperator.alpha = highlighted ? 0.0 : 0.14
+            bottomSeparator.alpha = highlighted ? 0.0 : 0.14
         }
 
         if !highlighted {

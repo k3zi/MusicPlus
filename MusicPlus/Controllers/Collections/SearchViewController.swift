@@ -136,11 +136,11 @@ class FilterItem {
         case .greaterThan:
             return condBuilder.greater(than: property.convert(value: value))
         case .greaterThanOrEqual:
-            return condBuilder.greater(thanOrEqualTo: property.convert(value: value))
+            return condBuilder.greaterThanOrEqual(to: property.convert(value: value))
         case .lessThan:
             return condBuilder.less(than: property.convert(value: value))
         case .lessThanOrEqual:
-            return condBuilder.less(thanOrEqualTo: property.convert(value: value))
+            return condBuilder.lessThanOrEqual(to: property.convert(value: value))
         case .containing:
             return condBuilder.containing(property.convert(value: value), caseInsensitive: true, diacriticInsensitive: true)
         case .notContaining:
@@ -204,20 +204,41 @@ class SearchViewController: KZViewController {
         view.addSubview(shadowView)
 
         addFilterButton.label.text = "Add Filter"
-        addFilterButton.imageView.image = #imageLiteral(resourceName: "addButton")
-        addFilterButton.imageView.tintColor = .white
+        addFilterButton.shuffleImage.image = Images.add
+        addFilterButton.shuffleImage.tintColor = .white
         addFilterButton.addTarget(self, action: #selector(addFilter), for: .touchUpInside)
         tableView.tableHeaderView = addFilterButton
 
         tableView.register(cellType: FilterTableViewCell.self)
 
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.rating as AnyKeyPath, displayName: "Rating (0 - 5)", shortDisplayName: "Rating"))
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.title as AnyKeyPath, displayName: "Title", shortDisplayName: "Title"))
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.playCount as AnyKeyPath, displayName: "Play Count", shortDisplayName: "Plays"))
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.bpm as AnyKeyPath, displayName: "Beats Per Minute", shortDisplayName: "BPM"))
-        filterableProperties.append(FilterableProperty(keyPath: \KZPlayerItem.isStoredLocally as AnyKeyPath, displayName: "Synced", shortDisplayName: "Synced"))
+        filterableProperties.append(FilterableProperty(
+            keyPath: \KZPlayerItem.rating as AnyKeyPath,
+            displayName: "Rating (0 - 5)",
+            shortDisplayName: "Rating"
+        ))
+        filterableProperties.append(FilterableProperty(
+            keyPath: \KZPlayerItem.title as AnyKeyPath,
+            displayName: "Title",
+            shortDisplayName: "Title"
+        ))
+        filterableProperties.append(FilterableProperty(
+            keyPath: \KZPlayerItem.playCount as AnyKeyPath,
+            displayName: "Play Count",
+            shortDisplayName: "Plays"
+        ))
+        filterableProperties.append(FilterableProperty(
+            keyPath: \KZPlayerItem.bpm as AnyKeyPath,
+            displayName: "Beats Per Minute",
+            shortDisplayName: "BPM"
+        ))
+        filterableProperties.append(FilterableProperty(
+            keyPath: \KZPlayerItem.isStoredLocally as AnyKeyPath,
+            displayName: "Synced",
+            shortDisplayName: "Synced"
+        ))
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "shuffleBT"), style: .plain, target: self, action: #selector(shuffle))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: Images.shuffle, style: .plain, target: self, action: #selector(shuffle))
+        navigationItem.rightBarButtonItem?.tintColor = Colors.shuffleButton
     }
 
     override func viewDidLayoutSubviews() {
@@ -364,7 +385,7 @@ class SearchViewController: KZViewController {
     }
 
     @objc func shuffle() {
-        let builder = NSPredicate.form(with: KZPlayerItem.self)
+        let builder = NSPredicate.with(type: KZPlayerItem.self)
         var connector: IntermediatePredicateConnector<KZPlayerItem>?
         var ender: IntermediatePredicateEnd<KZPlayerItem>?
         for filterItem in filterItems {
