@@ -15,7 +15,7 @@ protocol RealmGenerating {
 
 extension RealmGenerating where Self: ThreadConfined {
 
-    var safeRefrence: KZThreadSafeReference<Self> {
+    var safeReference: KZThreadSafeReference<Self> {
         return KZThreadSafeReference(to: self)
     }
 

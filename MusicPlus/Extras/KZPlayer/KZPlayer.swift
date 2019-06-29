@@ -245,7 +245,7 @@ extension KZPlayer {
             try audioSession.setPreferredIOBufferDuration(ioBufferDuration)
             try audioSession.setActive(true)
         } catch {
-            os_log(.error, log: .player, "Error starting audio sesssion")
+            os_log(.error, log: .player, "Error starting audio session")
         }
 
         audioSessionNotifications.forEach(NotificationCenter.default.removeObserver)

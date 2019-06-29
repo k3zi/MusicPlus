@@ -14,6 +14,8 @@ enum Colors {
 
     static var minimizeButton: UIColor { color() }
 
+    static var navigationBackButton: UIColor { color() }
+
     static var shuffleButton: UIColor { color() }
 
     static var volumeLevelAccessory: UIColor { color() }

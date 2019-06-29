@@ -152,16 +152,16 @@ class SliderView: UIView {
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesMoved(touches, with: event)
-        proccess(touches: touches, final: false)
+        process(touches: touches, final: false)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        proccess(touches: touches, final: true)
+        process(touches: touches, final: true)
         isSliding = false
     }
 
-    func proccess(touches: Set<UITouch>, final: Bool) {
+    func process(touches: Set<UITouch>, final: Bool) {
         guard isSliding, let touch = touches.first else {
             return
         }

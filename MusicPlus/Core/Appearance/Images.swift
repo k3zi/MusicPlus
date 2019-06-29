@@ -14,9 +14,15 @@ enum Images {
 
     static var chevronDown: UIImage { image() }
 
+    static var chevronLeading: UIImage { image() }
+
     static var chevronTrailing: UIImage { image() }
 
     static var chevronUp: UIImage { image() }
+
+    static var hamburger: UIImage { image() }
+
+    static var navigationChevronLeading: UIImage { image() }
 
     static var next: UIImage { image() }
 

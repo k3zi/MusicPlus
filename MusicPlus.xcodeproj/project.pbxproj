@@ -84,7 +84,6 @@
 		EA8A0FFB22C032C500C20273 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FFA22C032C500C20273 /* PlayerViewModel.swift */; };
 		EA8A0FFE22C0375100C20273 /* TintColorProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8A0FFD22C0375100C20273 /* TintColorProvider.swift */; };
 		EA8A100122C056AE00C20273 /* Predicate in Frameworks */ = {isa = PBXBuildFile; productRef = EA8A100022C056AE00C20273 /* Predicate */; };
-		EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FBB8821F98FD700EC099F /* IntermediatePredicate.swift */; };
 		EA9FCB7A21FE1498003E8AE5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7921FE1498003E8AE5 /* SearchViewController.swift */; };
 		EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9FCB7B21FE41EE003E8AE5 /* FilterTableViewCell.swift */; };
 		EAA040C71CF437FA005453F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA040C61CF437FA005453F9 /* AppDelegate.swift */; };
@@ -138,6 +137,7 @@
 		EAF6AE8C21E2E49200E1F727 /* Streaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE7921E2E49200E1F727 /* Streaming.swift */; };
 		EAF6AE8D21E2E49200E1F727 /* Streamer+DownloadableDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE7A21E2E49200E1F727 /* Streamer+DownloadableDelegate.swift */; };
 		EAF6AE8E21E2E49200E1F727 /* StreamingState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF6AE7B21E2E49200E1F727 /* StreamingState.swift */; };
+		EAFF934522C1EC7600AEE556 /* PlexSwift in Frameworks */ = {isa = PBXBuildFile; productRef = EAFF934422C1EC7600AEE556 /* PlexSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -312,6 +312,7 @@
 				EA8A0FD422BF527100C20273 /* Connectivity in Frameworks */,
 				EABBC7D822BEE34300F96285 /* Gooey in Frameworks */,
 				EAF47D94D855E246A20B9D2B /* Pods_MusicPlus.framework in Frameworks */,
+				EAFF934522C1EC7600AEE556 /* PlexSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -861,6 +862,7 @@
 				EABBC7D722BEE34300F96285 /* Gooey */,
 				EA8A0FD322BF527100C20273 /* Connectivity */,
 				EA8A100022C056AE00C20273 /* Predicate */,
+				EAFF934422C1EC7600AEE556 /* PlexSwift */,
 			);
 			productName = MusicPlus;
 			productReference = EAA040C31CF437FA005453F9 /* MusicPlus.app */;
@@ -951,6 +953,7 @@
 				EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */,
 				EA8A0FD222BF527100C20273 /* XCRemoteSwiftPackageReference "Connectivity" */,
 				EA8A0FFF22C056AE00C20273 /* XCRemoteSwiftPackageReference "Predicate" */,
+				EAFF934322C1EC7600AEE556 /* XCRemoteSwiftPackageReference "PlexSwift" */,
 			);
 			productRefGroup = EAA040C41CF437FA005453F9 /* Products */;
 			projectDirPath = "";
@@ -1153,7 +1156,6 @@
 				29F941E41D127E13001A3515 /* MPSectionedTableViewController.swift in Sources */,
 				EAF6AE7F21E2E49200E1F727 /* Parser+Packets.swift in Sources */,
 				EA9FCB7C21FE41EE003E8AE5 /* FilterTableViewCell.swift in Sources */,
-				EA9FBB8921F98FD700EC099F /* IntermediatePredicate.swift in Sources */,
 				EA85E1E321EA31C5000188F7 /* DevicesSyncItemsGETResponse.swift in Sources */,
 				EAF6AE5D21E2A2BD00E1F727 /* LibrarySectionsAllGETResponse.swift in Sources */,
 				EA5C5ADA21E836A700B0B822 /* KZThreadSafeReference.swift in Sources */,
@@ -1642,6 +1644,14 @@
 				kind = branch;
 			};
 		};
+		EAFF934322C1EC7600AEE556 /* XCRemoteSwiftPackageReference "PlexSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:k3zi/PlexSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1659,6 +1669,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EABBC7D622BEE34300F96285 /* XCRemoteSwiftPackageReference "Gooey" */;
 			productName = Gooey;
+		};
+		EAFF934422C1EC7600AEE556 /* PlexSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EAFF934322C1EC7600AEE556 /* XCRemoteSwiftPackageReference "PlexSwift" */;
+			productName = PlexSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

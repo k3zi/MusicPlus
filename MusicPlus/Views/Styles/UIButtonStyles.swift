@@ -10,15 +10,40 @@ import UIKit
 
 extension UIButton {
 
-    class func styleForBack() -> UIButton {
+    static func styleForBack() -> UIButton {
         let button = ExtendedButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.horizontalTouchMargin = 20
         button.verticalTouchMargin = 20
-        button.imageEdgeInsets = .init(top: 0, left: -10, bottom: 0, right: 0)
 
-        button.setImage(#imageLiteral(resourceName: "backBT"), for: .normal)
-        button.frame.size = CGSize(width: 30, height: 40)
-        button.contentMode = .left
+        let image = Images.navigationChevronLeading
+        let imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(imageView)
+        NSLayoutConstraint.goo.activate([
+            imageView.goo.boundingAnchor.makeRelativeEdgesEqualToSuperview(insets: .systemMultiples(top: 1.5, left: 0, bottom: 1.5, right: 0))
+        ])
+        imageView.tintColor = Colors.navigationBackButton
+        imageView.contentMode = .scaleAspectFit
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        return button
+    }
+
+    static func styleForMenu() -> UIButton {
+        let button = ExtendedButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.horizontalTouchMargin = 20
+        button.verticalTouchMargin = 20
+
+        let image = Images.hamburger
+        let imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        button.addSubview(imageView)
+        NSLayoutConstraint.goo.activate([
+            imageView.goo.boundingAnchor.makeRelativeEdgesEqualToSuperview(insets: .systemMultiples(top: 0, left: 0, bottom: 0, right: 1))
+        ])
+        imageView.tintColor = Colors.navigationBackButton
+        imageView.contentMode = .scaleAspectFit
         return button
     }
 

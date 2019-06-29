@@ -172,13 +172,13 @@ class KZPlex: NSObject {
             rootData = nestedData
         }
 
-        let formatter = DateFormatter()
+        //let formatter = ISO8601DateFormatter()
         // 2018-10-25T05:00:05.180Z
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        //formatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .formatted(formatter)
+        decoder.dateDecodingStrategy = .iso8601
         return try decoder.decode(T.self, from: rootData)
     }
 
@@ -217,7 +217,7 @@ class KZPlex: NSObject {
     func signIn(progressCallback: @escaping (NSAttributedString) -> Void, completionCallBack: @escaping (_ pinRequest: PinRequest) -> Void) {
         return async {
             let result = try await(self.post(Path.Pins.request))
-            var pinRequest: PinRequest = try KZPlex.parseResponseOrError(data: result.data, keyPath: "pin")
+            var pinRequest: PinRequest = try! KZPlex.parseResponseOrError(data: result.data, keyPath: "pin")
             let status = NSMutableAttributedString(string: "Invite PIN: \(pinRequest.code)\nPlease visit: ")
             status.append(NSAttributedString(string: Path.linkAccount, attributes: [NSAttributedString.Key.link: URL(string: Path.linkAccount)!]))
             progressCallback(status)

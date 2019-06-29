@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "PlexSwift",
+        "repositoryURL": "git@github.com:k3zi/PlexSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "1b4b80b218775ec23891d0497c4e30e3aac4fcb1",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "Predicate",
         "repositoryURL": "git@github.com:k3zi/Predicate.git",
         "state": {
@@ -44,6 +53,15 @@
           "branch": null,
           "revision": "94df9b449508344667e5afc7e80f8bcbff1e4c37",
           "version": "2.1.0"
+        }
+      },
+      {
+        "package": "XMLMapper",
+        "repositoryURL": "https://github.com/gcharita/XMLMapper.git",
+        "state": {
+          "branch": null,
+          "revision": "a3bf34e7331ab34fa3df031c7a16ad9b22514ee3",
+          "version": "1.5.3"
         }
       }
     ]

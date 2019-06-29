@@ -81,7 +81,7 @@ class KZRealmLibrary: Object, RealmGenerating {
     func refresh() {
         switch libraryType {
         case .local:
-            let safeSelf = self.safeRefrence
+            let safeSelf = self.safeReference
             MPMediaLibrary.requestAuthorization { _ in
                 safeSelf.resolve()?.addAllItems { _, _ in
                 }
@@ -96,7 +96,7 @@ class KZRealmLibrary: Object, RealmGenerating {
     // MARK: - Local Library
 
     func addAllItems(progressCallback: @escaping (_ status: String, _ complete: Bool) -> Void) {
-        let safeSelf = self.safeRefrence
+        let safeSelf = self.safeReference
         DispatchQueue.global(qos: DispatchQoS.QoSClass.utility).async {
             progressCallback("Loading Items...", false)
             let items = safeSelf.resolve()?.getAllItems() ?? []
@@ -179,7 +179,7 @@ class KZRealmLibrary: Object, RealmGenerating {
         }
 
         let asset = AVURLAsset(url: absoluteNewFileURL)
-        let safeSelf = self.safeRefrence
+        let safeSelf = self.safeReference
         asset.loadValuesAsynchronously(forKeys: [#keyPath(AVAsset.tracks), #keyPath(AVAsset.commonMetadata), #keyPath(AVAsset.duration)]) {
             let artworks = AVMetadataItem.metadataItems(from: asset.commonMetadata, withKey: AVMetadataKey.commonKeyArtwork, keySpace: AVMetadataKeySpace.common)
 

@@ -11,7 +11,10 @@ import Foundation
 extension UIViewController {
 
     func setupMenuToggle() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menuBT"), style: .plain, target: MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.toggleMenu))
+
+        let button = UIButton.styleForMenu()
+        button.addTarget(MPContainerViewController.sharedInstance, action: #selector(MPContainerViewController.toggleMenu), for: .touchDown)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
 
     func setUpLibraryBarItem() {

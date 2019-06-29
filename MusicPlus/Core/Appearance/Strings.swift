@@ -18,6 +18,10 @@ enum Strings {
 
 extension Strings.Buttons {
 
+    static var ok: String {
+        return NSLocalizedString("OK", comment: "")
+    }
+
     static var shuffleAll: String {
         return NSLocalizedString("Shuffle All", comment: "")
     }

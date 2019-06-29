@@ -31,7 +31,6 @@ public class Downloader: NSObject, Downloading {
     /// The `URLSession` currently being used as the HTTP/HTTPS implementation for the downloader.
     fileprivate lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 15
         configuration.urlCache = URLCache.shared
         let session = URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
         return session

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Predicate
 
 enum SearchStep {
     case fieldSelect
@@ -127,7 +128,7 @@ class FilterItem {
         self.comparison = comparison
     }
 
-    func add(to condBuilder: IntermediatePredicateQuery<KZPlayerItem>) -> IntermediatePredicateConnector<KZPlayerItem> {
+    func add(to condBuilder: PredicateQuery<KZPlayerItem>) -> PredicateConnector<KZPlayerItem> {
         switch comparison {
         case .equal:
             return condBuilder.equal(to: property.convert(value: value))
@@ -369,7 +370,7 @@ class SearchViewController: KZViewController {
         tableView.deleteRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
     }
 
-    func apply<X: IntermediatePredicateQueryable>(builder: X, keyPath: AnyKeyPath) -> IntermediatePredicateQuery<X.Base>? where X.Base: KZPlayerItem {
+    func apply<X: PredicateQueryable>(builder: X, keyPath: AnyKeyPath) -> PredicateQuery<X.Base>? where X.Base: KZPlayerItem {
         switch keyPath {
         case is KeyPath<X.Base, Int>:
             return builder[keyPath as! KeyPath<X.Base, Double>]
@@ -386,10 +387,10 @@ class SearchViewController: KZViewController {
 
     @objc func shuffle() {
         let builder = NSPredicate.with(type: KZPlayerItem.self)
-        var connector: IntermediatePredicateConnector<KZPlayerItem>?
-        var ender: IntermediatePredicateEnd<KZPlayerItem>?
+        var connector: PredicateConnector<KZPlayerItem>?
+        var ender: PredicateEnd<KZPlayerItem>?
         for filterItem in filterItems {
-            var condBuilder: IntermediatePredicateQuery<KZPlayerItem>?
+            var condBuilder: PredicateQuery<KZPlayerItem>?
             ender = connector?.and
             let keyPath = filterItem.property.keyPath
             if let ender = ender {

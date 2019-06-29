@@ -75,13 +75,12 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
         nextButton.layer.masksToBounds = true
         view.addSubview(nextButton)
 
+        welcomeLabel.text = "Add A Library"
         if KZRealmLibrary.libraries.isEmpty {
-            welcomeLabel.text =  "Add A Library"
             welcomeLabel.textAlignment = .center
 
             typeLabel.textAlignment = .center
         } else {
-            welcomeLabel.text = "Add A Library"
             welcomeLabel.textAlignment = .left
 
             typeLabel.textAlignment = .left
@@ -167,11 +166,15 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
 
     @objc func didTapNext() {
         guard let name = nameTextField.text, name.isNotEmpty else {
-            return self.present(UIAlertController(title: "Add A Library", message: "Please give a name to the library you wish to add.", preferredStyle: .alert), animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Add A Library", message: "Please give a name to the library you wish to add.", preferredStyle: .alert)
+            alertController.addAction(.init(title: Strings.Buttons.ok, style: .default))
+            return present(alertController, animated: true, completion: nil)
         }
 
         guard let typeSelectedIndexPath = typeSelectedIndexPath else {
-            return self.present(UIAlertController(title: "Add A Library", message: "Please select the type of library you wish to add.", preferredStyle: .alert), animated: true, completion: nil)
+            let alertController = UIAlertController(title: "Add A Library", message: "Please select the type of library you wish to add.", preferredStyle: .alert)
+            alertController.addAction(.init(title: Strings.Buttons.ok, style: .default))
+            return present(alertController, animated: true, completion: nil)
         }
 
         nameTextField.isEnabled = false
@@ -185,7 +188,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                 realm.add(library)
             }
             KZPlayer.sharedInstance.currentLibrary = library
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
+            presentingViewController?.dismiss(animated: true, completion: nil)
         case 1:
             let library = KZRealmLibrary(name: name, type: .local)
             let realm = Realm.main
@@ -193,7 +196,7 @@ class CreateLibraryViewController: KZViewController, UITextFieldDelegate {
                 realm.add(library)
             }
             nextButton.setTitle("Importing Songs...", for: .normal)
-            let safeLibrary = library.safeRefrence
+            let safeLibrary = library.safeReference
             MPMediaLibrary.requestAuthorization { _ in
                 safeLibrary.resolve()?.addAllItems { status, complete in
                     DispatchQueue.main.async {

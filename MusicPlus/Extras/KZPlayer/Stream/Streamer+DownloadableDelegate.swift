@@ -76,7 +76,7 @@ extension KZRemoteAudioPlayerNode: DownloadingDelegate {
     }
 
     public func download(_ download: Downloading, shouldHoldDataForURL url: URL) -> Bool {
-        return true
+        return false
     }
 
     public func download(_ download: Downloading, didSaveDataToURL url: URL) {

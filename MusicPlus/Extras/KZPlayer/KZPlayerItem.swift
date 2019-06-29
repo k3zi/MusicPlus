@@ -190,7 +190,7 @@ class KZPlayerItem: Object, KZPlayerItemBase {
         }
 
         if artworkURL.isNotEmpty {
-            let safeConfig = config?.safeRefrence
+            let safeConfig = config?.safeReference
             DispatchQueue.global(qos: .background).async {
                 if let config = safeConfig?.resolve() {
                     artworkURL = "\(config.connectionURI)/photo/:/transcode?url=\(artworkURL)&width=\(Int(UIScreen.main.bounds.height))&height=\(Int(UIScreen.main.bounds.height))&minSize=1&X-Plex-Token=\(config.authToken)"
